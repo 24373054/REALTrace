@@ -1,0 +1,5 @@
+{
+  "name": "ChainTrace - Crypto Funds Visualizer",
+  "description": "A blockchain funds tracking tool inspired by MistTrack. Features interactive transaction graphs, risk scoring, and AI-powered pattern analysis for security researchers.",
+  "requestFramePermissions": []
+}

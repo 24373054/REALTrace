@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GraphData, GraphNode, AddressType, GraphLink } from '../types';
+import { GraphData, GraphNode, AddressType, GraphLink, ChainType, NetworkType } from '../types';
 import { AlertTriangle, ShieldCheck, DollarSign, ExternalLink, Bot, Loader2, Copy } from 'lucide-react';
 
 interface AnalysisPanelProps {
@@ -15,6 +15,8 @@ interface AnalysisPanelProps {
   maxDepth: number;
   onExpandNode: () => Promise<void>;
   isExpanding: boolean;
+  chain: ChainType;
+  network: NetworkType;
 }
 
 const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ 
@@ -29,8 +31,40 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
   depthLimit,
   maxDepth,
   onExpandNode,
-  isExpanding
+  isExpanding,
+  chain,
+  network
 }) => {
+  // 生成区块链浏览器链接
+  const getExplorerUrl = (txHash: string, address?: string) => {
+    const hash = address || txHash;
+    
+    if (chain === ChainType.SOLANA) {
+      const baseUrl = network === NetworkType.MAINNET 
+        ? 'https://solscan.io'
+        : network === NetworkType.TESTNET
+        ? 'https://solscan.io/?cluster=testnet'
+        : 'https://solscan.io/?cluster=devnet';
+      
+      if (address) {
+        return `${baseUrl}/account/${hash}`;
+      }
+      return `${baseUrl}/tx/${hash}`;
+    } else if (chain === ChainType.ETHEREUM) {
+      const baseUrl = network === NetworkType.MAINNET
+        ? 'https://etherscan.io'
+        : network === NetworkType.TESTNET
+        ? 'https://sepolia.etherscan.io'
+        : 'https://goerli.etherscan.io';
+      
+      if (address) {
+        return `${baseUrl}/address/${hash}`;
+      }
+      return `${baseUrl}/tx/${hash}`;
+    }
+    
+    return '#';
+  };
   const [activeTab, setActiveTab] = useState<'details' | 'list'>('list');
   const [tokenFilter, setTokenFilter] = useState<string>('ALL');
   const [sortDir, setSortDir] = useState<'DESC' | 'ASC'>('DESC');
@@ -205,7 +239,14 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                                     </div>
                                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
                                         {getRiskBadge(target.riskScore, target.type)}
-                                        <a href="#" className="text-xs text-brand-500 hover:underline flex items-center gap-1">View Hash <ExternalLink size={10} /></a>
+                                        <a 
+                                          href={getExplorerUrl(tx.txHash)} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="text-xs text-brand-500 hover:underline flex items-center gap-1"
+                                        >
+                                          View Hash <ExternalLink size={10} />
+                                        </a>
                                     </div>
                                 </div>
                              )
@@ -238,7 +279,14 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                                     </div>
                                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
                                         {getRiskBadge(source.riskScore, source.type)}
-                                        <a href="#" className="text-xs text-brand-500 hover:underline flex items-center gap-1">View Hash <ExternalLink size={10} /></a>
+                                        <a 
+                                          href={getExplorerUrl(tx.txHash)} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="text-xs text-brand-500 hover:underline flex items-center gap-1"
+                                        >
+                                          View Hash <ExternalLink size={10} />
+                                        </a>
                                     </div>
                                 </div>
                             )

@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import Header from './components/Header';
 import GraphView, { GraphViewHandle } from './components/GraphView';
 import AnalysisPanel from './components/AnalysisPanel';
+import LoginModal from './components/LoginModal';
 import { INITIAL_ADDRESS } from './services/mockData';
 import { fetchGraph } from './services/api';
 import { analyzeGraphWithGemini } from './services/geminiService';
-import { GraphData, GraphLink, GraphNode, ChainType } from './types';
+import { GraphData, GraphLink, GraphNode, ChainType, NetworkType } from './types';
 import { Download, RefreshCw, ArrowDownLeft, ArrowUpRight, PanelLeft, Plus, Minus, Image as ImageIcon, FileDown, FileText } from 'lucide-react';
 import jsPDF from 'jspdf';
 
@@ -21,6 +22,11 @@ function App() {
   const graphRef = useRef<GraphViewHandle | null>(null);
   const [isExpanding, setIsExpanding] = useState(false);
   const [chain, setChain] = useState<ChainType>(ChainType.SOLANA);
+  const [network, setNetwork] = useState<NetworkType>(NetworkType.MAINNET);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isPremium, setIsPremium] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Initialize with mock data (只在首次加载时)
   useEffect(() => {
@@ -499,6 +505,40 @@ function App() {
         onSearch={handleSearch} 
         chain={chain}
         setChain={setChain}
+        network={network}
+        setNetwork={setNetwork}
+        isLoggedIn={isLoggedIn}
+        userEmail={userEmail}
+        onLoginClick={() => setShowLoginModal(true)}
+        onLogout={() => {
+          setIsLoggedIn(false);
+          setUserEmail(null);
+          setIsPremium(false);
+        }}
+        isPremium={isPremium}
+        onPremiumClick={() => {
+          if (isLoggedIn) {
+            setIsPremium(true);
+            alert('🎉 Premium features unlocked! You now have access to advanced analytics and unlimited queries.');
+          } else {
+            setShowLoginModal(true);
+            alert('Please log in first to unlock premium features.');
+          }
+        }}
+      />
+      
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLogin={(email, password) => {
+          // 简单的登录逻辑（实际应用中应该调用后端API）
+          setIsLoggedIn(true);
+          setUserEmail(email);
+          // 如果用户邮箱包含 premium 或 vip，自动解锁高级功能
+          if (email.includes('premium') || email.includes('vip')) {
+            setIsPremium(true);
+          }
+        }}
       />
 
       <div className="flex-1 flex overflow-hidden relative">
@@ -621,6 +661,8 @@ function App() {
             maxDepth={MAX_DEPTH}
             onExpandNode={() => selectedNode ? expandNode(selectedNode.id) : Promise.resolve()}
             isExpanding={isExpanding}
+            chain={chain}
+            network={network}
         />
       </div>
     </div>

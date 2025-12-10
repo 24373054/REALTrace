@@ -1,6 +1,6 @@
-import React from 'react';
-import { Search, Globe, ChevronDown, Activity } from 'lucide-react';
-import { ChainType } from '../types';
+import React, { useState } from 'react';
+import { Search, Globe, ChevronDown, Activity, User, LogOut } from 'lucide-react';
+import { ChainType, NetworkType } from '../types';
 
 interface HeaderProps {
     addressInput: string;
@@ -8,9 +8,46 @@ interface HeaderProps {
     onSearch: () => void;
     chain: ChainType;
     setChain: (c: ChainType) => void;
+    network: NetworkType;
+    setNetwork: (n: NetworkType) => void;
+    isLoggedIn: boolean;
+    userEmail: string | null;
+    onLoginClick: () => void;
+    onLogout: () => void;
+    isPremium: boolean;
+    onPremiumClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ addressInput, setAddressInput, onSearch, chain, setChain }) => {
+const Header: React.FC<HeaderProps> = ({ 
+  addressInput, 
+  setAddressInput, 
+  onSearch, 
+  chain, 
+  setChain,
+  network,
+  setNetwork,
+  isLoggedIn,
+  userEmail,
+  onLoginClick,
+  onLogout,
+  isPremium,
+  onPremiumClick
+}) => {
+  const [showNetworkMenu, setShowNetworkMenu] = useState(false);
+
+  const getNetworkLabel = () => {
+    switch (network) {
+      case NetworkType.MAINNET:
+        return 'Mainnet';
+      case NetworkType.TESTNET:
+        return 'Testnet';
+      case NetworkType.DEVNET:
+        return 'Devnet';
+      default:
+        return 'Mainnet';
+    }
+  };
+
   return (
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-20 relative">
       <div className="flex items-center gap-2">
@@ -52,16 +89,103 @@ const Header: React.FC<HeaderProps> = ({ addressInput, setAddressInput, onSearch
       </div>
 
       <div className="flex items-center gap-4 text-sm text-slate-600">
-        <button className="flex items-center gap-1 hover:text-brand-600">
+        {/* Network Selector */}
+        <div className="relative">
+          <button 
+            onClick={() => setShowNetworkMenu(!showNetworkMenu)}
+            className="flex items-center gap-1 hover:text-brand-600 transition-colors"
+          >
             <Globe size={16} />
-            <span>Mainnet</span>
-        </button>
+            <span>{getNetworkLabel()}</span>
+            <ChevronDown size={14} />
+          </button>
+          {showNetworkMenu && (
+            <div className="absolute top-full right-0 mt-2 bg-white border border-slate-200 rounded-md shadow-lg py-1 min-w-[120px] z-30">
+              <button
+                onClick={() => {
+                  setNetwork(NetworkType.MAINNET);
+                  setShowNetworkMenu(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 ${
+                  network === NetworkType.MAINNET ? 'text-brand-600 font-medium' : ''
+                }`}
+              >
+                Mainnet
+              </button>
+              <button
+                onClick={() => {
+                  setNetwork(NetworkType.TESTNET);
+                  setShowNetworkMenu(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 ${
+                  network === NetworkType.TESTNET ? 'text-brand-600 font-medium' : ''
+                }`}
+              >
+                Testnet
+              </button>
+              <button
+                onClick={() => {
+                  setNetwork(NetworkType.DEVNET);
+                  setShowNetworkMenu(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 ${
+                  network === NetworkType.DEVNET ? 'text-brand-600 font-medium' : ''
+                }`}
+              >
+                Devnet
+              </button>
+            </div>
+          )}
+        </div>
         <div className="h-4 w-px bg-slate-300"></div>
-        <button className="hover:text-brand-600 font-medium">Log In</button>
-        <button className="bg-slate-900 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-slate-800">
+        
+        {/* Login/User Menu */}
+        {isLoggedIn ? (
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded">
+              <User size={14} />
+              <span className="text-xs">{userEmail?.split('@')[0] || 'User'}</span>
+            </div>
+            <button 
+              onClick={onLogout}
+              className="hover:text-brand-600 transition-colors"
+              title="Logout"
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
+        ) : (
+          <button 
+            onClick={onLoginClick}
+            className="hover:text-brand-600 font-medium transition-colors"
+          >
+            Log In
+          </button>
+        )}
+        
+        {/* Premium Button */}
+        {!isPremium && (
+          <button 
+            onClick={onPremiumClick}
+            className="bg-slate-900 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-slate-800 transition-colors"
+          >
             Unlock Premium
-        </button>
+          </button>
+        )}
+        {isPremium && (
+          <div className="px-3 py-1.5 bg-gradient-to-r from-brand-500 to-brand-600 text-white rounded text-xs font-medium">
+            Premium
+          </div>
+        )}
       </div>
+      
+      {/* Click outside to close network menu */}
+      {showNetworkMenu && (
+        <div 
+          className="fixed inset-0 z-20" 
+          onClick={() => setShowNetworkMenu(false)}
+        />
+      )}
     </header>
   );
 };

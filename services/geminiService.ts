@@ -1,16 +1,16 @@
 import { GraphData } from "../types";
 
-// 使用常见的 OpenAI Chat Completions 接口，无需额外 SDK，直接 fetch。
+// 使用 DeepSeek API（兼容 OpenAI Chat Completions 接口），无需额外 SDK，直接 fetch。
 // 注意：前端暴露密钥有安全风险，生产环境应通过后端代理转发。
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-const OPENAI_API_BASE = import.meta.env.VITE_OPENAI_BASE_URL || "https://api.openai.com/v1";
-const OPENAI_MODEL = import.meta.env.VITE_OPENAI_MODEL || "gpt-4o-mini";
+const DEEPSEEK_API_KEY = import.meta.env.VITE_DEEPSEEK_API_KEY || import.meta.env.VITE_OPENAI_API_KEY; // 兼容旧配置
+const DEEPSEEK_API_BASE = import.meta.env.VITE_DEEPSEEK_API_BASE || import.meta.env.VITE_OPENAI_BASE_URL || "https://api.deepseek.com/v1";
+const DEEPSEEK_MODEL = import.meta.env.VITE_DEEPSEEK_MODEL || import.meta.env.VITE_OPENAI_MODEL || "deepseek-chat";
 
 export const analyzeGraphWithGemini = async (data: GraphData, focalAddress: string): Promise<string> => {
   // 没有 Key 时，返回友好提示，避免报错
-  if (!OPENAI_API_KEY) {
-    console.warn("VITE_OPENAI_API_KEY 未配置，返回离线提示。");
-    return "AI 分析不可用：未配置 VITE_OPENAI_API_KEY。";
+  if (!DEEPSEEK_API_KEY) {
+    console.warn("VITE_DEEPSEEK_API_KEY 未配置，返回离线提示。");
+    return "AI 分析不可用：未配置 VITE_DEEPSEEK_API_KEY。";
   }
 
   // 简化数据，避免 D3 计算字段和循环引用
@@ -38,7 +38,7 @@ export const analyzeGraphWithGemini = async (data: GraphData, focalAddress: stri
 `;
 
   const payload = {
-    model: OPENAI_MODEL,
+    model: DEEPSEEK_MODEL,
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: `Analyze this transaction data: ${JSON.stringify(simplifiedData)}` }
@@ -47,25 +47,25 @@ export const analyzeGraphWithGemini = async (data: GraphData, focalAddress: stri
   };
 
   try {
-    const resp = await fetch(`${OPENAI_API_BASE}/chat/completions`, {
+    const resp = await fetch(`${DEEPSEEK_API_BASE}/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
       },
       body: JSON.stringify(payload),
     });
 
     if (!resp.ok) {
       const text = await resp.text();
-      throw new Error(`OpenAI API ${resp.status}: ${text}`);
+      throw new Error(`DeepSeek API ${resp.status}: ${text}`);
     }
 
     const json = await resp.json();
     const content = json.choices?.[0]?.message?.content;
     return content || "未能生成分析结果。";
   } catch (error) {
-    console.error("OpenAI API Error:", error);
+    console.error("DeepSeek API Error:", error);
     return `分析失败：${(error as Error).message || "未知错误"}`;
   }
 };

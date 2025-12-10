@@ -19,10 +19,11 @@ View your app in AI Studio: https://ai.studio/apps/drive/1ccI2Kh_0sDYuG2el55UIXP
 
 2. 在根目录创建/编辑 `.env.local`：  
    ```
-   VITE_OPENAI_API_KEY=你的Key
+   VITE_DEEPSEEK_API_KEY=你的DeepSeek_API_Key
    # 可选：自定义接口和模型（如使用代理/网关）
-   # VITE_OPENAI_BASE_URL=https://api.openai.com/v1
-   # VITE_OPENAI_MODEL=gpt-4o-mini
+   # VITE_DEEPSEEK_API_BASE=https://api.deepseek.com/v1
+   # VITE_DEEPSEEK_MODEL=deepseek-chat
+   # 注意：也支持旧配置 VITE_OPENAI_API_KEY（向后兼容）
 
    # RPC 地址（代理服务器会读取这些配置）
    SOLANA_RPC_URL=https://your-solana-rpc-url?api-key=xxx
@@ -46,7 +47,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1ccI2Kh_0sDYuG2el55UIXP
 
 2. 在根目录创建/编辑 `.env.local`：  
    ```
-   VITE_OPENAI_API_KEY=你的Key
+   VITE_DEEPSEEK_API_KEY=你的DeepSeek_API_Key
    
    # 前端直连（可能受 CORS/权限限制）
    VITE_SOLANA_RPC=https://your-solana-endpoint/?api-key=xxxx

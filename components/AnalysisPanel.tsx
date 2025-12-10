@@ -260,7 +260,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                     <div>
                         <h3 className="text-brand-900 font-bold text-sm">Mist AI Investigator</h3>
                         <p className="text-brand-700 text-xs mt-1">
-                            Use Gemini models to analyze the transaction patterns of the current graph view.
+                            Use DeepSeek AI to analyze the transaction patterns of the current graph view.
                         </p>
                     </div>
                 </div>

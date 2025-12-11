@@ -20,6 +20,7 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
+import * as dbService from './database/dbService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -184,12 +185,192 @@ app.get('/api/eth', (req, res) => {
   });
 });
 
+// ============================================
+// 数据库 API 端点
+// ============================================
+
+// 保存地址节点
+app.post('/api/db/address', async (req, res) => {
+  try {
+    const addressData = req.body;
+    const result = await dbService.upsertAddress(addressData);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 保存地址失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 批量保存地址节点
+app.post('/api/db/addresses', async (req, res) => {
+  try {
+    const addressesArray = req.body.addresses || req.body;
+    const result = await dbService.upsertAddresses(addressesArray);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 批量保存地址失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 获取地址详情
+app.get('/api/db/address/:chain/:address', async (req, res) => {
+  try {
+    const { address, chain } = req.params;
+    const result = await dbService.getAddress(address, chain.toUpperCase());
+    if (result) {
+      res.json({ success: true, data: result });
+    } else {
+      res.status(404).json({ success: false, error: '地址未找到' });
+    }
+  } catch (error) {
+    console.error('[数据库API] 获取地址失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 添加地址标签
+app.post('/api/db/address/tag', async (req, res) => {
+  try {
+    const { address, chain, tagType, tagValue, source, confidence } = req.body;
+    const result = await dbService.addAddressTag(
+      address,
+      chain.toUpperCase(),
+      tagType,
+      tagValue,
+      source,
+      confidence
+    );
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 添加标签失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 批量添加地址标签
+app.post('/api/db/address/tags', async (req, res) => {
+  try {
+    const tagsArray = req.body.tags || req.body;
+    const result = await dbService.addAddressTags(tagsArray);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 批量添加标签失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 保存交易
+app.post('/api/db/transaction', async (req, res) => {
+  try {
+    const txData = req.body;
+    const result = await dbService.upsertTransaction(txData);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 保存交易失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 批量保存交易
+app.post('/api/db/transactions', async (req, res) => {
+  try {
+    const transactionsArray = req.body.transactions || req.body;
+    const result = await dbService.upsertTransactions(transactionsArray);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 批量保存交易失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 获取地址的交易列表
+app.get('/api/db/address/:chain/:address/transactions', async (req, res) => {
+  try {
+    const { address, chain } = req.params;
+    const limit = parseInt(req.query.limit) || 100;
+    const offset = parseInt(req.query.offset) || 0;
+    const result = await dbService.getAddressTransactions(
+      address,
+      chain.toUpperCase(),
+      limit,
+      offset
+    );
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 获取交易列表失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 获取地址的关联地址
+app.get('/api/db/address/:chain/:address/connections', async (req, res) => {
+  try {
+    const { address, chain } = req.params;
+    const limit = parseInt(req.query.limit) || 50;
+    const result = await dbService.getConnectedAddresses(
+      address,
+      chain.toUpperCase(),
+      limit
+    );
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 获取关联地址失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 构建地址的交易图谱
+app.get('/api/db/address/:chain/:address/graph', async (req, res) => {
+  try {
+    const { address, chain } = req.params;
+    const maxDepth = parseInt(req.query.maxDepth) || 3;
+    const maxNodes = parseInt(req.query.maxNodes) || 100;
+    const result = await dbService.buildAddressGraph(
+      address,
+      chain.toUpperCase(),
+      maxDepth,
+      maxNodes
+    );
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 构建图谱失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 搜索高风险地址
+app.get('/api/db/addresses/high-risk', async (req, res) => {
+  try {
+    const chain = req.query.chain?.toUpperCase() || 'SOLANA';
+    const minRiskScore = parseFloat(req.query.minRiskScore) || 70;
+    const limit = parseInt(req.query.limit) || 50;
+    const result = await dbService.searchHighRiskAddresses(chain, minRiskScore, limit);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('[数据库API] 搜索高风险地址失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // 健康检查端点
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
+  let dbStatus = '未配置';
+  try {
+    const pool = dbService.getPool();
+    if (pool) {
+      await pool.query('SELECT NOW()');
+      dbStatus = '已连接';
+    }
+  } catch (error) {
+    dbStatus = `连接失败: ${error.message}`;
+  }
+
   res.json({
     status: 'ok',
     solana: SOLANA_RPC_URL ? '已配置' : '未配置',
     ethereum: ETH_RPC_URL ? '已配置' : '未配置',
+    database: dbStatus,
   });
 });
 
@@ -204,7 +385,22 @@ app.use((req, res) => {
   res.status(404).json({
     error: 'Not Found',
     message: `路由 ${req.method} ${req.path} 不存在`,
-    availableRoutes: ['POST /api/solana', 'POST /api/eth', 'GET /health'],
+    availableRoutes: [
+      'POST /api/solana',
+      'POST /api/eth',
+      'GET /health',
+      'POST /api/db/address',
+      'POST /api/db/addresses',
+      'GET /api/db/address/:chain/:address',
+      'POST /api/db/address/tag',
+      'POST /api/db/address/tags',
+      'POST /api/db/transaction',
+      'POST /api/db/transactions',
+      'GET /api/db/address/:chain/:address/transactions',
+      'GET /api/db/address/:chain/:address/connections',
+      'GET /api/db/address/:chain/:address/graph',
+      'GET /api/db/addresses/high-risk',
+    ],
   });
 });
 

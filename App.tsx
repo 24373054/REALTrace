@@ -3,11 +3,14 @@ import Header from './components/Header';
 import GraphView, { GraphViewHandle } from './components/GraphView';
 import AnalysisPanel from './components/AnalysisPanel';
 import LoginModal from './components/LoginModal';
+import HackerTraceView from './components/cybertrace/HackerTraceView';
+import { loadHackerCsvData } from './components/cybertrace/data';
 import { INITIAL_ADDRESS } from './services/mockData';
 import { fetchGraph } from './services/api';
+import { loadHackerTraceGraph, HACKER_ROOT_ADDRESS } from './services/hackerTraceService';
 import { analyzeGraphWithGemini } from './services/geminiService';
 import { GraphData, GraphLink, GraphNode, ChainType, NetworkType } from './types';
-import { Download, RefreshCw, ArrowDownLeft, ArrowUpRight, PanelLeft, Plus, Minus, Image as ImageIcon, FileDown, FileText } from 'lucide-react';
+import { Download, RefreshCw, ArrowDownLeft, ArrowUpRight, PanelLeft, Plus, Minus, Image as ImageIcon, FileDown, FileText, Eye, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 
 function App() {
@@ -18,6 +21,7 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [viewMode, setViewMode] = useState<'all' | 'incoming' | 'outgoing'>('all');
   const [depthLimit, setDepthLimit] = useState(2); // 默认展示 2 层
+  const [viewLayout, setViewLayout] = useState<'standard' | 'cyber'>('standard');
   const MAX_DEPTH = 5;
   const graphRef = useRef<GraphViewHandle | null>(null);
   const [isExpanding, setIsExpanding] = useState(false);
@@ -497,50 +501,36 @@ function App() {
     a.click();
   };
 
-  return (
-    <div className="flex flex-col h-screen w-full bg-slate-100">
-      <Header 
-        addressInput={addressInput} 
-        setAddressInput={setAddressInput} 
-        onSearch={handleSearch} 
-        chain={chain}
-        setChain={setChain}
-        network={network}
-        setNetwork={setNetwork}
-        isLoggedIn={isLoggedIn}
-        userEmail={userEmail}
-        onLoginClick={() => setShowLoginModal(true)}
-        onLogout={() => {
-          setIsLoggedIn(false);
-          setUserEmail(null);
-          setIsPremium(false);
-        }}
-        isPremium={isPremium}
-        onPremiumClick={() => {
-          if (isLoggedIn) {
-            setIsPremium(true);
-            alert('🎉 Premium features unlocked! You now have access to advanced analytics and unlimited queries.');
-          } else {
-            setShowLoginModal(true);
-            alert('Please log in first to unlock premium features.');
-          }
-        }}
-      />
-      
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onLogin={(email, password) => {
-          // 简单的登录逻辑（实际应用中应该调用后端API）
-          setIsLoggedIn(true);
-          setUserEmail(email);
-          // 如果用户邮箱包含 premium 或 vip，自动解锁高级功能
-          if (email.includes('premium') || email.includes('vip')) {
-            setIsPremium(true);
-          }
-        }}
-      />
+  const handleLoadHackerTrace = () => {
+    const hackerGraph = loadHackerTraceGraph();
+    setData(hackerGraph);
+    const rootNode = hackerGraph.nodes.find(n => n.id.toLowerCase() === HACKER_ROOT_ADDRESS.toLowerCase()) || hackerGraph.nodes[0] || null;
+    setSelectedNode(rootNode);
+    setViewMode('all');
+    setAiReport(null);
+    setDepthLimit(2);
+  };
 
+  const renderContent = () => {
+    if (viewLayout === 'cyber') {
+      return (
+        <div className="flex-1 flex overflow-hidden relative min-h-0 min-w-0">
+          <div className="absolute top-3 right-3 z-30 flex gap-2">
+            <button
+              onClick={() => setViewLayout('standard')}
+              className="flex items-center gap-1 px-3 py-2 rounded bg-white/90 text-slate-700 border border-slate-200 shadow-sm hover:bg-white"
+              title="返回主视图"
+            >
+              <X size={14} />
+              返回主视图
+            </button>
+          </div>
+          <HackerTraceView loader={loadHackerCsvData} />
+        </div>
+      );
+    }
+
+    return (
       <div className="flex-1 flex overflow-hidden relative">
         {/* Main Graph Area */}
         <div className="flex-1 flex flex-col relative">
@@ -630,6 +620,20 @@ function App() {
                     >
                         <RefreshCw size={18} />
                     </button>
+                    <button
+                        onClick={handleLoadHackerTrace}
+                        className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors text-xs font-semibold"
+                        title="载入黑客攻击链路（本地CSV）"
+                    >
+                        黑客链路
+                    </button>
+                    <button
+                        onClick={() => setViewLayout('cyber')}
+                        className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                        title="切换到黑客链路赛博视图"
+                    >
+                        <Eye size={16} />
+                    </button>
                 </div>
 
                 <div className="bg-white rounded shadow-sm border border-slate-200 px-3 py-2 flex items-center gap-2 text-xs font-medium text-slate-600">
@@ -665,6 +669,54 @@ function App() {
             network={network}
         />
       </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col h-screen w-full bg-slate-100">
+      <Header 
+        addressInput={addressInput} 
+        setAddressInput={setAddressInput} 
+        onSearch={handleSearch} 
+        chain={chain}
+        setChain={setChain}
+        network={network}
+        setNetwork={setNetwork}
+        isLoggedIn={isLoggedIn}
+        userEmail={userEmail}
+        onLoginClick={() => setShowLoginModal(true)}
+        onLogout={() => {
+          setIsLoggedIn(false);
+          setUserEmail(null);
+          setIsPremium(false);
+        }}
+        isPremium={isPremium}
+        onPremiumClick={() => {
+          if (isLoggedIn) {
+            setIsPremium(true);
+            alert('🎉 Premium features unlocked! You now have access to advanced analytics and unlimited queries.');
+          } else {
+            setShowLoginModal(true);
+            alert('Please log in first to unlock premium features.');
+          }
+        }}
+      />
+      
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLogin={(email, password) => {
+          // 简单的登录逻辑（实际应用中应该调用后端API）
+          setIsLoggedIn(true);
+          setUserEmail(email);
+          // 如果用户邮箱包含 premium 或 vip，自动解锁高级功能
+          if (email.includes('premium') || email.includes('vip')) {
+            setIsPremium(true);
+          }
+        }}
+      />
+
+      {renderContent()}
     </div>
   );
 }

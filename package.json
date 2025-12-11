@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "proxy": "node proxy-server.js"
+    "proxy": "node proxy-server.js",
+    "db:setup": "node database/setup-windows.js",
+    "db:init": "node database/setup-windows.js",
+    "db:find": "node database/find-postgres.js",
+    "db:import": "node database/example/数据导入脚本.js"
   },
   "dependencies": {
     "lucide-react": "^0.559.0",
@@ -16,7 +20,8 @@
     "d3": "^7.9.0",
     "jspdf": "^2.5.1",
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

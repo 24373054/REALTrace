@@ -2,7 +2,7 @@ import { AddressType, GraphData, GraphLink, GraphNode } from "../types";
 
 // 使用 Vite ?raw 将 CSV 当作字符串引入（无需外部库）
 // 数据源：黑客攻击链路 hacker_flow_full.csv
-import rawCsv from "../黑客攻击链路/hacker_flow_full.csv?raw";
+import rawCsv from "../data/hacker_flow_full.csv?raw";
 
 export const HACKER_ROOT_ADDRESS = "0xb060679d533fa494f0f0be8311703d69f8a6b380";
 

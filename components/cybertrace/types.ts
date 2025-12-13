@@ -12,10 +12,12 @@ export interface CsvRow {
 
 export interface GraphNode extends d3.SimulationNodeDatum {
   id: string;
-  group: "attacker" | "victim" | "neutral";
+  group: "attacker" | "victim" | "neutral" | "mixer";
   value: number;
   connectionCount: number;
   index?: number;
+  isMixer?: boolean;
+  mixerName?: string;
 }
 
 export interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {

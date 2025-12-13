@@ -3,8 +3,9 @@ import Header from './components/Header';
 import GraphView, { GraphViewHandle } from './components/GraphView';
 import AnalysisPanel from './components/AnalysisPanel';
 import LoginModal from './components/LoginModal';
-import HackerTraceView from './components/cybertrace/HackerTraceView';
+import HackerTraceView, { CaseConfig } from './components/cybertrace/HackerTraceView';
 import { loadHackerCsvData } from './components/cybertrace/data';
+import { loadKucoinData } from './components/cybertrace/kucoinData';
 import { INITIAL_ADDRESS } from './services/mockData';
 import { fetchGraph } from './services/api';
 import { loadHackerTraceGraph, HACKER_ROOT_ADDRESS } from './services/hackerTraceService';
@@ -511,6 +512,29 @@ function App() {
     setDepthLimit(2);
   };
 
+  // 定义所有的 case 配置
+  const hackerCases: CaseConfig[] = [
+    {
+      id: 'case1',
+      name: 'Case 1: 黑客攻击链路',
+      description: '追踪黑客攻击的资金流向和洗钱路径',
+      loader: loadHackerCsvData,
+    },
+    {
+      id: 'case2',
+      name: 'Case 2: KuCoin 混币器洗钱',
+      description: 'KuCoin 交易所被盗资金通过混币器洗钱的追踪分析',
+      loader: loadKucoinData,
+    },
+    // 预留第三个 case 的位置
+    // {
+    //   id: 'case3',
+    //   name: 'Case 3: 待添加',
+    //   description: '第三个案例的描述',
+    //   loader: loadCase3Data,
+    // },
+  ];
+
   const renderContent = () => {
     if (viewLayout === 'cyber') {
       return (
@@ -525,7 +549,7 @@ function App() {
               返回主视图
             </button>
           </div>
-          <HackerTraceView loader={loadHackerCsvData} />
+          <HackerTraceView cases={hackerCases} />
         </div>
       );
     }

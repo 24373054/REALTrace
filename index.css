@@ -32,3 +32,14 @@
   background: #94a3b8;
 }
 
+/* Mixer frame animation */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+.mixer-frame {
+  animation: dash 20s linear infinite;
+}
+

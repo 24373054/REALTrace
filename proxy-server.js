@@ -48,7 +48,7 @@ const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL || envVars.SOLANA_RPC_URL || '
 const ETH_RPC_URL = process.env.ETH_RPC_URL || envVars.ETH_RPC_URL || 'https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY';
 
 const app = express();
-const PORT = process.env.PROXY_PORT || 3001;
+const PORT = process.env.PROXY_PORT || 3113;
 
 // 启用 CORS（允许所有来源，生产环境应限制）
 app.use(cors({

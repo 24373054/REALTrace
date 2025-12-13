@@ -6,8 +6,13 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       server: {
-        port: 3000,
+        port: 3114,
         host: '0.0.0.0',
+        allowedHosts: [
+          'trace.matrixlab.work',
+          'localhost',
+          '.matrixlab.work', // 允许所有 matrixlab.work 子域名
+        ],
         proxy: {
           ...(env.SOLANA_PROXY_TARGET ? {
             '/api/solana': {

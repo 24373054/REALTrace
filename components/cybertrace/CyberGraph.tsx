@@ -39,32 +39,55 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       .duration(300)
       .attr("stroke", (d) => {
         if (d === selectedNode) return "#06b6d4";
+        if (d.group === "mixer") return "#a855f7";
         if (d.group === "attacker") return "#ef4444";
         if (d.group === "victim") return "#fca5a5";
         return "#4b5563";
       })
-      .attr("stroke-width", (d) => (d === selectedNode ? 3 : 2))
+      .attr("stroke-width", (d) => {
+        if (d === selectedNode) return d.isMixer ? 4 : 3;
+        return d.isMixer ? 3 : 2;
+      })
       .attr("filter", (d) => (d === selectedNode ? "url(#glow)" : null))
       .attr("fill", (d) => {
         if (d === selectedNode) return "#101010";
+        if (d.group === "mixer") return "#581c87";
         if (d.group === "attacker") return "#7f1d1d";
         if (d.group === "victim") return "#ef4444";
         return "#000";
       });
 
+    // Update link highlighting based on selected node
     svg
-      .selectAll<SVGLineElement, GraphLink>(".link-line")
-      .attr("opacity", (d) => {
+      .selectAll<SVGPathElement, GraphLink>("path.link-line")
+      .transition()
+      .duration(300)
+      .attr("stroke-opacity", (d) => {
         if (!selectedNode) return 0.4;
-        return d.source === selectedNode || d.target === selectedNode ? 0.8 : 0.1;
+        const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+        const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+        return sourceId === selectedNode.id || targetId === selectedNode.id ? 0.8 : 0.1;
       })
       .attr("stroke", (d) => {
         if (!selectedNode) return "#ef4444";
-        return d.source === selectedNode || d.target === selectedNode ? "#06b6d4" : "#ef4444";
+        const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+        const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+        // 入账用绿色，出账用红色
+        if (targetId === selectedNode.id) return "#10b981"; // 绿色 - 入账
+        if (sourceId === selectedNode.id) return "#ef4444"; // 红色 - 出账
+        return "#ef4444";
+      })
+      .attr("stroke-width", (d) => {
+        if (!selectedNode) return Math.min(Math.sqrt(d.value), 4);
+        const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+        const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+        return sourceId === selectedNode.id || targetId === selectedNode.id 
+          ? Math.min(Math.sqrt(d.value), 6) 
+          : Math.min(Math.sqrt(d.value), 4);
       });
   }, [selectedNode]);
 
-  // Initialize graph
+  // Initialize graph with tree layout
   useEffect(() => {
     if (!svgRef.current || dimensions.width === 0) return;
 
@@ -74,13 +97,28 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
     const width = dimensions.width;
     const height = dimensions.height;
 
-    // Filters
+    // Filters and gradients
     const defs = svg.append("defs");
+    
+    // Glow filter
     const filter = defs.append("filter").attr("id", "glow");
     filter.append("feGaussianBlur").attr("stdDeviation", "3.5").attr("result", "coloredBlur");
     const feMerge = filter.append("feMerge");
     feMerge.append("feMergeNode").attr("in", "coloredBlur");
     feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+    // Arrow marker for links
+    defs.append("marker")
+      .attr("id", "arrowhead")
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 25)
+      .attr("refY", 0)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,-5L10,0L0,5")
+      .attr("fill", "#ef4444");
 
     // Background hex grid
     const bgGroup = svg.append("g").attr("class", "bg-grid");
@@ -100,7 +138,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
 
     const container = svg.append("g");
 
-    // Zoom
+    // Zoom and pan
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.1, 4])
@@ -117,26 +155,175 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       }
     });
 
-    // Simulation
-    const simulation = d3
-      .forceSimulation<GraphNode>(data.nodes)
-      .force("link", d3.forceLink<GraphNode, GraphLink>(data.links).id((d) => d.id).distance(100))
-      .force("charge", d3.forceManyBody().strength(-300))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide().radius(40));
+    // Build tree structure from graph data
+    // Find root node (highest connection count or first attacker)
+    const rootNode = data.nodes.find(n => n.group === "attacker") || data.nodes[0];
+    
+    // Create adjacency map
+    const adjacencyMap = new Map<string, Set<string>>();
+    data.nodes.forEach(n => adjacencyMap.set(n.id, new Set()));
+    data.links.forEach(link => {
+      const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+      const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+      adjacencyMap.get(sourceId)?.add(targetId);
+    });
 
-    // Links
-    const link = container
-      .append("g")
-      .attr("class", "links")
-      .selectAll<SVGLineElement, GraphLink>("line")
+    // BFS to build tree structure
+    interface TreeNode extends GraphNode {
+      children?: TreeNode[];
+      depth?: number;
+    }
+
+    const visited = new Set<string>();
+    const treeRoot: TreeNode = { ...rootNode, children: [], depth: 0 };
+    const queue: TreeNode[] = [treeRoot];
+    visited.add(rootNode.id);
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      const neighbors = adjacencyMap.get(current.id) || new Set();
+      
+      neighbors.forEach(neighborId => {
+        if (!visited.has(neighborId)) {
+          visited.add(neighborId);
+          const neighborNode = data.nodes.find(n => n.id === neighborId);
+          if (neighborNode) {
+            const childNode: TreeNode = { 
+              ...neighborNode, 
+              children: [], 
+              depth: (current.depth || 0) + 1 
+            };
+            current.children!.push(childNode);
+            queue.push(childNode);
+          }
+        }
+      });
+    }
+
+    // Tree layout with increased spacing
+    const treeLayout = d3.tree<TreeNode>()
+      .size([height - 100, width - 400])
+      .separation((a, b) => (a.parent === b.parent ? 2.5 : 3));
+
+    const root = d3.hierarchy(treeRoot);
+    const treeData = treeLayout(root);
+
+    // Position nodes (rotate 90 degrees: x becomes y, y becomes x)
+    // Increase horizontal spacing between levels
+    const nodePositions = new Map<string, { x: number; y: number }>();
+    treeData.descendants().forEach(d => {
+      const node = d.data as TreeNode;
+      const depth = d.depth;
+      nodePositions.set(node.id, {
+        x: depth * 250 + 150, // horizontal position (depth) - increased spacing
+        y: d.x + 50           // vertical position (spread)
+      });
+      node.x = depth * 250 + 150;
+      node.y = d.x + 50;
+      node.fx = node.x;
+      node.fy = node.y;
+    });
+
+    // Links with curved paths
+    const linkGroup = container.append("g").attr("class", "links");
+    
+    const link = linkGroup
+      .selectAll<SVGPathElement, GraphLink>("path")
       .data(data.links)
       .enter()
-      .append("line")
+      .append("path")
       .attr("class", "link-line")
+      .attr("fill", "none")
       .attr("stroke", "#ef4444")
       .attr("stroke-opacity", 0.4)
-      .attr("stroke-width", (d) => Math.min(Math.sqrt(d.value), 4));
+      .attr("stroke-width", (d) => Math.min(Math.sqrt(d.value), 4))
+      .attr("marker-end", "url(#arrowhead)")
+      .attr("d", (d) => {
+        const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+        const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+        const sourcePos = nodePositions.get(sourceId);
+        const targetPos = nodePositions.get(targetId);
+        
+        if (!sourcePos || !targetPos) return "";
+        
+        // Curved path
+        const dx = targetPos.x - sourcePos.x;
+        const dy = targetPos.y - sourcePos.y;
+        const dr = Math.sqrt(dx * dx + dy * dy) * 0.5;
+        
+        return `M${sourcePos.x},${sourcePos.y}Q${sourcePos.x + dx/2},${sourcePos.y},${targetPos.x},${targetPos.y}`;
+      });
+
+    // Animated bulge effect on links (连线鼓包动画)
+    data.links.forEach((linkData, i) => {
+      const sourceId = typeof linkData.source === 'object' ? linkData.source.id : linkData.source;
+      const targetId = typeof linkData.target === 'object' ? linkData.target.id : linkData.target;
+      const sourcePos = nodePositions.get(sourceId);
+      const targetPos = nodePositions.get(targetId);
+      
+      if (!sourcePos || !targetPos) return;
+      
+      // Create a thicker segment that will move along the path
+      const bulge = linkGroup
+        .append("path")
+        .attr("class", "link-bulge")
+        .attr("fill", "none")
+        .attr("stroke", "#ef4444")
+        .attr("stroke-opacity", 0)
+        .attr("stroke-width", 8)
+        .attr("stroke-linecap", "round");
+
+      // Animate bulge along path
+      function animateBulge() {
+        const dx = targetPos.x - sourcePos.x;
+        const dy = targetPos.y - sourcePos.y;
+        
+        // Create path segments for the bulge
+        const segmentLength = 30; // Length of the bulge segment
+        
+        bulge
+          .attr("stroke-opacity", 0)
+          .transition()
+          .duration(100)
+          .attr("stroke-opacity", 0.6)
+          .transition()
+          .duration(2000 + Math.random() * 1000)
+          .ease(d3.easeLinear)
+          .attrTween("d", () => {
+            return (t: number) => {
+              // Calculate position along the curve
+              const x1 = sourcePos.x + dx * Math.max(0, t - 0.05);
+              const y1 = sourcePos.y + dy * Math.max(0, t - 0.05);
+              const x2 = sourcePos.x + dx * Math.min(1, t + 0.05);
+              const y2 = sourcePos.y + dy * Math.min(1, t + 0.05);
+              
+              // Control point for quadratic curve
+              const cx = sourcePos.x + dx / 2;
+              const cy = sourcePos.y;
+              
+              // Calculate points on the quadratic bezier curve
+              const getPointOnCurve = (t: number) => {
+                const x = (1 - t) * (1 - t) * sourcePos.x + 2 * (1 - t) * t * cx + t * t * targetPos.x;
+                const y = (1 - t) * (1 - t) * sourcePos.y + 2 * (1 - t) * t * cy + t * t * targetPos.y;
+                return { x, y };
+              };
+              
+              const p1 = getPointOnCurve(Math.max(0, t - 0.05));
+              const p2 = getPointOnCurve(Math.min(1, t + 0.05));
+              
+              return `M${p1.x},${p1.y}L${p2.x},${p2.y}`;
+            };
+          })
+          .transition()
+          .duration(200)
+          .attr("stroke-opacity", 0)
+          .on("end", () => {
+            setTimeout(animateBulge, Math.random() * 3000 + 1000);
+          });
+      }
+      
+      setTimeout(animateBulge, Math.random() * 2000);
+    });
 
     // Nodes
     const node = container
@@ -146,33 +333,87 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       .data(data.nodes)
       .enter()
       .append("g")
-      .style("cursor", "pointer")
+      .attr("transform", (d) => {
+        const pos = nodePositions.get(d.id);
+        return pos ? `translate(${pos.x},${pos.y})` : "translate(0,0)";
+      })
+      .style("cursor", "grab")
       .call(
         d3
           .drag<SVGGElement, GraphNode>()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended)
+          .on("start", function(event, d) {
+            d3.select(this).style("cursor", "grabbing");
+          })
+          .on("drag", function(event, d) {
+            const pos = nodePositions.get(d.id);
+            if (pos) {
+              pos.x = event.x;
+              pos.y = event.y;
+              d3.select(this).attr("transform", `translate(${event.x},${event.y})`);
+              
+              // Update connected links
+              link.attr("d", function(linkData) {
+                const sourceId = typeof linkData.source === 'object' ? linkData.source.id : linkData.source;
+                const targetId = typeof linkData.target === 'object' ? linkData.target.id : linkData.target;
+                const sourcePos = nodePositions.get(sourceId);
+                const targetPos = nodePositions.get(targetId);
+                
+                if (!sourcePos || !targetPos) return "";
+                
+                const dx = targetPos.x - sourcePos.x;
+                const dy = targetPos.y - sourcePos.y;
+                
+                return `M${sourcePos.x},${sourcePos.y}Q${sourcePos.x + dx/2},${sourcePos.y},${targetPos.x},${targetPos.y}`;
+              });
+            }
+          })
+          .on("end", function(event, d) {
+            d3.select(this).style("cursor", "grab");
+          })
       );
+
+    // 为混币器节点添加外框（先添加，在六边形之前）
+    node.each(function(d) {
+      if (d.isMixer) {
+        const g = d3.select(this);
+        // 添加外框矩形
+        g.insert("rect", ":first-child")
+          .attr("class", "mixer-frame")
+          .attr("x", -60)
+          .attr("y", -70)
+          .attr("width", 120)
+          .attr("height", 120)
+          .attr("fill", "none")
+          .attr("stroke", "#a855f7")
+          .attr("stroke-width", 3)
+          .attr("stroke-dasharray", "5,5")
+          .attr("rx", 8)
+          .attr("filter", "url(#glow)")
+          .style("animation", "dash 20s linear infinite");
+      }
+    });
 
     node
       .append("path")
       .attr("class", "node-hex")
       .attr("d", (d) => {
-        const size = Math.max(10, Math.min(30, Math.sqrt(d.value) * 5));
-        return hexPath(size);
+        const size = Math.max(15, Math.min(35, Math.sqrt(d.value) * 5));
+        // 混币器节点更大
+        return hexPath(d.isMixer ? size * 1.5 : size);
       })
       .attr("fill", (d) => {
+        if (d.group === "mixer") return "#581c87"; // 紫色 - 混币器
         if (d.group === "attacker") return "#7f1d1d";
         if (d.group === "victim") return "#ef4444";
         return "#000";
       })
       .attr("stroke", (d) => {
+        if (d.group === "mixer") return "#a855f7"; // 亮紫色边框
         if (d.group === "attacker") return "#ef4444";
         if (d.group === "victim") return "#fca5a5";
         return "#4b5563";
       })
-      .attr("stroke-width", 2)
+      .attr("stroke-width", (d) => d.isMixer ? 3 : 2)
       .on("mouseover", (event, d) => {
         setHoveredNode(d);
         if (d !== selectedNode) {
@@ -204,38 +445,45 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       .attr("font-family", "monospace")
       .attr("pointer-events", "none");
 
-    simulation.on("tick", () => {
-      link
-        .attr("x1", (d) => (d.source as GraphNode).x!)
-        .attr("y1", (d) => (d.source as GraphNode).y!)
-        .attr("x2", (d) => (d.target as GraphNode).x!)
-        .attr("y2", (d) => (d.target as GraphNode).y!);
-
-      node.attr("transform", (d) => `translate(${d.x},${d.y})`);
+    // 为混币器节点添加标签（在六边形之后，确保在最上层）
+    node.each(function(d) {
+      if (d.isMixer) {
+        const g = d3.select(this);
+        
+        // 添加混币器标签背景
+        g.append("rect")
+          .attr("class", "mixer-label-bg")
+          .attr("x", -55)
+          .attr("y", -65)
+          .attr("width", 110)
+          .attr("height", 20)
+          .attr("fill", "#a855f7")
+          .attr("rx", 4)
+          .attr("pointer-events", "none");
+        
+        // 添加混币器标签文字
+        g.append("text")
+          .attr("class", "mixer-label")
+          .text(d.mixerName || "MIXER")
+          .attr("x", 0)
+          .attr("y", -52)
+          .attr("text-anchor", "middle")
+          .attr("font-size", "10px")
+          .attr("font-weight", "bold")
+          .attr("fill", "#fff")
+          .attr("font-family", "monospace")
+          .attr("pointer-events", "none");
+      }
     });
 
-    function dragstarted(event: any, d: GraphNode) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-    function dragged(event: any, d: GraphNode) {
-      d.fx = event.x;
-      d.fy = event.y;
-    }
-    function dragended(event: any, d: GraphNode) {
-      if (!event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    }
-
-    return () => {
-      simulation.stop();
-    };
   }, [data, dimensions]);
 
   const getNodeTransactions = (node: GraphNode) => {
-    return data.links.filter((l) => l.source === node || l.target === node);
+    return data.links.filter((l) => {
+      const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+      const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+      return sourceId === node.id || targetId === node.id;
+    });
   };
 
   return (
@@ -312,7 +560,11 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
                 <label className="text-[10px] text-gray-500 tracking-widest">TRANSACTION_LOG</label>
                 <div className="space-y-2">
                   {getNodeTransactions(selectedNode).map((link, i) => {
-                    const isIncoming = link.target === selectedNode;
+                    const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+                    const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+                    const isIncoming = targetId === selectedNode.id;
+                    const otherAddress = isIncoming ? sourceId : targetId;
+                    
                     return (
                       <div
                         key={i}
@@ -327,7 +579,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
                           <span className="text-white font-bold">{link.value.toFixed(3)} {link.asset}</span>
                         </div>
                         <div className="text-gray-500 truncate">
-                          {isIncoming ? `FROM: ${(link.source as GraphNode).id}` : `TO: ${(link.target as GraphNode).id}`}
+                          {isIncoming ? `FROM: ${otherAddress}` : `TO: ${otherAddress}`}
                         </div>
                       </div>
                     );

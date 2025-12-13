@@ -3,21 +3,33 @@ import CyberGraph from "./CyberGraph";
 import TransactionList from "./TransactionList";
 import { ParseResult } from "./types";
 
-interface Props {
+export interface CaseConfig {
+  id: string;
+  name: string;
+  description: string;
   loader: () => ParseResult;
 }
 
-const HackerTraceView: React.FC<Props> = ({ loader }) => {
+interface Props {
+  cases: CaseConfig[];
+}
+
+const HackerTraceView: React.FC<Props> = ({ cases }) => {
+  const [selectedCase, setSelectedCase] = useState<string>(cases[0]?.id || '');
   const [data, setData] = useState<ParseResult | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const timer = setTimeout(() => {
-      setData(loader());
+      const currentCase = cases.find(c => c.id === selectedCase);
+      if (currentCase) {
+        setData(currentCase.loader());
+      }
       setLoading(false);
     }, 300);
     return () => clearTimeout(timer);
-  }, [loader]);
+  }, [selectedCase, cases]);
 
   if (loading || !data) {
     return (
@@ -31,6 +43,8 @@ const HackerTraceView: React.FC<Props> = ({ loader }) => {
     );
   }
 
+  const currentCase = cases.find(c => c.id === selectedCase);
+
   return (
     <div className="flex h-full w-full bg-black text-white overflow-hidden relative">
       <div className="absolute top-0 left-0 right-0 h-12 bg-black/80 border-b border-red-900/50 z-20 flex items-center px-4 backdrop-blur-md justify-between">
@@ -39,6 +53,29 @@ const HackerTraceView: React.FC<Props> = ({ loader }) => {
           <h1 className="font-['Rajdhani'] font-bold text-2xl tracking-wider text-white">
             CYBER<span className="text-red-600">TRACE</span> // VISUALIZER
           </h1>
+          
+          {/* Case 选择器 */}
+          <div className="flex items-center gap-2 ml-8">
+            <span className="text-xs text-gray-500 font-mono">CASE:</span>
+            <select
+              value={selectedCase}
+              onChange={(e) => setSelectedCase(e.target.value)}
+              className="bg-gray-900 border border-red-900/50 text-white px-3 py-1 text-sm font-mono rounded hover:border-red-600 focus:outline-none focus:border-red-600 transition-colors cursor-pointer"
+            >
+              {cases.map(c => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Case 描述 */}
+          {currentCase && (
+            <div className="text-xs text-gray-500 font-mono ml-4 max-w-md truncate">
+              {currentCase.description}
+            </div>
+          )}
         </div>
         <div className="flex gap-8 text-xs font-mono text-gray-400">
           <div>

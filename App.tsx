@@ -6,6 +6,8 @@ import LoginModal from './components/LoginModal';
 import HackerTraceView, { CaseConfig } from './components/cybertrace/HackerTraceView';
 import { loadHackerCsvData } from './components/cybertrace/data';
 import { loadKucoinData } from './components/cybertrace/kucoinData';
+import { loadCase3Data } from './components/cybertrace/case3Data';
+import { loadCase4Data } from './components/cybertrace/case4Data';
 import { INITIAL_ADDRESS } from './services/mockData';
 import { fetchGraph } from './services/api';
 import { loadHackerTraceGraph, HACKER_ROOT_ADDRESS } from './services/hackerTraceService';
@@ -523,16 +525,21 @@ function App() {
     {
       id: 'case2',
       name: 'Case 2: KuCoin 混币器洗钱',
-      description: 'KuCoin 交易所被盗资金通过混币器洗钱的追踪分析',
+      description: 'KuCoin 交易所被盗资金通过 Tornado Cash 100 ETH 混币器洗钱（包含 14 笔存款和 17 笔提款）',
       loader: loadKucoinData,
     },
-    // 预留第三个 case 的位置
-    // {
-    //   id: 'case3',
-    //   name: 'Case 3: 待添加',
-    //   description: '第三个案例的描述',
-    //   loader: loadCase3Data,
-    // },
+    {
+      id: 'case3',
+      name: 'Case 3: 跨链资金转移',
+      description: '以太坊跨链交易追踪，涉及多个跨链桥和路由器',
+      loader: loadCase3Data,
+    },
+    {
+      id: 'case4',
+      name: 'Case 4: Bybit 质押洗钱',
+      description: 'Bybit 交易所被攻击后，黑客通过以太坊质押合约（Beacon Depositor）洗钱（6000+笔交易）',
+      loader: loadCase4Data,
+    },
   ];
 
   const renderContent = () => {

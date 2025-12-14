@@ -1,6 +1,6 @@
-import transactionsCsvRaw from "../../data/KUCOIN数据/交易数据.csv?raw";
-import addressesCsvRaw from "../../data/KUCOIN数据/地址数据.csv?raw";
-import tagsCsvRaw from "../../data/KUCOIN数据/标签数据.csv?raw";
+import transactionsCsvRaw from "../../data/数据更新/交易数据.csv?raw";
+import addressesCsvRaw from "../../data/数据更新/地址数据.csv?raw";
+import tagsCsvRaw from "../../data/数据更新/标签数据.csv?raw";
 import { ParseResult, GraphNode, GraphLink } from "./types";
 
 interface KucoinTransaction {
@@ -8,8 +8,13 @@ interface KucoinTransaction {
   chain: string;
   from_address: string;
   to_address: string;
+  block_number?: string;
+  timestamp?: string;
   amount: string;
   token_symbol: string;
+  token_address?: string;
+  gas_fee?: string;
+  tx_type?: string;
   risk_score: string;
   is_suspected: string;
   attributes: string;
@@ -23,13 +28,18 @@ interface KucoinAddress {
   balance: string;
   tx_count_in: string;
   tx_count_out: string;
+  entity_cluster_id?: string;
+  first_seen?: string;
+  last_seen?: string;
   additional_attributes: string;
 }
 
 interface KucoinTag {
   address: string;
+  chain?: string;
   tag_type: string;
   tag_value: string;
+  source?: string;
   confidence: string;
 }
 
@@ -126,6 +136,9 @@ export function loadKucoinData(): ParseResult {
   const nodes: GraphNode[] = [];
   const nodeSet = new Set<string>();
   
+  // Binance 地址
+  const BINANCE_ADDRESS = '0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be';
+  
   nodeStats.forEach((stats, address) => {
     if (nodeSet.has(address)) return;
     nodeSet.add(address);
@@ -135,6 +148,9 @@ export function loadKucoinData(): ParseResult {
     
     // 判断节点类型
     let group: "attacker" | "victim" | "neutral" | "mixer" = "neutral";
+    
+    // 检查是否是币安地址
+    const isBinance = address === BINANCE_ADDRESS;
     
     // 检查是否是黑客地址
     const isHacker = addrTags.some(tag => 
@@ -172,6 +188,7 @@ export function loadKucoinData(): ParseResult {
       connectionCount: stats.connectionCount,
       isMixer,
       mixerName,
+      isBinance,
     });
   });
   

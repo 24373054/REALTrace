@@ -53,7 +53,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
         if (d === selectedNode) return "#101010";
         if (d.group === "mixer") return "#581c87";
         if (d.group === "attacker") return "#7f1d1d";
-        if (d.group === "victim") return "#ef4444";
+        if (d.group === "victim") return "#be185d";
         return "#000";
       });
 
@@ -168,60 +168,89 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       adjacencyMap.get(sourceId)?.add(targetId);
     });
 
-    // BFS to build tree structure
+    // BFS to build tree structure - 处理多个连通分量
     interface TreeNode extends GraphNode {
       children?: TreeNode[];
       depth?: number;
     }
 
     const visited = new Set<string>();
-    const treeRoot: TreeNode = { ...rootNode, children: [], depth: 0 };
-    const queue: TreeNode[] = [treeRoot];
-    visited.add(rootNode.id);
-
-    while (queue.length > 0) {
-      const current = queue.shift()!;
-      const neighbors = adjacencyMap.get(current.id) || new Set();
+    const allTreeRoots: TreeNode[] = [];
+    
+    // 找到所有连通分量的根节点
+    const unvisitedNodes = [...data.nodes];
+    
+    while (unvisitedNodes.length > 0) {
+      // 找到下一个未访问的节点作为根
+      const nextRoot = unvisitedNodes.find(n => !visited.has(n.id));
+      if (!nextRoot) break;
       
-      neighbors.forEach(neighborId => {
-        if (!visited.has(neighborId)) {
-          visited.add(neighborId);
-          const neighborNode = data.nodes.find(n => n.id === neighborId);
-          if (neighborNode) {
-            const childNode: TreeNode = { 
-              ...neighborNode, 
-              children: [], 
-              depth: (current.depth || 0) + 1 
-            };
-            current.children!.push(childNode);
-            queue.push(childNode);
+      const treeRoot: TreeNode = { ...nextRoot, children: [], depth: 0 };
+      allTreeRoots.push(treeRoot);
+      
+      const queue: TreeNode[] = [treeRoot];
+      visited.add(nextRoot.id);
+
+      while (queue.length > 0) {
+        const current = queue.shift()!;
+        const neighbors = adjacencyMap.get(current.id) || new Set();
+        
+        neighbors.forEach(neighborId => {
+          if (!visited.has(neighborId)) {
+            visited.add(neighborId);
+            const neighborNode = data.nodes.find(n => n.id === neighborId);
+            if (neighborNode) {
+              const childNode: TreeNode = { 
+                ...neighborNode, 
+                children: [], 
+                depth: (current.depth || 0) + 1 
+              };
+              current.children!.push(childNode);
+              queue.push(childNode);
+            }
           }
-        }
-      });
+        });
+      }
     }
+    
+    console.log('[CyberGraph] 连通分量数:', allTreeRoots.length);
+    console.log('[CyberGraph] 已访问节点数:', visited.size, '/', data.nodes.length);
 
     // Tree layout with increased spacing
     const treeLayout = d3.tree<TreeNode>()
       .size([height - 100, width - 400])
       .separation((a, b) => (a.parent === b.parent ? 2.5 : 3));
 
-    const root = d3.hierarchy(treeRoot);
-    const treeData = treeLayout(root);
-
     // Position nodes (rotate 90 degrees: x becomes y, y becomes x)
     // Increase horizontal spacing between levels
     const nodePositions = new Map<string, { x: number; y: number }>();
-    treeData.descendants().forEach(d => {
-      const node = d.data as TreeNode;
-      const depth = d.depth;
-      nodePositions.set(node.id, {
-        x: depth * 250 + 150, // horizontal position (depth) - increased spacing
-        y: d.x + 50           // vertical position (spread)
+    
+    let currentYOffset = 50;
+    
+    // 为每个连通分量布局
+    allTreeRoots.forEach((treeRoot, treeIndex) => {
+      const root = d3.hierarchy(treeRoot);
+      const treeData = treeLayout(root);
+      
+      // 计算这棵树的高度
+      const treeHeight = Math.max(...treeData.descendants().map(d => d.x)) - 
+                         Math.min(...treeData.descendants().map(d => d.x)) + 100;
+      
+      treeData.descendants().forEach(d => {
+        const node = d.data as TreeNode;
+        const depth = d.depth;
+        nodePositions.set(node.id, {
+          x: depth * 250 + 150, // horizontal position (depth) - increased spacing
+          y: d.x + currentYOffset // vertical position (spread) + offset
+        });
+        node.x = depth * 250 + 150;
+        node.y = d.x + currentYOffset;
+        node.fx = node.x;
+        node.fy = node.y;
       });
-      node.x = depth * 250 + 150;
-      node.y = d.x + 50;
-      node.fx = node.x;
-      node.fy = node.y;
+      
+      // 为下一棵树增加垂直偏移
+      currentYOffset += treeHeight;
     });
 
     // Links with curved paths
@@ -391,6 +420,25 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
           .attr("filter", "url(#glow)")
           .style("animation", "dash 20s linear infinite");
       }
+      
+      // 为币安节点添加外框
+      if (d.isBinance) {
+        const g = d3.select(this);
+        // 添加金色外框矩形
+        g.insert("rect", ":first-child")
+          .attr("class", "binance-frame")
+          .attr("x", -60)
+          .attr("y", -70)
+          .attr("width", 120)
+          .attr("height", 120)
+          .attr("fill", "none")
+          .attr("stroke", "#f59e0b")
+          .attr("stroke-width", 3)
+          .attr("stroke-dasharray", "5,5")
+          .attr("rx", 8)
+          .attr("filter", "url(#glow)")
+          .style("animation", "dash 20s linear infinite");
+      }
     });
 
     node
@@ -403,15 +451,15 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       })
       .attr("fill", (d) => {
         if (d.group === "mixer") return "#581c87"; // 紫色 - 混币器
-        if (d.group === "attacker") return "#7f1d1d";
-        if (d.group === "victim") return "#ef4444";
-        return "#000";
+        if (d.group === "attacker") return "#7f1d1d"; // 深红色 - 攻击者
+        if (d.group === "victim") return "#be185d"; // 深粉色 - 受害者
+        return "#000"; // 黑色 - 中性
       })
       .attr("stroke", (d) => {
         if (d.group === "mixer") return "#a855f7"; // 亮紫色边框
-        if (d.group === "attacker") return "#ef4444";
-        if (d.group === "victim") return "#fca5a5";
-        return "#4b5563";
+        if (d.group === "attacker") return "#ef4444"; // 红色边框
+        if (d.group === "victim") return "#ec4899"; // 粉色边框
+        return "#4b5563"; // 灰色边框
       })
       .attr("stroke-width", (d) => d.isMixer ? 3 : 2)
       .on("mouseover", (event, d) => {
@@ -425,7 +473,10 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
         if (d !== selectedNode) {
           d3.select(event.currentTarget).attr(
             "fill",
-            d.group === "attacker" ? "#7f1d1d" : d.group === "victim" ? "#ef4444" : "#000"
+            d.group === "mixer" ? "#581c87" : 
+            d.group === "attacker" ? "#7f1d1d" : 
+            d.group === "victim" ? "#be185d" : 
+            "#000"
           );
         }
       })
@@ -465,6 +516,35 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
         g.append("text")
           .attr("class", "mixer-label")
           .text(d.mixerName || "MIXER")
+          .attr("x", 0)
+          .attr("y", -52)
+          .attr("text-anchor", "middle")
+          .attr("font-size", "10px")
+          .attr("font-weight", "bold")
+          .attr("fill", "#fff")
+          .attr("font-family", "monospace")
+          .attr("pointer-events", "none");
+      }
+      
+      // 为币安节点添加标签
+      if (d.isBinance) {
+        const g = d3.select(this);
+        
+        // 添加币安标签背景
+        g.append("rect")
+          .attr("class", "binance-label-bg")
+          .attr("x", -55)
+          .attr("y", -65)
+          .attr("width", 110)
+          .attr("height", 20)
+          .attr("fill", "#f59e0b")
+          .attr("rx", 4)
+          .attr("pointer-events", "none");
+        
+        // 添加币安标签文字
+        g.append("text")
+          .attr("class", "binance-label")
+          .text("BINANCE")
           .attr("x", 0)
           .attr("y", -52)
           .attr("text-anchor", "middle")

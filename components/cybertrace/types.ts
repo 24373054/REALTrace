@@ -18,6 +18,7 @@ export interface GraphNode extends d3.SimulationNodeDatum {
   index?: number;
   isMixer?: boolean;
   mixerName?: string;
+  isBinance?: boolean;
 }
 
 export interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {

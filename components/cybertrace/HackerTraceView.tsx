@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import CyberGraphPixi from "./CyberGraphPixi";
 import CyberGraph from "./CyberGraph";
 import TransactionList from "./TransactionList";
 import { ParseResult } from "./types";
@@ -18,6 +19,7 @@ const HackerTraceView: React.FC<Props> = ({ cases }) => {
   const [selectedCase, setSelectedCase] = useState<string>(cases[0]?.id || '');
   const [data, setData] = useState<ParseResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [renderMode, setRenderMode] = useState<'pixi' | 'svg'>('pixi');
 
   useEffect(() => {
     setLoading(true);
@@ -77,7 +79,36 @@ const HackerTraceView: React.FC<Props> = ({ cases }) => {
             </div>
           )}
         </div>
-        <div className="flex gap-8 text-xs font-mono text-gray-400">
+        
+        <div className="flex items-center gap-8">
+          {/* 渲染模式切换 */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 font-mono">RENDER:</span>
+            <div className="flex bg-gray-900 border border-red-900/50 rounded overflow-hidden">
+              <button
+                onClick={() => setRenderMode('pixi')}
+                className={`px-3 py-1 text-xs font-mono transition-colors ${
+                  renderMode === 'pixi' 
+                    ? 'bg-red-600 text-white' 
+                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                }`}
+              >
+                PIXI (WebGL)
+              </button>
+              <button
+                onClick={() => setRenderMode('svg')}
+                className={`px-3 py-1 text-xs font-mono transition-colors border-l border-red-900/50 ${
+                  renderMode === 'svg' 
+                    ? 'bg-red-600 text-white' 
+                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                }`}
+              >
+                SVG (D3)
+              </button>
+            </div>
+          </div>
+          
+          <div className="flex gap-8 text-xs font-mono text-gray-400">
           <div>
             NODES: <span className="text-white">{data.nodes.length}</span>
           </div>
@@ -90,13 +121,18 @@ const HackerTraceView: React.FC<Props> = ({ cases }) => {
           <div>
             THREATS: <span className="text-red-500 font-bold">{data.highValueTargets}</span>
           </div>
+          </div>
         </div>
       </div>
 
       <div className="flex flex-1 pt-12">
         <TransactionList links={data.links} />
         <div className="flex-1 relative">
-          <CyberGraph data={data} />
+          {renderMode === 'pixi' ? (
+            <CyberGraphPixi data={data} />
+          ) : (
+            <CyberGraph data={data} />
+          )}
           <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-red-500 opacity-50 pointer-events-none"></div>
           <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-red-500 opacity-50 pointer-events-none"></div>
           <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-red-500 opacity-50 pointer-events-none"></div>

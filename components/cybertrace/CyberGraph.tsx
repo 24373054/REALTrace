@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { ParseResult, GraphNode, GraphLink } from "./types";
 import { hexPath, generateHexGrid } from "./utils";
+import { ASSET_COLORS, getAssetColor } from "./case5Data";
 
 interface Props {
   data: ParseResult;
@@ -63,27 +64,30 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       .transition()
       .duration(300)
       .attr("stroke-opacity", (d) => {
-        if (!selectedNode) return 0.4;
+        if (!selectedNode) return 0.5;
         const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
         const targetId = typeof d.target === 'object' ? d.target.id : d.target;
-        return sourceId === selectedNode.id || targetId === selectedNode.id ? 0.8 : 0.1;
+        return sourceId === selectedNode.id || targetId === selectedNode.id ? 0.9 : 0.15;
       })
       .attr("stroke", (d) => {
-        if (!selectedNode) return "#ef4444";
+        if (!selectedNode) {
+          // 未选中时使用币种颜色
+          return getAssetColor(d.asset);
+        }
         const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
         const targetId = typeof d.target === 'object' ? d.target.id : d.target;
-        // 入账用绿色，出账用红色
+        // 选中时：相关链接用红绿区分进出，其他链接保持币种颜色但降低透明度
         if (targetId === selectedNode.id) return "#10b981"; // 绿色 - 入账
         if (sourceId === selectedNode.id) return "#ef4444"; // 红色 - 出账
-        return "#ef4444";
+        return getAssetColor(d.asset); // 其他链接保持币种颜色
       })
       .attr("stroke-width", (d) => {
-        if (!selectedNode) return Math.min(Math.sqrt(d.value), 4);
+        if (!selectedNode) return Math.min(Math.sqrt(d.value) + 1, 5);
         const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
         const targetId = typeof d.target === 'object' ? d.target.id : d.target;
         return sourceId === selectedNode.id || targetId === selectedNode.id 
-          ? Math.min(Math.sqrt(d.value), 6) 
-          : Math.min(Math.sqrt(d.value), 4);
+          ? Math.min(Math.sqrt(d.value) + 2, 7) 
+          : Math.min(Math.sqrt(d.value) + 1, 5);
       });
   }, [selectedNode]);
 
@@ -263,9 +267,9 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       .append("path")
       .attr("class", "link-line")
       .attr("fill", "none")
-      .attr("stroke", "#ef4444")
-      .attr("stroke-opacity", 0.4)
-      .attr("stroke-width", (d) => Math.min(Math.sqrt(d.value), 4))
+      .attr("stroke", (d) => getAssetColor(d.asset)) // 使用币种颜色
+      .attr("stroke-opacity", 0.5)
+      .attr("stroke-width", (d) => Math.min(Math.sqrt(d.value) + 1, 5))
       .attr("marker-end", "url(#arrowhead)")
       .attr("d", (d) => {
         const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
@@ -293,11 +297,12 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       if (!sourcePos || !targetPos) return;
       
       // Create a thicker segment that will move along the path
+      const assetColor = getAssetColor(linkData.asset);
       const bulge = linkGroup
         .append("path")
         .attr("class", "link-bulge")
         .attr("fill", "none")
-        .attr("stroke", "#ef4444")
+        .attr("stroke", assetColor) // 使用币种颜色
         .attr("stroke-opacity", 0)
         .attr("stroke-width", 8)
         .attr("stroke-linecap", "round");
@@ -577,6 +582,19 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       />
       <svg ref={svgRef} className="w-full h-full block cursor-move" />
 
+      {/* 币种图例 */}
+      <div className="absolute bottom-4 left-4 bg-black/80 border border-gray-700 p-3 rounded text-xs font-mono z-40">
+        <div className="text-gray-400 mb-2 text-[10px]">ASSET_LEGEND</div>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(ASSET_COLORS).filter(([key]) => !['default', 'ETH', 'stETH', 'mETH', 'cmETH', 'USDT', 'WETH'].includes(key)).map(([asset, color]) => (
+            <div key={asset} className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }}></div>
+              <span className="text-gray-300 text-[10px]">{asset.replace(/\([^)]+\)/, '').trim()}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {hoveredNode && !selectedNode && (
         <div className="absolute top-4 left-4 bg-black/90 border border-red-500 p-3 rounded text-xs font-mono max-w-sm pointer-events-none shadow-[0_0_15px_rgba(239,68,68,0.5)] z-40">
           <h3 className="text-red-400 font-bold mb-1">ID: {hoveredNode.id.substring(0, 8)}...</h3>
@@ -638,28 +656,39 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
 
               <div className="space-y-2">
                 <label className="text-[10px] text-gray-500 tracking-widest">TRANSACTION_LOG</label>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-64 overflow-y-auto">
                   {getNodeTransactions(selectedNode).map((link, i) => {
                     const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
                     const targetId = typeof link.target === 'object' ? link.target.id : link.target;
                     const isIncoming = targetId === selectedNode.id;
                     const otherAddress = isIncoming ? sourceId : targetId;
+                    const assetColor = getAssetColor(link.asset);
                     
                     return (
                       <div
                         key={i}
-                        className={`p-2 border-l-2 text-xs ${
-                          isIncoming ? "border-emerald-500 bg-emerald-900/10" : "border-red-500 bg-red-900/10"
-                        }`}
+                        className="p-2 border-l-2 text-xs"
+                        style={{ 
+                          borderLeftColor: assetColor,
+                          backgroundColor: `${assetColor}15`
+                        }}
                       >
-                        <div className="flex justify-between mb-1">
+                        <div className="flex justify-between items-center mb-1">
                           <span className={isIncoming ? "text-emerald-400" : "text-red-400"}>
-                            {isIncoming ? "<- INCOMING" : "-> OUTGOING"}
+                            {isIncoming ? "← IN" : "→ OUT"}
                           </span>
-                          <span className="text-white font-bold">{link.value.toFixed(3)} {link.asset}</span>
+                          <div className="flex items-center gap-2">
+                            <span 
+                              className="px-1.5 py-0.5 rounded text-[10px] font-bold"
+                              style={{ backgroundColor: assetColor, color: '#fff' }}
+                            >
+                              {link.asset}
+                            </span>
+                            <span className="text-white font-bold">{link.value.toFixed(3)}</span>
+                          </div>
                         </div>
-                        <div className="text-gray-500 truncate">
-                          {isIncoming ? `FROM: ${otherAddress}` : `TO: ${otherAddress}`}
+                        <div className="text-gray-500 truncate text-[10px]">
+                          {isIncoming ? `FROM: ${otherAddress.slice(0, 10)}...${otherAddress.slice(-6)}` : `TO: ${otherAddress.slice(0, 10)}...${otherAddress.slice(-6)}`}
                         </div>
                       </div>
                     );

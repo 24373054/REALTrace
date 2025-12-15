@@ -8,6 +8,7 @@ import { loadHackerCsvData } from './components/cybertrace/data';
 import { loadKucoinData } from './components/cybertrace/kucoinData';
 import { loadCase3Data } from './components/cybertrace/case3Data';
 import { loadCase4Data } from './components/cybertrace/case4Data';
+import { loadCase5Data } from './components/cybertrace/case5Data';
 import { INITIAL_ADDRESS } from './services/mockData';
 import { fetchGraph } from './services/api';
 import { loadHackerTraceGraph, HACKER_ROOT_ADDRESS } from './services/hackerTraceService';
@@ -539,6 +540,12 @@ function App() {
       name: 'Case 4: Bybit 质押洗钱',
       description: 'Bybit 交易所被攻击后，黑客通过以太坊质押合约（Beacon Depositor）洗钱（6000+笔交易）',
       loader: loadCase4Data,
+    },
+    {
+      id: 'case5',
+      name: 'Case 5: Bybit 多币种洗钱',
+      description: 'Bybit 被攻击后的多币种资金流转（ETH、stETH、mETH、cmETH、USDT），涉及 Lido、Mantle 等协议',
+      loader: loadCase5Data,
     },
   ];
 

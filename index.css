@@ -43,3 +43,13 @@
   animation: dash 20s linear infinite;
 }
 
+/* Hide scrollbar for auto-scroll containers */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

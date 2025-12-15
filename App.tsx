@@ -563,7 +563,7 @@ function App() {
           <div className="absolute top-3 right-3 z-30 flex gap-2">
             <button
               onClick={() => setViewLayout('standard')}
-              className="flex items-center gap-1 px-3 py-2 rounded bg-white/90 text-slate-700 border border-slate-200 shadow-sm hover:bg-white"
+              className="flex items-center gap-1 px-3 py-2 rounded bg-black/60 text-white border border-red-500/50 shadow-lg hover:bg-black/90 hover:border-red-500 transition-all backdrop-blur-sm"
               title="返回主视图"
             >
               <X size={14} />

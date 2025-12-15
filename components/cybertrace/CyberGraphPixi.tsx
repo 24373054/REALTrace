@@ -1023,7 +1023,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
               </button>
             </div>
 
-            <div className="space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-6 flex-1 overflow-y-auto pr-2 hide-scrollbar">
               <div className="space-y-2">
                 <label className="text-[10px] text-gray-500 tracking-widest">IDENTITY_MATRIX</label>
                 <div className="bg-red-900/10 border border-red-900/30 p-3 rounded break-all">
@@ -1060,7 +1060,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
 
               <div className="space-y-2">
                 <label className="text-[10px] text-gray-500 tracking-widest">TRANSACTION_LOG</label>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
+                <div className="space-y-2 max-h-64 overflow-y-auto hide-scrollbar">
                   {getNodeTransactions(selectedNode).map((link, i) => {
                     const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
                     const targetId = typeof link.target === 'object' ? link.target.id : link.target;

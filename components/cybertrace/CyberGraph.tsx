@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { ParseResult, GraphNode, GraphLink } from "./types";
 import { hexPath, generateHexGrid } from "./utils";
-import { ASSET_COLORS, getAssetColor } from "./case5Data";
+import { getEdgeColor } from "./colorUtils";
 
 interface Props {
   data: ParseResult;
@@ -72,14 +72,14 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       .attr("stroke", (d) => {
         if (!selectedNode) {
           // 未选中时使用币种颜色
-          return getAssetColor(d.asset);
+          return getEdgeColor(d.asset);
         }
         const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
         const targetId = typeof d.target === 'object' ? d.target.id : d.target;
         // 选中时：相关链接用红绿区分进出，其他链接保持币种颜色但降低透明度
         if (targetId === selectedNode.id) return "#10b981"; // 绿色 - 入账
         if (sourceId === selectedNode.id) return "#ef4444"; // 红色 - 出账
-        return getAssetColor(d.asset); // 其他链接保持币种颜色
+        return getEdgeColor(d.asset); // 其他链接保持币种颜色
       })
       .attr("stroke-width", (d) => {
         if (!selectedNode) return Math.min(Math.sqrt(d.value) + 1, 5);
@@ -267,7 +267,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       .append("path")
       .attr("class", "link-line")
       .attr("fill", "none")
-      .attr("stroke", (d) => getAssetColor(d.asset)) // 使用币种颜色
+      .attr("stroke", (d) => getEdgeColor(d.asset)) // 使用币种颜色
       .attr("stroke-opacity", 0.5)
       .attr("stroke-width", (d) => Math.min(Math.sqrt(d.value) + 1, 5))
       .attr("marker-end", "url(#arrowhead)")
@@ -297,7 +297,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       if (!sourcePos || !targetPos) return;
       
       // Create a thicker segment that will move along the path
-      const assetColor = getAssetColor(linkData.asset);
+      const assetColor = getEdgeColor(linkData.asset);
       const bulge = linkGroup
         .append("path")
         .attr("class", "link-bulge")
@@ -582,16 +582,19 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       />
       <svg ref={svgRef} className="w-full h-full block cursor-move" />
 
-      {/* 币种图例 */}
+      {/* 动态图例 - 显示当前数据中使用的资产/方法 */}
       <div className="absolute bottom-4 left-4 bg-black/80 border border-gray-700 p-3 rounded text-xs font-mono z-40">
-        <div className="text-gray-400 mb-2 text-[10px]">ASSET_LEGEND</div>
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(ASSET_COLORS).filter(([key]) => !['default', 'ETH', 'stETH', 'mETH', 'cmETH', 'USDT', 'WETH'].includes(key)).map(([asset, color]) => (
-            <div key={asset} className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }}></div>
-              <span className="text-gray-300 text-[10px]">{asset.replace(/\([^)]+\)/, '').trim()}</span>
-            </div>
-          ))}
+        <div className="text-gray-400 mb-2 text-[10px]">LEGEND</div>
+        <div className="flex flex-wrap gap-2 max-w-md">
+          {Array.from(new Set(data.links.map(l => l.asset))).map((asset: string) => {
+            const color = getEdgeColor(asset);
+            return (
+              <div key={asset} className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }}></div>
+                <span className="text-gray-300 text-[10px]">{asset}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -662,7 +665,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
                     const targetId = typeof link.target === 'object' ? link.target.id : link.target;
                     const isIncoming = targetId === selectedNode.id;
                     const otherAddress = isIncoming ? sourceId : targetId;
-                    const assetColor = getAssetColor(link.asset);
+                    const assetColor = getEdgeColor(link.asset);
                     
                     return (
                       <div

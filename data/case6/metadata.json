@@ -1,0 +1,108 @@
+{
+  "case_id": "case6",
+  "case_name": "Monero Privacy Coin Tracing Analysis",
+  "case_name_cn": "门罗币隐私币追踪分析",
+  "blockchain": "Monero (XMR)",
+  "case_type": "privacy_coin_tracing",
+  "date_range": {
+    "start": "2023-01-15T08:30:00Z",
+    "end": "2023-01-26T16:45:00Z"
+  },
+  "total_transactions": 30,
+  "suspected_transactions": 24,
+  "confidence_distribution": {
+    "high_90_100": 8,
+    "medium_high_70_89": 11,
+    "medium_50_69": 5,
+    "low_below_50": 6
+  },
+  "methodology": {
+    "heuristics": [
+      {
+        "name": "temporal_newest",
+        "description": "Newest input heuristic - assumes the most recent output in a ring is the real input",
+        "success_rate_historical": "85-90% on pre-2017 transactions",
+        "reference": "Möser et al., arXiv 2017"
+      },
+      {
+        "name": "temporal_age_dist",
+        "description": "Age distribution analysis - statistical anomalies in decoy selection patterns",
+        "success_rate_historical": "70-80% on transactions with biased decoy selection",
+        "reference": "Kumar et al., IACR 2017"
+      },
+      {
+        "name": "chain_reaction",
+        "description": "Graph propagation when a transaction has only one plausible real input",
+        "success_rate_historical": "Variable, depends on initial seed confidence",
+        "reference": "Kumar et al., IACR 2017"
+      },
+      {
+        "name": "cross_chain",
+        "description": "Cross-chain analysis using hard fork information (e.g., MoneroV)",
+        "success_rate_historical": "90%+ when key reuse is detected",
+        "reference": "Hinteregger & Haslhofer, 2018"
+      },
+      {
+        "name": "external_intel",
+        "description": "Integration of external intelligence (exchange addresses, law enforcement tips)",
+        "success_rate_historical": "95%+ when source is reliable",
+        "reference": "Various law enforcement reports"
+      }
+    ]
+  },
+  "key_findings": {
+    "total_value_traced": "Unknown (RingCT hides amounts)",
+    "identified_entities": [
+      "Exchange_A",
+      "Exchange_B", 
+      "Exchange_C",
+      "Darknet_Market_X",
+      "Known_Mixer_A"
+    ],
+    "law_enforcement_cases": [
+      "LE-2023-0042",
+      "LE-2023-0043"
+    ],
+    "cross_chain_matches": 2,
+    "high_confidence_paths": 3
+  },
+  "limitations": {
+    "amount_visibility": "Hidden by RingCT",
+    "address_visibility": "Hidden by stealth addresses",
+    "recent_protocol_improvements": "Ring size 11+ and improved decoy selection reduce traceability",
+    "data_type": "Synthetic demonstration data for educational purposes"
+  },
+  "visualization_features": [
+    "Ring signature member visualization",
+    "Temporal heuristic scoring timeline",
+    "Confidence heat map across multiple heuristics",
+    "Cross-chain correlation graph",
+    "Entity relationship network"
+  ],
+  "academic_references": [
+    {
+      "title": "A Traceability Analysis of Monero's Blockchain",
+      "authors": "Kumar et al.",
+      "year": 2017,
+      "venue": "IACR Cryptology ePrint Archive",
+      "url": "https://eprint.iacr.org/2017/338.pdf"
+    },
+    {
+      "title": "An Empirical Analysis of Traceability in the Monero Blockchain",
+      "authors": "Möser et al.",
+      "year": 2017,
+      "venue": "arXiv",
+      "url": "https://arxiv.org/pdf/1704.04299.pdf"
+    },
+    {
+      "title": "Monero Cross-Chain Traceability",
+      "authors": "Hinteregger & Haslhofer",
+      "year": 2018,
+      "venue": "arXiv",
+      "url": "https://arxiv.org/pdf/1812.02808.pdf"
+    }
+  ],
+  "disclaimer": "This is synthetic demonstration data created for educational and visualization purposes. Real Monero tracing requires sophisticated analysis, external intelligence, and often yields probabilistic rather than deterministic results. The effectiveness of these heuristics has decreased significantly with recent protocol upgrades.",
+  "created_date": "2024-12-16",
+  "data_version": "1.0"
+}

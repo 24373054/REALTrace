@@ -9,6 +9,7 @@ import { loadKucoinData } from './components/cybertrace/kucoinData';
 import { loadCase3Data } from './components/cybertrace/case3Data';
 import { loadCase4Data } from './components/cybertrace/case4Data';
 import { loadCase5Data } from './components/cybertrace/case5Data';
+import { loadCase6Data } from './components/cybertrace/case6Data';
 import { INITIAL_ADDRESS } from './services/mockData';
 import { fetchGraph } from './services/api';
 import { loadHackerTraceGraph, HACKER_ROOT_ADDRESS } from './services/hackerTraceService';
@@ -546,6 +547,12 @@ function App() {
       name: 'Case 5: Bybit 多币种洗钱',
       description: 'Bybit 被攻击后的多币种资金流转（ETH、stETH、mETH、cmETH、USDT），涉及 Lido、Mantle 等协议',
       loader: loadCase5Data,
+    },
+    {
+      id: 'case6',
+      name: 'Case 6: Monero 隐私币追踪',
+      description: '门罗币（XMR）隐私币追踪分析，展示环签名、时间启发式、跨链追踪等方法（合成演示数据）',
+      loader: loadCase6Data,
     },
   ];
 

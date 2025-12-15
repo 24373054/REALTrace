@@ -1,0 +1,31 @@
+tx_hash,from_address,to_address,timestamp,block_height,ring_size,amount_hidden,confidence_score,heuristic_method,is_suspected,attributes,chain
+a1b2c3d4e5f6,XMR_ADDR_001,XMR_ADDR_101,2023-01-15T08:30:00Z,2456789,11,true,85.5,temporal_newest,true,"{""exchange_deposit"": true, ""known_entity"": ""Exchange_A"", ""ring_anomaly"": true}",MONERO
+b2c3d4e5f6g7,XMR_ADDR_101,XMR_ADDR_102,2023-01-15T09:45:00Z,2456812,11,true,72.3,temporal_age_dist,true,"{""time_gap_suspicious"": true, ""decoy_pattern"": ""old_bias""}",MONERO
+c3d4e5f6g7h8,XMR_ADDR_102,XMR_ADDR_103,2023-01-15T11:20:00Z,2456845,11,true,91.2,chain_reaction,true,"{""propagated_from"": ""a1b2c3d4e5f6"", ""single_candidate"": true}",MONERO
+d4e5f6g7h8i9,XMR_ADDR_103,XMR_ADDR_104,2023-01-15T14:30:00Z,2456901,11,true,68.7,temporal_newest,true,"{""mixer_related"": true, ""pattern"": ""rapid_succession""}",MONERO
+e5f6g7h8i9j0,XMR_ADDR_104,XMR_ADDR_105,2023-01-15T16:15:00Z,2456945,11,true,45.2,temporal_age_dist,false,"{""low_confidence"": true, ""multiple_candidates"": 3}",MONERO
+f6g7h8i9j0k1,XMR_ADDR_001,XMR_ADDR_106,2023-01-16T10:00:00Z,2457123,11,true,88.9,cross_chain,true,"{""monerox_fork_match"": true, ""key_reuse_detected"": true, ""fork_chain"": ""MoneroV""}",MONERO
+g7h8i9j0k1l2,XMR_ADDR_106,XMR_ADDR_107,2023-01-16T12:30:00Z,2457178,11,true,76.4,chain_reaction,true,"{""propagated_from"": ""f6g7h8i9j0k1"", ""confidence_boost"": 12.5}",MONERO
+h8i9j0k1l2m3,XMR_ADDR_107,XMR_ADDR_108,2023-01-16T15:45:00Z,2457234,11,true,82.1,temporal_newest,true,"{""exchange_withdrawal"": true, ""known_entity"": ""Exchange_B""}",MONERO
+i9j0k1l2m3n4,XMR_ADDR_105,XMR_ADDR_109,2023-01-17T08:00:00Z,2457456,11,true,55.8,temporal_age_dist,false,"{""ambiguous_ring"": true, ""candidates"": 2}",MONERO
+j0k1l2m3n4o5,XMR_ADDR_108,XMR_ADDR_110,2023-01-17T11:20:00Z,2457512,11,true,93.7,external_intel,true,"{""law_enforcement_tip"": true, ""case_id"": ""LE-2023-0042"", ""confirmed_entity"": ""Darknet_Market_X""}",MONERO
+k1l2m3n4o5p6,XMR_ADDR_110,XMR_ADDR_111,2023-01-17T14:00:00Z,2457567,11,true,87.3,chain_reaction,true,"{""propagated_from"": ""j0k1l2m3n4o5"", ""high_confidence_chain"": true}",MONERO
+l2m3n4o5p6q7,XMR_ADDR_109,XMR_ADDR_112,2023-01-18T09:30:00Z,2457789,11,true,41.5,temporal_newest,false,"{""weak_signal"": true, ""ring_size_adequate"": true}",MONERO
+m3n4o5p6q7r8,XMR_ADDR_111,XMR_ADDR_113,2023-01-18T13:15:00Z,2457845,11,true,79.6,temporal_newest,true,"{""mixing_service"": true, ""pattern_match"": ""known_mixer_A""}",MONERO
+n4o5p6q7r8s9,XMR_ADDR_113,XMR_ADDR_114,2023-01-18T16:45:00Z,2457901,11,true,84.2,chain_reaction,true,"{""propagated_from"": ""m3n4o5p6q7r8"", ""mixer_exit"": true}",MONERO
+o5p6q7r8s9t0,XMR_ADDR_001,XMR_ADDR_115,2023-01-19T10:00:00Z,2458123,11,true,90.8,cross_chain,true,"{""monerox_fork_match"": true, ""double_spend_attempt"": false, ""fork_chain"": ""MoneroV""}",MONERO
+p6q7r8s9t0u1,XMR_ADDR_115,XMR_ADDR_116,2023-01-19T12:30:00Z,2458178,11,true,73.9,temporal_age_dist,true,"{""decoy_selection_bias"": true, ""old_decoys_ratio"": 0.82}",MONERO
+q7r8s9t0u1v2,XMR_ADDR_114,XMR_ADDR_117,2023-01-20T08:45:00Z,2458456,11,true,67.4,temporal_newest,true,"{""rapid_movement"": true, ""time_since_previous"": ""16h""}",MONERO
+r8s9t0u1v2w3,XMR_ADDR_116,XMR_ADDR_118,2023-01-20T14:20:00Z,2458512,11,true,88.5,external_intel,true,"{""exchange_deposit"": true, ""known_entity"": ""Exchange_C"", ""kyc_available"": true}",MONERO
+s9t0u1v2w3x4,XMR_ADDR_117,XMR_ADDR_119,2023-01-21T09:00:00Z,2458789,11,true,75.1,chain_reaction,true,"{""propagated_from"": ""q7r8s9t0u1v2"", ""intermediate_hop"": true}",MONERO
+t0u1v2w3x4y5,XMR_ADDR_118,XMR_ADDR_120,2023-01-21T15:30:00Z,2458845,11,true,81.7,temporal_newest,true,"{""cash_out_pattern"": true, ""final_destination"": ""likely""}",MONERO
+u1v2w3x4y5z6,XMR_ADDR_119,XMR_ADDR_121,2023-01-22T11:15:00Z,2459012,11,true,52.3,temporal_age_dist,false,"{""weak_temporal_signal"": true, ""ring_diversity"": ""high""}",MONERO
+v2w3x4y5z6a7,XMR_ADDR_120,XMR_ADDR_122,2023-01-22T16:00:00Z,2459078,11,true,86.9,external_intel,true,"{""reported_address"": true, ""source"": ""victim_complaint"", ""amount_match"": true}",MONERO
+w3x4y5z6a7b8,XMR_ADDR_001,XMR_ADDR_123,2023-01-23T10:30:00Z,2459234,11,true,77.8,temporal_newest,true,"{""repeat_pattern"": true, ""same_source_cluster"": true}",MONERO
+x4y5z6a7b8c9,XMR_ADDR_122,XMR_ADDR_124,2023-01-23T14:45:00Z,2459289,11,true,89.4,chain_reaction,true,"{""propagated_from"": ""v2w3x4y5z6a7"", ""high_confidence_chain"": true}",MONERO
+y5z6a7b8c9d0,XMR_ADDR_123,XMR_ADDR_125,2023-01-24T09:20:00Z,2459456,11,true,71.6,temporal_age_dist,true,"{""decoy_pattern"": ""old_bias"", ""statistical_anomaly"": true}",MONERO
+z6a7b8c9d0e1,XMR_ADDR_124,XMR_ADDR_126,2023-01-24T13:00:00Z,2459512,11,true,83.2,temporal_newest,true,"{""mixer_related"": false, ""direct_transfer_likely"": true}",MONERO
+a7b8c9d0e1f2,XMR_ADDR_125,XMR_ADDR_127,2023-01-25T10:15:00Z,2459678,11,true,48.9,temporal_age_dist,false,"{""low_confidence"": true, ""protocol_upgrade_affected"": true}",MONERO
+b8c9d0e1f2g3,XMR_ADDR_126,XMR_ADDR_128,2023-01-25T15:30:00Z,2459734,11,true,92.1,external_intel,true,"{""law_enforcement_tip"": true, ""case_id"": ""LE-2023-0043"", ""linked_to"": ""j0k1l2m3n4o5""}",MONERO
+c9d0e1f2g3h4,XMR_ADDR_127,XMR_ADDR_129,2023-01-26T11:00:00Z,2459901,11,true,38.7,temporal_newest,false,"{""very_weak_signal"": true, ""ring_size_adequate"": true, ""post_upgrade"": true}",MONERO
+d0e1f2g3h4i5,XMR_ADDR_128,XMR_ADDR_130,2023-01-26T16:45:00Z,2459967,11,true,87.6,chain_reaction,true,"{""propagated_from"": ""b8c9d0e1f2g3"", ""final_destination"": ""likely""}",MONERO

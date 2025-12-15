@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { ParseResult, GraphNode, GraphLink } from "./types";
-import { getAssetColor, ASSET_COLORS } from "./case5Data";
+import { getEdgeColor } from "./colorUtils";
 
 interface Props {
   data: ParseResult;
@@ -278,7 +278,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
           if (!sourcePos || !targetPos) return;
           
           const lineGraphics = new PIXI.Graphics();
-          const color = parseInt(getAssetColor(link.asset).replace('#', ''), 16);
+          const color = parseInt(getEdgeColor(link.asset).replace('#', ''), 16);
           // 线条粗细计算：和原版SVG一致
           const width = Math.min(Math.sqrt(link.value) + 1, 5);
           
@@ -701,7 +701,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
                 
                 if (!currentSelected) {
                   // 未选中：币种颜色
-                  color = parseInt(getAssetColor(link.asset).replace('#', ''), 16);
+                  color = parseInt(getEdgeColor(link.asset).replace('#', ''), 16);
                   width = Math.min(Math.sqrt(link.value) + 1, 5);
                   alpha = 0.5;
                 } else if (isRelated) {
@@ -712,7 +712,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
                   alpha = 0.9;
                 } else {
                   // 选中但不相关：币种颜色但降低透明度
-                  color = parseInt(getAssetColor(link.asset).replace('#', ''), 16);
+                  color = parseInt(getEdgeColor(link.asset).replace('#', ''), 16);
                   width = Math.min(Math.sqrt(link.value) + 1, 5);
                   alpha = 0.15;
                 }
@@ -851,14 +851,14 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
       const currentAlpha = linkRef.line.alpha || 0.5;
       // 估算当前宽度（无法直接读取，使用默认值）
       const currentWidth = Math.min(Math.sqrt(link.value) + 1, 5);
-      const currentColor = parseInt(getAssetColor(link.asset).replace('#', ''), 16);
+      const currentColor = parseInt(getEdgeColor(link.asset).replace('#', ''), 16);
       
       let targetWidth: number;
       let targetAlpha: number;
       let targetColor: number;
       
       if (!selectedNode) {
-        targetColor = parseInt(getAssetColor(link.asset).replace('#', ''), 16);
+        targetColor = parseInt(getEdgeColor(link.asset).replace('#', ''), 16);
         targetWidth = Math.min(Math.sqrt(link.value) + 1, 5);
         targetAlpha = 0.5;
       } else if (isRelated) {
@@ -867,7 +867,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
         targetWidth = Math.min(Math.sqrt(link.value) + 2, 7);
         targetAlpha = 0.9;
       } else {
-        targetColor = parseInt(getAssetColor(link.asset).replace('#', ''), 16);
+        targetColor = parseInt(getEdgeColor(link.asset).replace('#', ''), 16);
         targetWidth = Math.min(Math.sqrt(link.value) + 1, 5);
         targetAlpha = 0.15;
       }
@@ -983,16 +983,19 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
         }}
       />
 
-      {/* 币种图例 */}
+      {/* 动态图例 - 显示当前数据中使用的资产/方法 */}
       <div className="absolute bottom-4 left-4 bg-black/80 border border-gray-700 p-3 rounded text-xs font-mono z-40">
-        <div className="text-gray-400 mb-2 text-[10px]">ASSET_LEGEND</div>
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(ASSET_COLORS).filter(([key]) => !['default', 'ETH', 'stETH', 'mETH', 'cmETH', 'USDT', 'WETH'].includes(key)).map(([asset, color]) => (
-            <div key={asset} className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }}></div>
-              <span className="text-gray-300 text-[10px]">{asset.replace(/\([^)]+\)/, '').trim()}</span>
-            </div>
-          ))}
+        <div className="text-gray-400 mb-2 text-[10px]">LEGEND</div>
+        <div className="flex flex-wrap gap-2 max-w-md">
+          {Array.from(new Set(data.links.map(l => l.asset))).map((asset: string) => {
+            const color = getEdgeColor(asset);
+            return (
+              <div key={asset} className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }}></div>
+                <span className="text-gray-300 text-[10px]">{asset}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -1063,7 +1066,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
                     const targetId = typeof link.target === 'object' ? link.target.id : link.target;
                     const isIncoming = targetId === selectedNode.id;
                     const otherAddress = isIncoming ? sourceId : targetId;
-                    const assetColor = getAssetColor(link.asset);
+                    const assetColor = getEdgeColor(link.asset);
                     
                     return (
                       <div

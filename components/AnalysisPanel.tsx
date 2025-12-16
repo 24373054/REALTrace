@@ -18,6 +18,7 @@ interface AnalysisPanelProps {
   isExpanding: boolean;
   chain: ChainType;
   network: NetworkType;
+  isDarkMode?: boolean;
 }
 
 const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ 
@@ -34,7 +35,8 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
   onExpandNode,
   isExpanding,
   chain,
-  network
+  network,
+  isDarkMode = false
 }) => {
   // 生成区块链浏览器链接
   const getExplorerUrl = (txHash: string, address?: string) => {
@@ -113,20 +115,20 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
   const availableTokens = Array.from(new Set(links.map(l => l.token)));
 
   return (
-    <div className="h-full flex flex-col bg-white border-l border-slate-200 shadow-xl w-96 z-10">
+    <div className={`h-full flex flex-col ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border-l shadow-xl w-96 z-10 transition-colors`}>
       
       {/* Header */}
-      <div className="p-4 border-b border-slate-100 bg-slate-50">
-        <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">Inspection Panel</h2>
+      <div className={`p-4 border-b ${isDarkMode ? 'border-slate-700 bg-slate-900' : 'border-slate-100 bg-slate-50'} transition-colors`}>
+        <h2 className={`text-sm font-semibold ${isDarkMode ? 'text-slate-200' : 'text-slate-700'} uppercase tracking-wide transition-colors`}>Inspection Panel</h2>
         {selectedNode ? (
             <div className="mt-2">
                 <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-medium text-slate-900">{formatAddr(selectedNode.id)}</span>
-                    <button className="text-slate-400 hover:text-brand-600"><Copy size={12} /></button>
+                    <span className={`font-mono text-sm font-medium ${isDarkMode ? 'text-slate-200' : 'text-slate-900'} transition-colors`}>{formatAddr(selectedNode.id)}</span>
+                    <button className={`${isDarkMode ? 'text-slate-500 hover:text-brand-500' : 'text-slate-400 hover:text-brand-600'} transition-colors`}><Copy size={12} /></button>
                 </div>
                 <div className="flex gap-2 mt-1">
                     {getRiskBadge(selectedNode.riskScore, selectedNode.type)}
-                    <span className="text-[10px] px-2 py-0.5 rounded border border-slate-200 text-slate-500 bg-white">
+                    <span className={`text-[10px] px-2 py-0.5 rounded border ${isDarkMode ? 'border-slate-600 text-slate-300 bg-slate-700' : 'border-slate-200 text-slate-500 bg-white'} transition-colors`}>
                         视图: {viewMode === 'all' ? '全部' : viewMode === 'incoming' ? '只入账' : '只出账'}
                     </span>
                     {selectedNode.intelSources && selectedNode.intelSources.length > 0 && (
@@ -135,7 +137,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                       </span>
                     )}
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-xs text-slate-600">
+                <div className={`mt-2 flex items-center gap-2 text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>
                   <button
                     onClick={onExpandDepth}
                     disabled={depthLimit >= maxDepth}
@@ -143,9 +145,9 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                   >
                     展开一层 (Depth {depthLimit}/{maxDepth})
                   </button>
-                  <span className="text-slate-400">深度裁剪当前视图；RPC 展开请用下方按钮。</span>
+                  <span className={isDarkMode ? 'text-slate-500' : 'text-slate-400'}>深度裁剪当前视图；RPC 展开请用下方按钮。</span>
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-xs text-slate-600">
+                <div className={`mt-2 flex items-center gap-2 text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>
                   <button
                     onClick={onExpandNode}
                     disabled={!selectedNode || isExpanding}
@@ -153,25 +155,25 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                   >
                     {isExpanding ? '展开中...' : '向后端请求下一层'}
                   </button>
-                  <span className="text-slate-400">基于选中地址从 RPC 拉取新交易并合并。</span>
+                  <span className={isDarkMode ? 'text-slate-500' : 'text-slate-400'}>基于选中地址从 RPC 拉取新交易并合并。</span>
                 </div>
             </div>
         ) : (
-            <div className="mt-2 text-sm text-slate-500 italic">Select a node to inspect</div>
+            <div className={`mt-2 text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} italic transition-colors`}>Select a node to inspect</div>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200">
+      <div className={`flex border-b ${isDarkMode ? 'border-slate-700' : 'border-slate-200'} transition-colors`}>
         <button 
           onClick={() => setActiveTab('list')}
-          className={`flex-1 py-3 text-sm font-medium ${activeTab === 'list' ? 'text-brand-600 border-b-2 border-brand-600 bg-white' : 'text-slate-500 bg-slate-50 hover:bg-slate-100'}`}
+          className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === 'list' ? 'text-brand-600 border-b-2 border-brand-600' : isDarkMode ? 'text-slate-400 bg-slate-900 hover:bg-slate-800' : 'text-slate-500 bg-slate-50 hover:bg-slate-100'} ${activeTab === 'list' ? (isDarkMode ? 'bg-slate-800' : 'bg-white') : ''}`}
         >
           Transactions
         </button>
         <button 
           onClick={() => setActiveTab('details')}
-          className={`flex-1 py-3 text-sm font-medium ${activeTab === 'details' ? 'text-brand-600 border-b-2 border-brand-600 bg-white' : 'text-slate-500 bg-slate-50 hover:bg-slate-100'}`}
+          className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === 'details' ? 'text-brand-600 border-b-2 border-brand-600' : isDarkMode ? 'text-slate-400 bg-slate-900 hover:bg-slate-800' : 'text-slate-500 bg-slate-50 hover:bg-slate-100'} ${activeTab === 'details' ? (isDarkMode ? 'bg-slate-800' : 'bg-white') : ''}`}
         >
           AI Insight
         </button>
@@ -191,11 +193,11 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
             )}
 
             {selectedNode && (
-              <div className="flex items-center gap-3 text-xs text-slate-600">
+              <div className={`flex items-center gap-3 text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>
                 <div className="flex items-center gap-1">
-                  <span className="text-slate-500">Token:</span>
+                  <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>Token:</span>
                   <select
-                    className="border border-slate-200 rounded px-2 py-1 text-xs bg-white"
+                    className={`border ${isDarkMode ? 'border-slate-600 bg-slate-700 text-slate-200' : 'border-slate-200 bg-white text-slate-700'} rounded px-2 py-1 text-xs transition-colors`}
                     value={tokenFilter}
                     onChange={(e) => setTokenFilter(e.target.value)}
                   >
@@ -204,9 +206,9 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                   </select>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-slate-500">排序:</span>
+                  <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>排序:</span>
                   <select
-                    className="border border-slate-200 rounded px-2 py-1 text-xs bg-white"
+                    className={`border ${isDarkMode ? 'border-slate-600 bg-slate-700 text-slate-200' : 'border-slate-200 bg-white text-slate-700'} rounded px-2 py-1 text-xs transition-colors`}
                     value={sortDir}
                     onChange={(e) => setSortDir(e.target.value as 'DESC' | 'ASC')}
                   >
@@ -219,7 +221,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
 
             {selectedNode && outgoingTxs.length > 0 && (
                 <div>
-                    <h3 className="text-xs font-bold text-slate-500 mb-3 uppercase flex items-center gap-2">
+                    <h3 className={`text-xs font-bold ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} mb-3 uppercase flex items-center gap-2 transition-colors`}>
                         <div className="w-2 h-2 rounded-full bg-red-400"></div> Outgoing Funds
                     </h3>
                     <div className="space-y-2">
@@ -228,18 +230,18 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                              if (!target) return null;
 
                              return (
-                                <div key={idx} className="bg-white border border-slate-100 rounded p-3 hover:border-brand-200 transition-colors shadow-sm">
+                                <div key={idx} className={`${isDarkMode ? 'bg-slate-700 border-slate-600 hover:border-brand-500' : 'bg-white border-slate-100 hover:border-brand-200'} border rounded p-3 transition-colors shadow-sm`}>
                                     <div className="flex justify-between items-start mb-1">
                                         <div className="flex flex-col">
-                                            <span className="text-xs text-slate-400">Recipient</span>
-                                            <span className="text-xs font-mono text-slate-700">{formatAddr(target.id)}</span>
+                                            <span className={`text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>Recipient</span>
+                                            <span className={`text-xs font-mono ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{formatAddr(target.id)}</span>
                                         </div>
                                         <div className="text-right">
-                                            <span className="block text-sm font-bold text-slate-800">-{tx.value} {tx.token}</span>
-                                            <span className="text-[10px] text-slate-400">{tx.timestamp.split(' ')[0]}</span>
+                                            <span className={`block text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>-{tx.value} {tx.token}</span>
+                                            <span className={`text-[10px] ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{tx.timestamp.split(' ')[0]}</span>
                                         </div>
                                     </div>
-                                    <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
+                                    <div className={`flex justify-between items-center mt-2 pt-2 border-t ${isDarkMode ? 'border-slate-600' : 'border-slate-50'}`}>
                                         {getRiskBadge(target.riskScore, target.type)}
                                         <a 
                                           href={getExplorerUrl(tx.txHash)} 
@@ -259,7 +261,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
 
             {selectedNode && incomingTxs.length > 0 && (
                 <div>
-                    <h3 className="text-xs font-bold text-slate-500 mb-3 uppercase flex items-center gap-2">
+                    <h3 className={`text-xs font-bold ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} mb-3 uppercase flex items-center gap-2 transition-colors`}>
                         <div className="w-2 h-2 rounded-full bg-green-400"></div> Incoming Funds
                     </h3>
                     <div className="space-y-2">
@@ -268,11 +270,11 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                             if (!source) return null;
 
                             return (
-                                <div key={idx} className="bg-white border border-slate-100 rounded p-3 hover:border-brand-200 transition-colors shadow-sm">
+                                <div key={idx} className={`${isDarkMode ? 'bg-slate-700 border-slate-600 hover:border-brand-500' : 'bg-white border-slate-100 hover:border-brand-200'} border rounded p-3 transition-colors shadow-sm`}>
                                     <div className="flex justify-between items-start mb-1">
                                         <div className="flex flex-col">
-                                            <span className="text-xs text-slate-400">Sender</span>
-                                            <span className="text-xs font-mono text-slate-700">{formatAddr(source.id)}</span>
+                                            <span className={`text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>Sender</span>
+                                            <span className={`text-xs font-mono ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{formatAddr(source.id)}</span>
                                         </div>
                                         <div className="text-right">
                                             <span className="block text-sm font-bold text-green-600">+{tx.value} {tx.token}</span>
@@ -327,7 +329,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
              </div>
 
              {aiReport && (
-                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700 leading-relaxed shadow-inner">
+                 <div className={`${isDarkMode ? 'bg-slate-700 border-slate-600 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700'} border rounded-lg p-4 text-sm leading-relaxed shadow-inner transition-colors`}>
                      <div className="prose prose-sm prose-slate max-w-none">
                          <div dangerouslySetInnerHTML={{ __html: aiReport.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                      </div>
@@ -342,7 +344,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                         <button 
                            onClick={onAnalyze}
                            disabled={isAnalyzing}
-                           className="px-4 py-2 text-sm text-brand-600 hover:text-brand-800 font-medium border border-brand-200 rounded hover:bg-brand-50 transition-colors"
+                           className={`px-4 py-2 text-sm text-brand-600 hover:text-brand-800 font-medium border ${isDarkMode ? 'border-brand-400 hover:bg-brand-900' : 'border-brand-200 hover:bg-brand-50'} rounded transition-colors`}
                         >
                            Regenerate
                         </button>

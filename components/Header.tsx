@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Globe, ChevronDown, Activity, User, LogOut } from 'lucide-react';
+import { Search, Globe, ChevronDown, Activity, User, LogOut, Moon, Sun } from 'lucide-react';
 import { ChainType, NetworkType } from '../types';
 
 interface HeaderProps {
@@ -16,6 +16,8 @@ interface HeaderProps {
     onLogout: () => void;
     isPremium: boolean;
     onPremiumClick: () => void;
+    isDarkMode: boolean;
+    onToggleDarkMode: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -31,7 +33,9 @@ const Header: React.FC<HeaderProps> = ({
   onLoginClick,
   onLogout,
   isPremium,
-  onPremiumClick
+  onPremiumClick,
+  isDarkMode,
+  onToggleDarkMode
 }) => {
   const [showNetworkMenu, setShowNetworkMenu] = useState(false);
 
@@ -49,19 +53,19 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-20 relative">
+    <header className={`h-16 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border-b flex items-center justify-between px-6 shadow-sm z-20 relative transition-colors`}>
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 bg-brand-600 rounded flex items-center justify-center text-white">
             <Activity size={20} />
         </div>
-        <h1 className="text-xl font-bold text-slate-800 tracking-tight">Chain<span className="text-brand-600">Trace</span></h1>
+        <h1 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'} tracking-tight transition-colors`}>Chain<span className="text-brand-600">Trace</span></h1>
       </div>
 
       <div className="flex-1 max-w-2xl mx-12">
-        <div className="flex shadow-sm rounded-md overflow-hidden border border-slate-300 focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500 transition-all">
-            <div className="bg-slate-50 px-3 flex items-center border-r border-slate-300 text-slate-500">
+        <div className={`flex shadow-sm rounded-md overflow-hidden border ${isDarkMode ? 'border-slate-600' : 'border-slate-300'} focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500 transition-all`}>
+            <div className={`${isDarkMode ? 'bg-slate-700 border-slate-600 text-slate-300' : 'bg-slate-50 border-slate-300 text-slate-500'} px-3 flex items-center border-r transition-colors`}>
                 <select
-                  className="bg-transparent text-sm font-medium outline-none cursor-pointer privacy-chain-select"
+                  className={`bg-transparent text-sm font-medium outline-none cursor-pointer privacy-chain-select ${isDarkMode ? 'text-slate-200' : ''}`}
                   value={chain}
                   onChange={(e) => setChain(e.target.value as ChainType)}
                 >
@@ -82,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({
             </div>
             <input 
                 type="text" 
-                className="flex-1 px-4 py-2 text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                className={`flex-1 px-4 py-2 text-sm outline-none ${isDarkMode ? 'bg-slate-700 text-slate-200 placeholder:text-slate-400' : 'bg-white text-slate-700 placeholder:text-slate-400'} transition-colors`}
                 placeholder="Search by Address, Tx Hash, or Label..."
                 value={addressInput}
                 onChange={(e) => setAddressInput(e.target.value)}
@@ -98,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-4 text-sm text-slate-600">
+      <div className={`flex items-center gap-4 text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'} transition-colors`}>
         {/* Network Selector */}
         <div className="relative">
           <button 
@@ -110,13 +114,13 @@ const Header: React.FC<HeaderProps> = ({
             <ChevronDown size={14} />
           </button>
           {showNetworkMenu && (
-            <div className="absolute top-full right-0 mt-2 bg-white border border-slate-200 rounded-md shadow-lg py-1 min-w-[120px] z-30">
+            <div className={`absolute top-full right-0 mt-2 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border rounded-md shadow-lg py-1 min-w-[120px] z-30`}>
               <button
                 onClick={() => {
                   setNetwork(NetworkType.MAINNET);
                   setShowNetworkMenu(false);
                 }}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 ${
+                className={`w-full text-left px-4 py-2 text-sm ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-50'} ${
                   network === NetworkType.MAINNET ? 'text-brand-600 font-medium' : ''
                 }`}
               >
@@ -127,7 +131,7 @@ const Header: React.FC<HeaderProps> = ({
                   setNetwork(NetworkType.TESTNET);
                   setShowNetworkMenu(false);
                 }}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 ${
+                className={`w-full text-left px-4 py-2 text-sm ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-50'} ${
                   network === NetworkType.TESTNET ? 'text-brand-600 font-medium' : ''
                 }`}
               >
@@ -138,7 +142,7 @@ const Header: React.FC<HeaderProps> = ({
                   setNetwork(NetworkType.DEVNET);
                   setShowNetworkMenu(false);
                 }}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 ${
+                className={`w-full text-left px-4 py-2 text-sm ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-50'} ${
                   network === NetworkType.DEVNET ? 'text-brand-600 font-medium' : ''
                 }`}
               >
@@ -147,6 +151,20 @@ const Header: React.FC<HeaderProps> = ({
             </div>
           )}
         </div>
+        <div className="h-4 w-px bg-slate-300"></div>
+        
+        {/* Dark Mode Toggle */}
+        <button
+          onClick={onToggleDarkMode}
+          className={`p-2 ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-100'} rounded-lg transition-colors`}
+          title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {isDarkMode ? (
+            <Sun size={18} className="text-amber-400" />
+          ) : (
+            <Moon size={18} className="text-slate-600" />
+          )}
+        </button>
         <div className="h-4 w-px bg-slate-300"></div>
         
         {/* Login/User Menu */}

@@ -36,6 +36,7 @@ function App() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Initialize with mock data (只在首次加载时)
   useEffect(() => {
@@ -519,10 +520,10 @@ function App() {
   // 定义所有的 case 配置
   const hackerCases: CaseConfig[] = [
     {
-      id: 'case1',
-      name: 'Case 1: 黑客攻击链路',
-      description: '追踪黑客攻击的资金流向和洗钱路径',
-      loader: loadHackerCsvData,
+      id: 'case5',
+      name: 'Case 1: Bybit 多币种洗钱',
+      description: 'Bybit 被攻击后的多币种资金流转（ETH、stETH、mETH、cmETH、USDT），涉及 Lido、Mantle 等协议',
+      loader: loadCase5Data,
     },
     {
       id: 'case2',
@@ -537,16 +538,16 @@ function App() {
       loader: loadCase3Data,
     },
     {
-      id: 'case4',
-      name: 'Case 4: Bybit 质押洗钱',
-      description: 'Bybit 交易所被攻击后，黑客通过以太坊质押合约（Beacon Depositor）洗钱（6000+笔交易）',
-      loader: loadCase4Data,
+      id: 'case1',
+      name: 'Case 4: 黑客攻击链路',
+      description: '追踪黑客攻击的资金流向和洗钱路径',
+      loader: loadHackerCsvData,
     },
     {
-      id: 'case5',
-      name: 'Case 5: Bybit 多币种洗钱',
-      description: 'Bybit 被攻击后的多币种资金流转（ETH、stETH、mETH、cmETH、USDT），涉及 Lido、Mantle 等协议',
-      loader: loadCase5Data,
+      id: 'case4',
+      name: 'Case 5: Bybit 质押洗钱',
+      description: 'Bybit 交易所被攻击后，黑客通过以太坊质押合约（Beacon Depositor）洗钱（6000+笔交易）',
+      loader: loadCase4Data,
     },
     {
       id: 'case6',
@@ -582,59 +583,59 @@ function App() {
             
             {/* Toolbar Overlay */}
             <div className="absolute top-4 left-4 z-10 flex gap-2">
-                <div className="bg-white rounded shadow-sm border border-slate-200 p-1 flex">
+                <div className={`${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} rounded shadow-sm border p-1 flex transition-colors`}>
                     <button 
                         onClick={exportCSV}
-                        className="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors tooltip"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-brand-50'} hover:text-brand-600 rounded transition-colors tooltip`}
                         title="Export CSV"
                     >
                         <Download size={18} />
                     </button>
                     <button 
                         onClick={exportSVG}
-                        className="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors tooltip"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-brand-50'} hover:text-brand-600 rounded transition-colors tooltip`}
                         title="Export SVG"
                     >
                         <FileDown size={18} />
                     </button>
                     <button 
                         onClick={exportPNG}
-                        className="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors tooltip"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-brand-50'} hover:text-brand-600 rounded transition-colors tooltip`}
                         title="Export PNG"
                     >
                         <ImageIcon size={18} />
                     </button>
                     <button 
                         onClick={exportPDF}
-                        className="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors tooltip"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-brand-50'} hover:text-brand-600 rounded transition-colors tooltip`}
                         title="Export PDF"
                     >
                         <FileText size={18} />
                     </button>
                 </div>
 
-                <div className="bg-white rounded shadow-sm border border-slate-200 p-1 flex items-center gap-1">
+                <div className={`${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} rounded shadow-sm border p-1 flex items-center gap-1 transition-colors`}>
                     <button 
                         onClick={() => setDepthLimit(d => Math.max(1, d - 1))}
-                        className="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-brand-50'} hover:text-brand-600 rounded transition-colors`}
                         title="减少可见深度"
                     >
                         <Minus size={16} />
                     </button>
-                    <span className="text-xs px-2 text-slate-600">Depth {depthLimit}/{MAX_DEPTH}</span>
+                    <span className={`text-xs px-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-600'} transition-colors`}>Depth {depthLimit}/{MAX_DEPTH}</span>
                     <button 
                         onClick={() => setDepthLimit(d => Math.min(MAX_DEPTH, d + 1))}
-                        className="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-brand-50'} hover:text-brand-600 rounded transition-colors`}
                         title="展开一层（mock 数据）"
                     >
                         <Plus size={16} />
                     </button>
                 </div>
 
-                <div className="bg-white rounded shadow-sm border border-slate-200 p-1 flex items-center gap-1">
+                <div className={`${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} rounded shadow-sm border p-1 flex items-center gap-1 transition-colors`}>
                     <button 
                         onClick={() => setViewMode('all')}
-                        className={`px-3 py-1.5 text-xs font-medium rounded flex items-center gap-1 ${viewMode === 'all' ? 'bg-brand-50 text-brand-700 border border-brand-100' : 'text-slate-600 hover:bg-slate-50'}`}
+                        className={`px-3 py-1.5 text-xs font-medium rounded flex items-center gap-1 ${viewMode === 'all' ? 'bg-brand-50 text-brand-700 border border-brand-100' : isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-slate-50'}`}
                         title="显示全部转入/转出"
                     >
                         <PanelLeft size={14} />
@@ -642,7 +643,7 @@ function App() {
                     </button>
                     <button 
                         onClick={() => setViewMode('incoming')}
-                        className={`px-3 py-1.5 text-xs font-medium rounded flex items-center gap-1 ${viewMode === 'incoming' ? 'bg-green-50 text-green-700 border border-green-100' : 'text-slate-600 hover:bg-slate-50'}`}
+                        className={`px-3 py-1.5 text-xs font-medium rounded flex items-center gap-1 ${viewMode === 'incoming' ? 'bg-green-50 text-green-700 border border-green-100' : isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-slate-50'}`}
                         title="只看选中地址的入账"
                     >
                         <ArrowDownLeft size={14} />
@@ -650,7 +651,7 @@ function App() {
                     </button>
                     <button 
                         onClick={() => setViewMode('outgoing')}
-                        className={`px-3 py-1.5 text-xs font-medium rounded flex items-center gap-1 ${viewMode === 'outgoing' ? 'bg-red-50 text-red-700 border border-red-100' : 'text-slate-600 hover:bg-slate-50'}`}
+                        className={`px-3 py-1.5 text-xs font-medium rounded flex items-center gap-1 ${viewMode === 'outgoing' ? 'bg-red-50 text-red-700 border border-red-100' : isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-slate-50'}`}
                         title="只看选中地址的出账"
                     >
                         <ArrowUpRight size={14} />
@@ -658,10 +659,10 @@ function App() {
                     </button>
                 </div>
 
-                <div className="bg-white rounded shadow-sm border border-slate-200 p-1 flex">
+                <div className={`${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} rounded shadow-sm border p-1 flex transition-colors`}>
                     <button 
                         onClick={handleSearch}
-                        className="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-brand-50'} hover:text-brand-600 rounded transition-colors`}
                     >
                         <RefreshCw size={18} />
                     </button>
@@ -674,16 +675,16 @@ function App() {
                     </button>
                     <button
                         onClick={() => setViewLayout('cyber')}
-                        className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                        className={`p-2 ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-red-50'} hover:text-red-600 rounded transition-colors`}
                         title="切换到黑客链路赛博视图"
                     >
                         <Eye size={16} />
                     </button>
                 </div>
 
-                <div className="bg-white rounded shadow-sm border border-slate-200 px-3 py-2 flex items-center gap-2 text-xs font-medium text-slate-600">
+                <div className={`${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white border-slate-200 text-slate-600'} rounded shadow-sm border px-3 py-2 flex items-center gap-2 text-xs font-medium transition-colors`}>
                     <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-slate-400"></div> Depth: {depthLimit}</span>
-                    <span className="text-slate-300">|</span>
+                    <span className={isDarkMode ? 'text-slate-600' : 'text-slate-300'}>|</span>
                     <span className="flex items-center gap-1"> Tx Count: {filteredGraph.links.length}</span>
                 </div>
             </div>
@@ -693,6 +694,7 @@ function App() {
                 onNodeClick={handleNodeClick}
                 selectedNodeId={selectedNode?.id}
                 ref={graphRef}
+                isDarkMode={isDarkMode}
             />
         </div>
 
@@ -712,40 +714,45 @@ function App() {
             isExpanding={isExpanding}
             chain={chain}
             network={network}
+            isDarkMode={isDarkMode}
         />
       </div>
     );
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-slate-100">
-      <Header 
-        addressInput={addressInput} 
-        setAddressInput={setAddressInput} 
-        onSearch={handleSearch} 
-        chain={chain}
-        setChain={setChain}
-        network={network}
-        setNetwork={setNetwork}
-        isLoggedIn={isLoggedIn}
-        userEmail={userEmail}
-        onLoginClick={() => setShowLoginModal(true)}
-        onLogout={() => {
-          setIsLoggedIn(false);
-          setUserEmail(null);
-          setIsPremium(false);
-        }}
-        isPremium={isPremium}
-        onPremiumClick={() => {
-          if (isLoggedIn) {
-            setIsPremium(true);
-            alert('🎉 Premium features unlocked! You now have access to advanced analytics and unlimited queries.');
-          } else {
-            setShowLoginModal(true);
-            alert('Please log in first to unlock premium features.');
-          }
-        }}
-      />
+    <div className={`flex flex-col h-screen w-full ${isDarkMode ? 'bg-slate-900' : 'bg-slate-100'}`}>
+      {viewLayout !== 'cyber' && (
+        <Header 
+          addressInput={addressInput} 
+          setAddressInput={setAddressInput} 
+          onSearch={handleSearch} 
+          chain={chain}
+          setChain={setChain}
+          network={network}
+          setNetwork={setNetwork}
+          isLoggedIn={isLoggedIn}
+          userEmail={userEmail}
+          onLoginClick={() => setShowLoginModal(true)}
+          onLogout={() => {
+            setIsLoggedIn(false);
+            setUserEmail(null);
+            setIsPremium(false);
+          }}
+          isPremium={isPremium}
+          onPremiumClick={() => {
+            if (isLoggedIn) {
+              setIsPremium(true);
+              alert('🎉 Premium features unlocked! You now have access to advanced analytics and unlimited queries.');
+            } else {
+              setShowLoginModal(true);
+              alert('Please log in first to unlock premium features.');
+            }
+          }}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+        />
+      )}
       
       <LoginModal
         isOpen={showLoginModal}

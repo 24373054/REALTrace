@@ -424,20 +424,28 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
           let fillColor = 0x000000;
           let strokeColor = 0x4b5563;
           
+          // 检查是否是 MAJOR HUB（橙色）
+          const isMajorHub = node.mixerName === 'MAJOR HUB';
+          
           if (node.group === "mixer") {
-            fillColor = 0x581c87;
-            strokeColor = 0xa855f7;
+            if (isMajorHub) {
+              fillColor = 0xc2410c; // 橙色深色
+              strokeColor = 0xf97316; // 橙色亮色
+            } else {
+              fillColor = 0x581c87; // 紫色深色
+              strokeColor = 0xa855f7; // 紫色亮色
+            }
           } else if (node.group === "attacker") {
             fillColor = 0x7f1d1d;
             strokeColor = 0xef4444;
           } else if (node.group === "victim") {
-            fillColor = 0xbe185d;
-            strokeColor = 0xec4899;
+            fillColor = 0x0891b2;
+            strokeColor = 0x06b6d4;
           }
           
           // 绘制外框（如果是特殊节点）- 带虚线动画
           if (node.isMixer || node.isBinance) {
-            const frameColor = node.isBinance ? 0xf59e0b : 0xa855f7;
+            const frameColor = node.isBinance ? 0xf59e0b : isMajorHub ? 0xf97316 : 0xa855f7;
             const frame = new PIXI.Graphics();
             
             const dashLength = 5;
@@ -570,7 +578,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
           // 添加标签
           if (node.isMixer || node.isBinance) {
             const labelBg = new PIXI.Graphics();
-            const bgColor = node.isBinance ? 0xf59e0b : 0xa855f7;
+            const bgColor = node.isBinance ? 0xf59e0b : isMajorHub ? 0xf97316 : 0xa855f7;
             labelBg.roundRect(-55, -65, 110, 20, 4);
             labelBg.fill({ color: bgColor, alpha: 1 });
             nodeGroup.addChild(labelBg);
@@ -973,6 +981,29 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
     });
   };
 
+  // 计算节点的总交易量（以 USD 计）
+  const calculateTotalVolumeUSD = (node: GraphNode) => {
+    const transactions = getNodeTransactions(node);
+    const exchangeRates: { [key: string]: number } = {
+      'USDT': 1,
+      'USDC': 1,
+      'DAI': 1,
+      'ETH': 3000,
+      'WETH': 3000,
+      'BTC': 60000,
+      'WBTC': 60000,
+    };
+    
+    let totalUSD = 0;
+    transactions.forEach(link => {
+      const asset = link.asset || 'ETH';
+      const rate = exchangeRates[asset] || 1;
+      totalUSD += link.value * rate;
+    });
+    
+    return totalUSD;
+  };
+
   return (
     <div ref={containerRef} className="w-full h-full relative bg-gray-950 overflow-hidden">
       <div
@@ -1029,11 +1060,16 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
                 <div className="bg-red-900/10 border border-red-900/30 p-3 rounded break-all">
                   <div className="text-xs text-gray-300 mb-1">WALLET_ADDRESS</div>
                   <div className="text-sm font-bold text-white font-mono">{selectedNode.id}</div>
+                  {selectedNode.mixerName && (
+                    <div className={`mt-2 inline-block px-2 py-1 ${selectedNode.mixerName === 'MAJOR HUB' ? 'bg-orange-900/50 border-orange-500 text-orange-300' : 'bg-purple-900/50 border-purple-500 text-purple-300'} border rounded text-xs font-bold animate-pulse`}>
+                      {selectedNode.mixerName === 'MAJOR HUB' ? '🔶' : '🔷'} {selectedNode.mixerName}
+                    </div>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="bg-red-900/10 border border-red-900/30 p-3 rounded">
                     <div className="text-[10px] text-gray-500">THREAT_TYPE</div>
-                    <div className={`text-lg font-bold ${selectedNode.group === "attacker" ? "text-red-500 animate-pulse" : "text-emerald-400"}`}>
+                    <div className={`text-lg font-bold ${selectedNode.group === "attacker" ? "text-red-500 animate-pulse" : selectedNode.mixerName === 'MAJOR HUB' ? "text-orange-400 animate-pulse" : selectedNode.mixerName ? "text-purple-400 animate-pulse" : "text-emerald-400"}`}>
                       {selectedNode.group.toUpperCase()}
                     </div>
                   </div>
@@ -1053,7 +1089,7 @@ const CyberGraphPixi: React.FC<Props> = ({ data }) => {
                   </div>
                   <div className="bg-black border border-gray-800 p-2 col-span-2">
                     <div className="text-xs text-gray-500">TOTAL_VOLUME</div>
-                    <div className="text-cyan-400 font-bold">{selectedNode.value.toFixed(4)} ETH</div>
+                    <div className="text-cyan-400 font-bold">${calculateTotalVolumeUSD(selectedNode).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                   </div>
                 </div>
               </div>

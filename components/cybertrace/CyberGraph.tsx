@@ -42,7 +42,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
         if (d === selectedNode) return "#06b6d4";
         if (d.group === "mixer") return "#a855f7";
         if (d.group === "attacker") return "#ef4444";
-        if (d.group === "victim") return "#fca5a5";
+        if (d.group === "victim") return "#06b6d4";
         return "#4b5563";
       })
       .attr("stroke-width", (d) => {
@@ -54,7 +54,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
         if (d === selectedNode) return "#101010";
         if (d.group === "mixer") return "#581c87";
         if (d.group === "attacker") return "#7f1d1d";
-        if (d.group === "victim") return "#be185d";
+        if (d.group === "victim") return "#0891b2";
         return "#000";
       });
 
@@ -455,15 +455,21 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
         return hexPath(d.isMixer ? size * 1.5 : size);
       })
       .attr("fill", (d) => {
-        if (d.group === "mixer") return "#581c87"; // 紫色 - 混币器
+        if (d.group === "mixer") {
+          if (d.mixerName === 'MAJOR HUB') return "#c2410c"; // 橙色深色 - 大型中转
+          return "#581c87"; // 紫色 - 混币器
+        }
         if (d.group === "attacker") return "#7f1d1d"; // 深红色 - 攻击者
-        if (d.group === "victim") return "#be185d"; // 深粉色 - 受害者
+        if (d.group === "victim") return "#0891b2"; // 青色 - 受害者
         return "#000"; // 黑色 - 中性
       })
       .attr("stroke", (d) => {
-        if (d.group === "mixer") return "#a855f7"; // 亮紫色边框
+        if (d.group === "mixer") {
+          if (d.mixerName === 'MAJOR HUB') return "#f97316"; // 橙色亮色 - 大型中转
+          return "#a855f7"; // 亮紫色边框
+        }
         if (d.group === "attacker") return "#ef4444"; // 红色边框
-        if (d.group === "victim") return "#ec4899"; // 粉色边框
+        if (d.group === "victim") return "#06b6d4"; // 亮青色边框
         return "#4b5563"; // 灰色边框
       })
       .attr("stroke-width", (d) => d.isMixer ? 3 : 2)
@@ -480,7 +486,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
             "fill",
             d.group === "mixer" ? "#581c87" : 
             d.group === "attacker" ? "#7f1d1d" : 
-            d.group === "victim" ? "#be185d" : 
+            d.group === "victim" ? "#0891b2" : 
             "#000"
           );
         }
@@ -513,7 +519,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
           .attr("y", -65)
           .attr("width", 110)
           .attr("height", 20)
-          .attr("fill", "#a855f7")
+          .attr("fill", d.mixerName === 'MAJOR HUB' ? "#f97316" : "#a855f7")
           .attr("rx", 4)
           .attr("pointer-events", "none");
         
@@ -569,6 +575,29 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
       const targetId = typeof l.target === 'object' ? l.target.id : l.target;
       return sourceId === node.id || targetId === node.id;
     });
+  };
+
+  // 计算节点的总交易量（以 USD 计）
+  const calculateTotalVolumeUSD = (node: GraphNode) => {
+    const transactions = getNodeTransactions(node);
+    const exchangeRates: { [key: string]: number } = {
+      'USDT': 1,
+      'USDC': 1,
+      'DAI': 1,
+      'ETH': 3000,
+      'WETH': 3000,
+      'BTC': 60000,
+      'WBTC': 60000,
+    };
+    
+    let totalUSD = 0;
+    transactions.forEach(link => {
+      const asset = link.asset || 'ETH';
+      const rate = exchangeRates[asset] || 1;
+      totalUSD += link.value * rate;
+    });
+    
+    return totalUSD;
   };
 
   return (
@@ -628,11 +657,16 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
                 <div className="bg-red-900/10 border border-red-900/30 p-3 rounded break-all">
                   <div className="text-xs text-gray-300 mb-1">WALLET_ADDRESS</div>
                   <div className="text-sm font-bold text-white font-mono">{selectedNode.id}</div>
+                  {selectedNode.mixerName && (
+                    <div className={`mt-2 inline-block px-2 py-1 ${selectedNode.mixerName === 'MAJOR HUB' ? 'bg-orange-900/50 border-orange-500 text-orange-300' : 'bg-purple-900/50 border-purple-500 text-purple-300'} border rounded text-xs font-bold animate-pulse`}>
+                      {selectedNode.mixerName === 'MAJOR HUB' ? '🔶' : '🔷'} {selectedNode.mixerName}
+                    </div>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="bg-red-900/10 border border-red-900/30 p-3 rounded">
                     <div className="text-[10px] text-gray-500">THREAT_TYPE</div>
-                    <div className={`text-lg font-bold ${selectedNode.group === "attacker" ? "text-red-500 animate-pulse" : "text-emerald-400"}`}>
+                    <div className={`text-lg font-bold ${selectedNode.group === "attacker" ? "text-red-500 animate-pulse" : selectedNode.mixerName === 'MAJOR HUB' ? "text-orange-400 animate-pulse" : selectedNode.mixerName ? "text-purple-400 animate-pulse" : "text-emerald-400"}`}>
                       {selectedNode.group.toUpperCase()}
                     </div>
                   </div>
@@ -652,7 +686,7 @@ const CyberGraph: React.FC<Props> = ({ data }) => {
                   </div>
                   <div className="bg-black border border-gray-800 p-2 col-span-2">
                     <div className="text-xs text-gray-500">TOTAL_VOLUME</div>
-                    <div className="text-cyan-400 font-bold">{selectedNode.value.toFixed(4)} ETH</div>
+                    <div className="text-cyan-400 font-bold">${calculateTotalVolumeUSD(selectedNode).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                   </div>
                 </div>
               </div>

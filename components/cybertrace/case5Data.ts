@@ -119,6 +119,9 @@ export function loadCase5Data(): ParseResult {
   // 特殊合约地址
   const specialContracts = new Map<string, string>(); // address -> type
   
+  // 大型中转地址（特别标记）
+  const MAJOR_HUB_ADDRESS = '0x47666fab8bd0ac7003bce3f5c3585383f09486e2';
+  
   transactions.forEach(tx => {
     const from = tx.From.toLowerCase();
     const to = tx.To.toLowerCase();
@@ -207,8 +210,14 @@ export function loadCase5Data(): ParseResult {
     let isSpecial = false;
     let specialName: string | undefined;
     
+    // 检查是否是大型中转地址（最高优先级）
+    if (address === MAJOR_HUB_ADDRESS) {
+      group = "mixer";
+      isSpecial = true;
+      specialName = 'MAJOR HUB';
+    }
     // 检查是否是特殊合约（Lido、Mantle、质押等）
-    if (specialContracts.has(address)) {
+    else if (specialContracts.has(address)) {
       const contractType = specialContracts.get(address)!;
       group = "mixer";
       isSpecial = true;

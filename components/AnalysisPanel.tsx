@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GraphData, GraphNode, AddressType, GraphLink, ChainType, NetworkType } from '../types';
-import { AlertTriangle, ShieldCheck, DollarSign, ExternalLink, Bot, Loader2, Copy } from 'lucide-react';
+import { AlertTriangle, ShieldCheck, DollarSign, ExternalLink, Bot, Loader2, Copy, FileText } from 'lucide-react';
+import ReportDetailView from './ReportDetailView';
 
 interface AnalysisPanelProps {
   data: GraphData;
@@ -68,6 +69,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
   const [activeTab, setActiveTab] = useState<'details' | 'list'>('list');
   const [tokenFilter, setTokenFilter] = useState<string>('ALL');
   const [sortDir, setSortDir] = useState<'DESC' | 'ASC'>('DESC');
+  const [showReportDetail, setShowReportDetail] = useState(false);
 
   // Helpers
   const formatAddr = (addr: string | undefined) => {
@@ -306,7 +308,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                         <Bot size={20} />
                     </div>
                     <div>
-                        <h3 className="text-brand-900 font-bold text-sm">Mist AI Investigator</h3>
+                        <h3 className="text-brand-900 font-bold text-sm">Mitrix AI Investigator</h3>
                         <p className="text-brand-700 text-xs mt-1">
                             Use DeepSeek AI to analyze the transaction patterns of the current graph view.
                         </p>
@@ -329,19 +331,38 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({
                      <div className="prose prose-sm prose-slate max-w-none">
                          <div dangerouslySetInnerHTML={{ __html: aiReport.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                      </div>
-                     <button 
-                        onClick={onAnalyze}
-                        disabled={isAnalyzing}
-                        className="mt-4 text-xs text-brand-600 hover:text-brand-800 font-medium underline"
-                     >
-                        Regenerate Analysis
-                     </button>
+                     <div className="flex gap-3 mt-4">
+                        <button 
+                           onClick={() => setShowReportDetail(true)}
+                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded hover:bg-slate-900 transition-colors"
+                        >
+                           <FileText size={16} />
+                           View Full Report
+                        </button>
+                        <button 
+                           onClick={onAnalyze}
+                           disabled={isAnalyzing}
+                           className="px-4 py-2 text-sm text-brand-600 hover:text-brand-800 font-medium border border-brand-200 rounded hover:bg-brand-50 transition-colors"
+                        >
+                           Regenerate
+                        </button>
+                     </div>
                  </div>
              )}
           </div>
         )}
 
       </div>
+
+      {/* Report Detail Modal */}
+      {showReportDetail && aiReport && (
+        <ReportDetailView
+          aiReport={aiReport}
+          data={data}
+          selectedNode={selectedNode}
+          onClose={() => setShowReportDetail(false)}
+        />
+      )}
     </div>
   );
 };

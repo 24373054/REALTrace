@@ -53,3 +53,19 @@
   scrollbar-width: none;  /* Firefox */
 }
 
+/* Privacy coin styles */
+.privacy-chain-select option.privacy-coin {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+
+/* Firefox specific styles for privacy coins */
+@-moz-document url-prefix() {
+  .privacy-chain-select option.privacy-coin {
+    background: #ff6b6b;
+    color: white;
+  }
+}
+

@@ -21,8 +21,38 @@ interface Case3Transaction {
 }
 
 function parseCsvLine(line: string): string[] {
-  // 简单的 CSV 解析（不处理引号内的逗号，因为这个数据集不需要）
-  return line.split(',').map(field => field.trim());
+  // 改进的 CSV 解析，处理引号内的逗号
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  let quoteChar = '';
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    
+    if ((char === '"' || char === "'") && !inQuotes) {
+      inQuotes = true;
+      quoteChar = char;
+    } else if (char === quoteChar && inQuotes) {
+      // 检查是否是转义的引号
+      if (i + 1 < line.length && line[i + 1] === quoteChar) {
+        current += char;
+        i++; // 跳过下一个引号
+      } else {
+        inQuotes = false;
+      }
+    } else if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  
+  // 添加最后一个字段
+  result.push(current.trim());
+  
+  return result;
 }
 
 function parseCsv(csvText: string): Case3Transaction[] {
@@ -37,11 +67,72 @@ function parseCsv(csvText: string): Case3Transaction[] {
     const line = lines[i].trim();
     if (!line) continue; // 跳过空行
     
-    const values = parseCsvLine(line);
+    let values = parseCsvLine(line);
+    
+    // 如果列数不匹配，尝试修复
+    if (values.length !== headers.length) {
+      console.warn(`[Case3] 第 ${i + 1} 行列数不匹配: 期望 ${headers.length}, 实际 ${values.length}`);
+      
+      // 如果实际列数多于期望列数，可能是由于引号内的逗号被错误解析
+      // 在这种情况下，我们尝试合并多余的列
+      if (values.length > headers.length) {
+        // 找到可能是引号内逗号导致的额外列
+        const fixedValues: string[] = [];
+        let j = 0;
+        let inQuotes = false;
+        
+        while (j < values.length) {
+          let value = values[j];
+          
+          // 检查是否以引号开始但未以引号结束
+          if ((value.startsWith('"') && !value.endsWith('"')) || 
+              (value.startsWith("'") && !value.endsWith("'"))) {
+            inQuotes = true;
+            let combinedValue = value;
+            j++;
+            
+            // 继续合并直到找到结束引号
+            while (j < values.length && inQuotes) {
+              combinedValue += ',' + values[j];
+              if (values[j].endsWith('"') || values[j].endsWith("'")) {
+                inQuotes = false;
+              }
+              j++;
+            }
+            fixedValues.push(combinedValue);
+          } else {
+            fixedValues.push(value);
+            j++;
+          }
+        }
+        
+        // 如果修复后的列数仍然不匹配，只取前 headers.length 列
+        if (fixedValues.length >= headers.length) {
+          values = fixedValues.slice(0, headers.length);
+        } else {
+          // 填充缺失的列
+          while (values.length < headers.length) {
+            values.push('');
+          }
+        }
+      } else if (values.length < headers.length) {
+        // 填充缺失的列
+        while (values.length < headers.length) {
+          values.push('');
+        }
+      }
+    }
+    
     const obj: any = {};
     
     headers.forEach((header, index) => {
-      obj[header] = values[index] || '';
+      let value = values[index] || '';
+      // 移除字段值周围可能的引号
+      if ((value.startsWith('"') && value.endsWith('"')) || 
+          (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.substring(1, value.length - 1);
+      }
+      obj[header] = value;
     });
     
     data.push(obj as Case3Transaction);

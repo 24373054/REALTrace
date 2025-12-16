@@ -239,7 +239,12 @@ const GraphView = forwardRef<GraphViewHandle, GraphViewProps>(({ data, onNodeCli
     <div ref={containerRef} className="w-full h-full bg-slate-50 relative overflow-hidden">
       <svg ref={svgRef} className="w-full h-full"></svg>
       <div className="absolute bottom-4 left-4 bg-white/90 p-2 rounded shadow-sm text-xs text-slate-500 border border-slate-200">
-        <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 rounded-full bg-green-500"></div> Start Address</div>
+        <div className="flex items-center gap-2 mb-1">
+          <svg width="12" height="12" viewBox="0 0 24 24" className="fill-green-500">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          Start Address
+        </div>
         <div className="flex items-center gap-2 mb-1"><div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[10px] border-b-red-500"></div> Risk / Phishing</div>
         <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 rounded bg-amber-500"></div> Exchange (CEX)</div>
         <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-slate-400"></div> Normal Wallet</div>

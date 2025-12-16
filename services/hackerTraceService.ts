@@ -86,6 +86,9 @@ export const loadHackerTraceGraph = (): GraphData => {
     } else if (inn > 15) {
       node.type = AddressType.CEX;
       node.tags = Array.from(new Set([...(node.tags || []), "Aggregation Hub"]));
+    } else if (node.riskScore > 50) {
+      // 高风险节点显示为红色三角形
+      node.type = AddressType.PHISHING;
     }
   });
 

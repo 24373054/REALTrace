@@ -61,12 +61,22 @@ const Header: React.FC<HeaderProps> = ({
         <div className="flex shadow-sm rounded-md overflow-hidden border border-slate-300 focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500 transition-all">
             <div className="bg-slate-50 px-3 flex items-center border-r border-slate-300 text-slate-500">
                 <select
-                  className="bg-transparent text-sm font-medium outline-none cursor-pointer"
+                  className="bg-transparent text-sm font-medium outline-none cursor-pointer privacy-chain-select"
                   value={chain}
                   onChange={(e) => setChain(e.target.value as ChainType)}
                 >
                   <option value={ChainType.SOLANA}>Solana</option>
                   <option value={ChainType.ETHEREUM}>Ethereum</option>
+                  <option value={ChainType.BITCOIN}>Bitcoin</option>
+                  <option value={ChainType.BNB_CHAIN}>BNB Chain</option>
+                  <option value={ChainType.POLYGON}>Polygon</option>
+                  <option value={ChainType.ARBITRUM}>Arbitrum</option>
+                  <option value={ChainType.OPTIMISM}>Optimism</option>
+                  <option value={ChainType.BASE}>Base</option>
+                  <option value={ChainType.AVALANCHE}>Avalanche</option>
+                  <option value={ChainType.TRON}>Tron</option>
+                  <option value={ChainType.MONERO} className="privacy-coin">🔒 Monero (XMR)</option>
+                  <option value={ChainType.ZCASH} className="privacy-coin">🔒 Zcash (ZEC)</option>
                 </select>
                 <ChevronDown size={14} className="ml-1" />
             </div>

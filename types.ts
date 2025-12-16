@@ -11,6 +11,16 @@ export enum AddressType {
 export enum ChainType {
   SOLANA = 'SOLANA',
   ETHEREUM = 'ETHEREUM',
+  BITCOIN = 'BITCOIN',
+  BNB_CHAIN = 'BNB_CHAIN',
+  POLYGON = 'POLYGON',
+  ARBITRUM = 'ARBITRUM',
+  OPTIMISM = 'OPTIMISM',
+  BASE = 'BASE',
+  AVALANCHE = 'AVALANCHE',
+  TRON = 'TRON',
+  MONERO = 'MONERO',
+  ZCASH = 'ZCASH',
 }
 
 export enum NetworkType {

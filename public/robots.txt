@@ -1,0 +1,45 @@
+# ChainTrace - Robots.txt
+# https://trace.matrixlab.work/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /logs/
+Disallow: /.git/
+Disallow: /node_modules/
+
+# 特别允许重要资源
+Allow: /favicon (2)/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.svg$
+
+# 爬虫速率限制
+Crawl-delay: 1
+
+# Sitemap 位置
+Sitemap: https://trace.matrixlab.work/sitemap.xml
+
+# 针对特定搜索引擎的优化
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: 360Spider
+Allow: /
+Crawl-delay: 2
+
+User-agent: Sogou web spider
+Allow: /
+Crawl-delay: 2

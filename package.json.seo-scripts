@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "seo:check": "node scripts/seo-check.js",
+    "seo:submit": "bash scripts/seo-submit.sh",
+    "seo:og-image": "bash scripts/create-og-image.sh"
+  }
+}

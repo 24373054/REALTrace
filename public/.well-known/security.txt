@@ -1,0 +1,6 @@
+Contact: mailto:security@matrixlab.work
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: zh-CN, en
+Canonical: https://trace.matrixlab.work/.well-known/security.txt
+Policy: https://trace.matrixlab.work/security-policy
+Acknowledgments: https://trace.matrixlab.work/security-acknowledgments

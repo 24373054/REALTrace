@@ -11,7 +11,10 @@
     "db:setup": "node database/setup-windows.js",
     "db:init": "node database/setup-windows.js",
     "db:find": "node database/find-postgres.js",
-    "db:import": "node database/example/数据导入脚本.js"
+    "db:import": "node database/example/数据导入脚本.js",
+    "seo:check": "node scripts/seo-check.js",
+    "seo:submit": "bash scripts/seo-submit.sh",
+    "seo:og-image": "bash scripts/create-og-image.sh"
   },
   "dependencies": {
     "@pixi/graphics-extras": "^7.4.3",

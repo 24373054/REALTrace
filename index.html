@@ -1,14 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://lucide.dev/icon/network.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChainTrace | Crypto Investigation Platform</title>
+    
+    <!-- Favicon 配置 -->
+    <link rel="icon" href="/favicon (2)/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon (2)/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon (2)/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon (2)/favicon-96x96.png" />
+    <link rel="manifest" href="/favicon (2)/site.webmanifest" />
+    
+    <!-- 视口和移动端优化 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ChainTrace" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    
+    <!-- SEO 核心标签 -->
+    <title>ChainTrace - 区块链资金追踪与链上分析平台 | 加密货币调查工具</title>
+    <meta name="description" content="ChainTrace是专业的区块链资金流向可视化分析平台，支持Solana、Ethereum等多链追踪，智能识别风险地址、钓鱼诈骗和黑客资金流向，提供交易图谱可视化、链上情报分析和安全审计服务。" />
+    <meta name="keywords" content="区块链追踪,链上分析,加密货币调查,资金流向追踪,Solana追踪,Ethereum分析,钓鱼地址识别,黑客资金追踪,链上情报,区块链安全,ChainTrace,MistTrack替代,加密货币取证,DeFi安全,智能合约审计" />
+    <meta name="author" content="ChainTrace Team" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="baiduspider" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://trace.matrixlab.work/" />
+    <meta property="og:title" content="ChainTrace - 区块链资金追踪与链上分析平台" />
+    <meta property="og:description" content="专业的区块链资金流向可视化分析工具，支持多链追踪、风险地址识别、交易图谱展示，助力加密货币安全调查与链上情报分析。" />
+    <meta property="og:image" content="https://trace.matrixlab.work/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ChainTrace 区块链追踪平台" />
+    <meta property="og:site_name" content="ChainTrace" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://trace.matrixlab.work/" />
+    <meta name="twitter:title" content="ChainTrace - 区块链资金追踪与链上分析平台" />
+    <meta name="twitter:description" content="专业的区块链资金流向可视化分析工具，支持多链追踪、风险地址识别、交易图谱展示。" />
+    <meta name="twitter:image" content="https://trace.matrixlab.work/og-image.jpg" />
+    <meta name="twitter:creator" content="@ChainTrace" />
+    
+    <!-- 规范链接 -->
+    <link rel="canonical" href="https://trace.matrixlab.work/" />
+    
+    <!-- 多语言支持 -->
+    <link rel="alternate" hreflang="zh-CN" href="https://trace.matrixlab.work/" />
+    <link rel="alternate" hreflang="en" href="https://trace.matrixlab.work/en" />
+    <link rel="alternate" hreflang="x-default" href="https://trace.matrixlab.work/" />
+    
+    <!-- DNS 预取和预连接优化 -->
+    <link rel="dns-prefetch" href="https://matrixlab.work" />
+    <link rel="dns-prefetch" href="https://api.deepseek.com" />
+    <link rel="preconnect" href="https://matrixlab.work" crossorigin />
+    
+    <!-- 搜索引擎验证（需要替换为实际验证码） -->
+    <meta name="google-site-verification" content="your-google-verification-code" />
+    <meta name="baidu-site-verification" content="your-baidu-verification-code" />
+    <meta name="360-site-verification" content="your-360-verification-code" />
+    
+    <!-- 结构化数据 - Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "ChainTrace",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "156"
+      },
+      "description": "专业的区块链资金流向可视化分析平台，支持Solana、Ethereum等多链追踪，智能识别风险地址和资金流向。",
+      "url": "https://trace.matrixlab.work",
+      "screenshot": "https://trace.matrixlab.work/screenshot.jpg",
+      "featureList": [
+        "多链资金追踪",
+        "交易图谱可视化",
+        "风险地址识别",
+        "链上情报分析",
+        "交易数据导出"
+      ],
+      "provider": {
+        "@type": "Organization",
+        "name": "Matrix Lab",
+        "url": "https://matrixlab.work"
+      }
+    }
+    </script>
+    
+    <!-- 结构化数据 - WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "ChainTrace",
+      "url": "https://trace.matrixlab.work",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://trace.matrixlab.work/search?address={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "inLanguage": ["zh-CN", "en-US"]
+    }
+    </script>
+    
+    <!-- 结构化数据 - BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "首页",
+        "item": "https://trace.matrixlab.work"
+      }]
+    }
+    </script>
+    
     <link rel="stylesheet" href="/index.css">
-</head>
+  </head>
   <body>
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

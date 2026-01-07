@@ -1,0 +1,47 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景渐变 -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0e27;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- 网格背景 -->
+  <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+    <line x1="0" y1="0" x2="1200" y2="630"/>
+    <line x1="1200" y1="0" x2="0" y2="630"/>
+    <circle cx="300" cy="150" r="100" fill="none"/>
+    <circle cx="900" cy="450" r="120" fill="none"/>
+  </g>
+  
+  <!-- Logo 占位 -->
+  <rect x="80" y="80" width="120" height="120" fill="rgba(0,102,255,0.2)" rx="10"/>
+  <text x="140" y="160" font-family="Arial" font-size="48" font-weight="bold" fill="#0066FF" text-anchor="middle">CT</text>
+  
+  <!-- 主标题 -->
+  <text x="250" y="180" font-family="Arial" font-size="80" font-weight="bold" fill="white">ChainTrace</text>
+  
+  <!-- 副标题 -->
+  <text x="250" y="240" font-family="Arial" font-size="48" fill="#CCCCCC">区块链资金追踪平台</text>
+  
+  <!-- 装饰线 -->
+  <line x1="250" y1="270" x2="450" y2="270" stroke="#0066FF" stroke-width="4"/>
+  
+  <!-- 特性列表 -->
+  <text x="250" y="320" font-family="Arial" font-size="32" fill="#00FF88">✓ 多链支持 (Solana/Ethereum)</text>
+  <text x="250" y="370" font-family="Arial" font-size="32" fill="#00FF88">✓ 交易图谱可视化</text>
+  <text x="250" y="420" font-family="Arial" font-size="32" fill="#00FF88">✓ 智能风险识别</text>
+  
+  <!-- 网址 -->
+  <text x="250" y="550" font-family="Arial" font-size="28" fill="#888888">trace.matrixlab.work</text>
+  
+  <!-- 装饰节点 -->
+  <circle cx="150" cy="450" r="8" fill="#0066FF" opacity="0.5"/>
+  <circle cx="350" cy="500" r="8" fill="#0066FF" opacity="0.5"/>
+  <circle cx="550" cy="480" r="8" fill="#0066FF" opacity="0.5"/>
+  <line x1="150" y1="450" x2="350" y2="500" stroke="#0066FF" stroke-width="2" opacity="0.3"/>
+  <line x1="350" y1="500" x2="550" y2="480" stroke="#0066FF" stroke-width="2" opacity="0.3"/>
+</svg>

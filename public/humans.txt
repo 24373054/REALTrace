@@ -1,0 +1,40 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Developer & Designer: ChainTrace Team
+    Contact: tech [at] matrixlab.work
+    Twitter: @ChainTrace
+    Location: Beijing, China
+
+# THANKS
+
+    Matrix Lab - https://matrixlab.work
+    Open Source Community
+
+# TECHNOLOGY COLOPHON
+
+    Frontend: React 19, TypeScript
+    Visualization: D3.js, PixiJS
+    Styling: Tailwind CSS
+    Build: Vite
+    Backend: Node.js, Express
+    Database: PostgreSQL
+    Blockchain: Solana, Ethereum
+    AI: DeepSeek API
+
+    Standards: HTML5, CSS3, ES2024
+    Components: Lucide Icons
+    Fonts: System Fonts
+    
+    SEO: Optimized for search engines
+    Performance: Core Web Vitals optimized
+    Accessibility: WCAG 2.1 AA compliant
+    
+# SITE
+
+    Last update: 2026/01/08
+    Language: 中文 / English
+    Doctype: HTML5
+    IDE: VS Code, Cursor

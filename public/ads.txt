@@ -1,0 +1,6 @@
+# ads.txt for trace.matrixlab.work
+# 如果将来需要投放广告，在此配置广告商信息
+# 格式: domain, publisher_id, relationship, certification_authority_id
+
+# 示例（未启用）:
+# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

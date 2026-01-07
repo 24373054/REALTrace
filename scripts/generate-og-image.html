@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OG Image Generator - ChainTrace</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .canvas-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        #ogCanvas {
+            width: 100%;
+            max-width: 1200px;
+            border: 1px solid #ddd;
+            display: block;
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #0066FF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0052CC;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f9ff;
+            border-left: 4px solid #0066FF;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ChainTrace OG Image Generator</h1>
+        
+        <div class="canvas-wrapper">
+            <canvas id="ogCanvas" width="1200" height="630"></canvas>
+        </div>
+        
+        <div class="controls">
+            <button onclick="downloadImage()">下载图片 (og-image.jpg)</button>
+            <button onclick="regenerate()">重新生成</button>
+            
+            <div class="info">
+                <strong>使用说明：</strong>
+                <ol>
+                    <li>点击"下载图片"按钮保存图片</li>
+                    <li>将下载的图片重命名为 <code>og-image.jpg</code></li>
+                    <li>放置到项目的 <code>public/</code> 目录</li>
+                    <li>刷新网站测试分享效果</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('ogCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawOGImage() {
+            // 背景渐变
+            const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, '#0a0e27');
+            gradient.addColorStop(1, '#1a1a2e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1200, 630);
+
+            // 网格背景效果
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 1200; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, 630);
+                ctx.stroke();
+            }
+            for (let i = 0; i < 630; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(1200, i);
+                ctx.stroke();
+            }
+
+            // 装饰性节点和连线（模拟区块链网络）
+            ctx.strokeStyle = 'rgba(0, 102, 255, 0.3)';
+            ctx.fillStyle = 'rgba(0, 102, 255, 0.5)';
+            ctx.lineWidth = 2;
+            
+            const nodes = [
+                {x: 150, y: 150}, {x: 350, y: 100}, {x: 550, y: 180},
+                {x: 200, y: 400}, {x: 450, y: 450}, {x: 700, y: 380},
+                {x: 900, y: 200}, {x: 1000, y: 450}
+            ];
+            
+            // 绘制连线
+            for (let i = 0; i < nodes.length - 1; i++) {
+                ctx.beginPath();
+                ctx.moveTo(nodes[i].x, nodes[i].y);
+                ctx.lineTo(nodes[i + 1].x, nodes[i + 1].y);
+                ctx.stroke();
+            }
+            
+            // 绘制节点
+            nodes.forEach(node => {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Logo 区域（占位）
+            ctx.fillStyle = 'rgba(0, 102, 255, 0.2)';
+            ctx.fillRect(80, 80, 120, 120);
+            ctx.fillStyle = '#0066FF';
+            ctx.font = 'bold 48px Arial';
+            ctx.fillText('CT', 110, 160);
+
+            // 主标题
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 80px Arial';
+            ctx.fillText('ChainTrace', 250, 180);
+
+            // 副标题
+            ctx.fillStyle = '#CCCCCC';
+            ctx.font = '48px Arial';
+            ctx.fillText('区块链资金追踪平台', 250, 240);
+
+            // 特性列表
+            ctx.fillStyle = '#00FF88';
+            ctx.font = '32px Arial';
+            const features = [
+                '✓ 多链支持 (Solana/Ethereum)',
+                '✓ 交易图谱可视化',
+                '✓ 智能风险识别'
+            ];
+            
+            features.forEach((feature, index) => {
+                ctx.fillText(feature, 250, 320 + index * 50);
+            });
+
+            // 底部网址
+            ctx.fillStyle = '#888888';
+            ctx.font = '28px Arial';
+            ctx.fillText('trace.matrixlab.work', 250, 550);
+
+            // 装饰线
+            ctx.strokeStyle = '#0066FF';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(250, 270);
+            ctx.lineTo(450, 270);
+            ctx.stroke();
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'og-image.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+        }
+
+        function regenerate() {
+            ctx.clearRect(0, 0, 1200, 630);
+            drawOGImage();
+        }
+
+        // 初始绘制
+        drawOGImage();
+    </script>
+</body>
+</html>

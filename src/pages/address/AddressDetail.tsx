@@ -7,6 +7,7 @@ import { CopyButton } from '../../components/common/CopyButton';
 import { StatCard } from '../../components/common/StatCard';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { UpgradePrompt } from '../../components/common/UpgradePrompt';
+import { useI18n } from '../../hooks/useI18n';
 import { shortAddress, formatAmount, formatDate } from '../../utils/format';
 import { useAppStore } from '../../stores/app';
 import { useUserStore } from '../../stores/user';
@@ -22,12 +23,12 @@ const getMockAddress = (chain: string, address: string) => ({
   riskScore: 87,
   riskLevel: 'critical' as const,
   riskFactors: [
-    { name: '与混币器交互', score: 30, description: '检测到与 Tornado Cash 的直接交互' },
-    { name: '高风险地址关联', score: 25, description: '与 3 个已知黑名单地址有交易往来' },
-    { name: '交易模式异常', score: 20, description: '短时间内大量小额分散交易' },
-    { name: '黑名单匹配', score: 12, description: 'OFAC 制裁名单匹配' },
+    { name: 'Mixer Interaction', score: 30, description: 'Direct interaction with Tornado Cash detected' },
+    { name: 'High-Risk Address Link', score: 25, description: 'Transactions with 3 known blacklisted addresses' },
+    { name: 'Abnormal Tx Pattern', score: 20, description: 'Large volume of small dispersal transactions in short time' },
+    { name: 'Blacklist Match', score: 12, description: 'OFAC sanctions list match' },
   ],
-  tags: ['混币器', '黑客', 'OFAC制裁'],
+  tags: ['Mixer', 'Hacker', 'OFAC Sanctioned'],
   txCount: 2847,
   totalReceived: '15847.23',
   totalSent: '14599.40',
@@ -55,17 +56,24 @@ type Tab = 'overview' | 'transactions' | 'flow' | 'risk';
 
 export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { addFavorite, removeFavorite, isFavorite } = useAppStore();
   const [tab, setTab] = useState<Tab>('overview');
   const [loading] = useState(false);
   const data = getMockAddress(chain, address);
   const favorited = isFavorite(address);
 
-  if (loading) return <LoadingSpinner text="查询中..." />;
+  if (loading) return <LoadingSpinner text={t.common.loading} />;
+
+  const TAB_LABELS: Record<Tab, string> = {
+    overview: t.address.detail.overview,
+    transactions: t.address.detail.transactions,
+    flow: t.address.detail.flow,
+    risk: t.address.detail.risk,
+  };
 
   return (
     <div className={styles.wrap}>
-      {/* 地址头部 */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <div className={styles.chainBadge}>{chain}</div>
@@ -75,7 +83,7 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
           </div>
           {data.label && <div className={styles.label}>{data.label}</div>}
           <div className={styles.tags}>
-            {data.tags.map(t => <span key={t} className="tag tag-danger">{t}</span>)}
+            {data.tags.map(tag => <span key={tag} className="tag tag-danger">{tag}</span>)}
           </div>
         </div>
         <div className={styles.headerRight}>
@@ -86,49 +94,46 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
               onClick={() => favorited ? removeFavorite(address) : addFavorite(address, chain, data.label)}
               style={favorited ? { color: 'var(--color-warning)', borderColor: 'var(--color-warning)' } : {}}
             >
-              {favorited ? '★ 已收藏' : '☆ 收藏'}
+              {favorited ? `★ ${t.address.favorited}` : `☆ ${t.address.favorite}`}
             </button>
-            <button className="btn btn-sm" onClick={() => navigate(ROUTES.MONITOR)}>◉ 监控</button>
-            <button className="btn btn-sm">▤ 导出报告</button>
+            <button className="btn btn-sm" onClick={() => navigate(ROUTES.MONITOR)}>◉ {t.address.monitor}</button>
+            <button className="btn btn-sm">▤ {t.address.exportReport}</button>
           </div>
         </div>
       </div>
 
-      {/* 统计卡片 */}
       <div className={styles.statsRow}>
-        <StatCard label="当前余额" value={`${formatAmount(data.balance)} ${chain}`} sub={`≈ $${parseFloat(data.balanceUSD).toLocaleString()}`} />
-        <StatCard label="总交易数" value={data.txCount.toLocaleString()} />
-        <StatCard label="累计收入" value={`${formatAmount(data.totalReceived)} ${chain}`} />
-        <StatCard label="累计支出" value={`${formatAmount(data.totalSent)} ${chain}`} />
-        <StatCard label="首次活跃" value={formatDate(data.firstSeen)} />
-        <StatCard label="最近活跃" value={formatDate(data.lastSeen)} />
+        <StatCard label={t.address.balance} value={`${formatAmount(data.balance)} ${chain}`} sub={`≈ ${parseFloat(data.balanceUSD).toLocaleString()}`} />
+        <StatCard label={t.address.txCount} value={data.txCount.toLocaleString()} />
+        <StatCard label={t.address.received} value={`${formatAmount(data.totalReceived)} ${chain}`} />
+        <StatCard label={t.address.sent} value={`${formatAmount(data.totalSent)} ${chain}`} />
+        <StatCard label={t.address.firstSeen} value={formatDate(data.firstSeen)} />
+        <StatCard label={t.address.lastSeen} value={formatDate(data.lastSeen)} />
       </div>
 
-      {/* 标签页 */}
       <div className={styles.tabs}>
-        {(['overview', 'transactions', 'flow', 'risk'] as Tab[]).map(t => (
+        {(['overview', 'transactions', 'flow', 'risk'] as Tab[]).map(tb => (
           <button
-            key={t}
-            className={`${styles.tab} ${tab === t ? styles.activeTab : ''}`}
-            onClick={() => setTab(t)}
+            key={tb}
+            className={`${styles.tab} ${tab === tb ? styles.activeTab : ''}`}
+            onClick={() => setTab(tb)}
           >
-            {{ overview: '概览', transactions: '交易记录', flow: '资金流向', risk: '风险报告' }[t]}
+            {TAB_LABELS[tb]}
           </button>
         ))}
       </div>
 
       <div className={styles.tabContent}>
-        {tab === 'overview' && <OverviewTab data={data} />}
-        {tab === 'transactions' && <TransactionsTab chain={chain} address={address} />}
-        {tab === 'flow' && <FlowTab chain={chain} address={address} />}
-        {tab === 'risk' && <RiskTab data={data} />}
+        {tab === 'overview' && <OverviewTab data={data} t={t} />}
+        {tab === 'transactions' && <TransactionsTab chain={chain} address={address} t={t} />}
+        {tab === 'flow' && <FlowTab chain={chain} address={address} t={t} />}
+        {tab === 'risk' && <RiskTab data={data} t={t} />}
       </div>
     </div>
   );
 };
 
-// Sub-tab components
-const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress> }> = ({ data }) => {
+const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress>; t: any }> = ({ data, t }) => {
   const assetOption = {
     backgroundColor: 'transparent',
     tooltip: {
@@ -161,7 +166,7 @@ const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress> }> = ({ da
   return (
     <div className={styles.overviewGrid}>
       <div className={styles.riskCard}>
-        <div className={styles.cardTitle}>风险评分</div>
+        <div className={styles.cardTitle}>{t.address.riskScore}</div>
         <RiskBar score={data.riskScore} />
         <div className={styles.riskFactors}>
           {data.riskFactors.map((f, i) => (
@@ -174,17 +179,17 @@ const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress> }> = ({ da
         </div>
       </div>
       <div className={styles.infoCard}>
-        <div className={styles.cardTitle}>地址信息</div>
+        <div className={styles.cardTitle}>{t.address.addressInfo}</div>
         <div className={styles.infoRows}>
-          <div className={styles.infoRow}><span>链</span><span className="mono">{data.chain}</span></div>
-          <div className={styles.infoRow}><span>地址类型</span><span>EOA</span></div>
-          <div className={styles.infoRow}><span>首次活跃</span><span>{formatDate(data.firstSeen)}</span></div>
-          <div className={styles.infoRow}><span>最近活跃</span><span>{formatDate(data.lastSeen)}</span></div>
-          <div className={styles.infoRow}><span>交易总数</span><span className="mono">{data.txCount.toLocaleString()}</span></div>
+          <div className={styles.infoRow}><span>{t.common.chain}</span><span className="mono">{data.chain}</span></div>
+          <div className={styles.infoRow}><span>{t.address.addressType}</span><span>EOA</span></div>
+          <div className={styles.infoRow}><span>{t.address.firstSeen}</span><span>{formatDate(data.firstSeen)}</span></div>
+          <div className={styles.infoRow}><span>{t.address.lastSeen}</span><span>{formatDate(data.lastSeen)}</span></div>
+          <div className={styles.infoRow}><span>{t.address.txCount}</span><span className="mono">{data.txCount.toLocaleString()}</span></div>
         </div>
       </div>
       <div className={styles.assetCard}>
-        <div className={styles.cardTitle}>资产分布</div>
+        <div className={styles.cardTitle}>{t.address.assetDistribution}</div>
         <div className={styles.assetLayout}>
           <ReactECharts option={assetOption} style={{ height: 160, width: 160 }} theme="dark" />
           <div className={styles.assetList}>
@@ -199,7 +204,7 @@ const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress> }> = ({ da
         </div>
       </div>
       <div className={styles.relatedCard}>
-        <div className={styles.cardTitle}>关联地址</div>
+        <div className={styles.cardTitle}>{t.address.relatedAddresses}</div>
         <div className={styles.relatedList}>
           {data.relatedAddresses.map((r, i) => (
             <div key={i} className={styles.relatedRow}>
@@ -230,10 +235,15 @@ const MOCK_TXS = Array.from({ length: 10 }, (_, i) => ({
   status: 'confirmed' as const,
 }));
 
-const TransactionsTab: React.FC<{ chain: string; address: string }> = ({ chain }) => (
+const TransactionsTab: React.FC<{ chain: string; address: string; t: any }> = ({ chain, t }) => (
   <div className={styles.txTable}>
     <div className={styles.txHeader}>
-      <span>交易哈希</span><span>时间</span><span>发送方</span><span>接收方</span><span>金额</span><span>状态</span>
+      <span>{t.transaction.txHash}</span>
+      <span>{t.common.time}</span>
+      <span>{t.transaction.from}</span>
+      <span>{t.transaction.to}</span>
+      <span>{t.common.amount}</span>
+      <span>{t.common.status}</span>
     </div>
     {MOCK_TXS.map(tx => (
       <div key={tx.hash} className={styles.txRow}>
@@ -242,17 +252,17 @@ const TransactionsTab: React.FC<{ chain: string; address: string }> = ({ chain }
         <span className={`${styles.txAddr} mono`}>{shortAddress(tx.from)}</span>
         <span className={`${styles.txAddr} mono`}>{shortAddress(tx.to)}</span>
         <span className={`${styles.txAmount} mono`}>{tx.amount} {chain}</span>
-        <span className={styles.txStatus}>已确认</span>
+        <span className={styles.txStatus}>{t.address.confirmed}</span>
       </div>
     ))}
   </div>
 );
 
-const FlowTab: React.FC<{ chain: string; address: string }> = ({ chain, address }) => {
+const FlowTab: React.FC<{ chain: string; address: string; t: any }> = ({ chain, address, t }) => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   if (!user || user.role === 'free') {
-    return <UpgradePrompt feature="资金流向图" requiredPlan="基础版" />;
+    return <UpgradePrompt feature={t.address.detail.flow} requiredPlan="Basic" />;
   }
 
   const flowOption = {
@@ -270,12 +280,7 @@ const FlowTab: React.FC<{ chain: string; address: string }> = ({ chain, address 
       force: { repulsion: 200, edgeLength: 120 },
       label: { show: true, color: '#8888a0', fontSize: 10, position: 'bottom' },
       lineStyle: { color: '#2a2a3a', width: 1.5, curveness: 0.2 },
-      edgeLabel: {
-        show: true,
-        fontSize: 9,
-        color: '#555568',
-        formatter: (p: any) => p.data.label || '',
-      },
+      edgeLabel: { show: true, fontSize: 9, color: '#555568', formatter: (p: any) => p.data.label || '' },
       data: [
         { name: shortAddress(address, 6, 4), symbolSize: 36, itemStyle: { color: '#c0392b' }, label: { color: '#e0e0e6', fontWeight: 600 } },
         { name: 'Bybit Hot', symbolSize: 28, itemStyle: { color: '#2980b9' } },
@@ -301,15 +306,15 @@ const FlowTab: React.FC<{ chain: string; address: string }> = ({ chain, address 
   return (
     <div className={styles.flowWrap}>
       <div className={styles.flowActions}>
-        <button className="btn btn-sm" onClick={() => navigate('/trace')}>在链路追踪中打开完整图谱 →</button>
-        <span className={styles.flowNote}>演示数据 · 完整数据需连接区块链节点</span>
+        <button className="btn btn-sm" onClick={() => navigate('/trace')}>{t.address.openInTrace}</button>
+        <span className={styles.flowNote}>{t.address.demoNote}</span>
       </div>
       <ReactECharts option={flowOption} style={{ flex: 1, minHeight: 320 }} theme="dark" />
     </div>
   );
 };
 
-const RiskTab: React.FC<{ data: ReturnType<typeof getMockAddress> }> = ({ data }) => (
+const RiskTab: React.FC<{ data: ReturnType<typeof getMockAddress>; t: any }> = ({ data, t }) => (
   <div className={styles.riskReport}>
     <div className={styles.reportHeader}>
       <div className={styles.reportScore}>
@@ -317,17 +322,17 @@ const RiskTab: React.FC<{ data: ReturnType<typeof getMockAddress> }> = ({ data }
         <span className={styles.reportScoreLabel}>/ 100</span>
       </div>
       <div>
-        <div className={styles.reportTitle}>高风险地址</div>
-        <div className={styles.reportSub}>该地址存在多项高风险特征，建议谨慎交互</div>
+        <div className={styles.reportTitle}>{t.address.highRisk}</div>
+        <div className={styles.reportSub}>{t.address.highRiskDesc}</div>
       </div>
     </div>
     <div className={styles.factorList}>
-      <div className={styles.cardTitle}>风险因素详情</div>
+      <div className={styles.cardTitle}>{t.address.riskFactorDetail}</div>
       {data.riskFactors.map((f, i) => (
         <div key={i} className={styles.factorDetail}>
           <div className={styles.factorDetailHeader}>
             <span className={styles.factorName}>{f.name}</span>
-            <span className={styles.factorScore} style={{ color: 'var(--risk-critical)' }}>影响分值: +{f.score}</span>
+            <span className={styles.factorScore} style={{ color: 'var(--risk-critical)' }}>{t.address.impactScore}: +{f.score}</span>
           </div>
           <div className={styles.factorDesc}>{f.description}</div>
         </div>

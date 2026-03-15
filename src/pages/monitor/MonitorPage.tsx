@@ -7,15 +7,15 @@ import styles from './MonitorPage.module.css';
 const MOCK_MONITORS = [
   { id: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', monitorType: 'transaction', status: 'active', alertCount: 12, createdAt: '2025-02-21T08:00:00Z', lastAlert: '2025-03-14T16:44:02Z', threshold: 10 },
   { id: '2', address: '1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf', chain: 'BTC', label: 'Genesis Block', monitorType: 'balance', status: 'active', alertCount: 0, createdAt: '2025-01-01T00:00:00Z', threshold: 50 },
-  { id: '3', address: 'TXmixerXXXXXXXXXXXXXXXXXXXXXXXXX', chain: 'TRX', label: '混币器地址', monitorType: 'risk', status: 'paused', alertCount: 3, createdAt: '2025-03-01T00:00:00Z', threshold: 80 },
+  { id: '3', address: 'TXmixerXXXXXXXXXXXXXXXXXXXXXXXXX', chain: 'TRX', label: 'Mixer Address', monitorType: 'risk', status: 'paused', alertCount: 3, createdAt: '2025-03-01T00:00:00Z', threshold: 80 },
 ];
 
 const MOCK_ALERTS = [
-  { id: 'a1', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'large_transfer', severity: 'critical', message: '检测到大额转账: 100 ETH → Tornado Cash', time: '2025-03-14T16:44:02Z', read: false },
-  { id: 'a2', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'risk_change', severity: 'high', message: '风险评分上升至 94 (+7)', time: '2025-03-14T12:11:30Z', read: false },
-  { id: 'a3', monitorId: '3', address: 'TXmixerXXXXXXXXXXXXXXXXXXXXXXXXX', chain: 'TRX', label: '混币器地址', type: 'new_tx', severity: 'medium', message: '新交易: 收到 50,000 TRX', time: '2025-03-13T09:22:15Z', read: true },
-  { id: 'a4', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'blacklist', severity: 'critical', message: '地址被新增至 OFAC 制裁名单', time: '2025-03-12T18:05:44Z', read: true },
-  { id: 'a5', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'large_transfer', severity: 'critical', message: '检测到大额转账: 200 ETH → 中间地址', time: '2025-03-11T07:33:21Z', read: true },
+  { id: 'a1', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'large_transfer', severity: 'critical', message: 'Large transfer detected: 100 ETH → Tornado Cash', time: '2025-03-14T16:44:02Z', read: false },
+  { id: 'a2', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'risk_change', severity: 'high', message: 'Risk score increased to 94 (+7)', time: '2025-03-14T12:11:30Z', read: false },
+  { id: 'a3', monitorId: '3', address: 'TXmixerXXXXXXXXXXXXXXXXXXXXXXXXX', chain: 'TRX', label: 'Mixer Address', type: 'new_tx', severity: 'medium', message: 'New transaction: received 50,000 TRX', time: '2025-03-13T09:22:15Z', read: true },
+  { id: 'a4', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'blacklist', severity: 'critical', message: 'Address added to OFAC sanctions list', time: '2025-03-12T18:05:44Z', read: true },
+  { id: 'a5', monitorId: '1', address: '0x47666Fab8bd0Ac7003bce3f5C3585383F09486E2', chain: 'ETH', label: 'Bybit Hacker', type: 'large_transfer', severity: 'critical', message: 'Large transfer detected: 200 ETH → Relay address', time: '2025-03-11T07:33:21Z', read: true },
 ];
 
 type MonitorView = 'list' | 'alerts';
@@ -53,14 +53,15 @@ export const MonitorPage: React.FC = () => {
         newType={newType} setNewType={setNewType}
         newThreshold={newThreshold} setNewThreshold={setNewThreshold}
         onClose={() => setShowAdd(false)}
+        t={t}
       />}
 
       <div className={styles.statsRow}>
         {[
-          { label: '监控地址', value: MOCK_MONITORS.length },
-          { label: '活跃监控', value: MOCK_MONITORS.filter(m => m.status === 'active').length },
-          { label: '今日预警', value: 5, danger: true },
-          { label: '未读预警', value: unreadCount, danger: unreadCount > 0 },
+          { label: t.monitor.monitoredAddresses, value: MOCK_MONITORS.length },
+          { label: t.monitor.activeMonitors, value: MOCK_MONITORS.filter(m => m.status === 'active').length },
+          { label: t.monitor.todayAlerts, value: 5, danger: true },
+          { label: t.monitor.unreadAlerts, value: unreadCount, danger: unreadCount > 0 },
         ].map((s, i) => (
           <div key={i} className={styles.statItem}>
             <span className={`${styles.statValue} ${s.danger ? styles.statDanger : ''}`}>{s.value}</span>
@@ -69,7 +70,7 @@ export const MonitorPage: React.FC = () => {
         ))}
       </div>
 
-      {view === 'list' ? <MonitorList /> : <AlertList />}
+      {view === 'list' ? <MonitorList t={t} /> : <AlertList t={t} />}
     </div>
   );
 };
@@ -81,69 +82,88 @@ interface AddFormProps {
   newType: string; setNewType: (v: string) => void;
   newThreshold: string; setNewThreshold: (v: string) => void;
   onClose: () => void;
+  t: any;
 }
 
-const AddForm: React.FC<AddFormProps> = ({ newAddr, setNewAddr, newChain, setNewChain, newLabel, setNewLabel, newType, setNewType, newThreshold, setNewThreshold, onClose }) => (
-  <div className={styles.addForm}>
-    <div className={styles.addFormTitle}>添加地址监控</div>
-    <div className={styles.addFormGrid}>
-      <div className={styles.addField}>
-        <label>公链</label>
-        <select className={styles.select} value={newChain} onChange={e => setNewChain(e.target.value)}>
-          {['ETH','BTC','TRX','SOL','BSC'].map(c => <option key={c}>{c}</option>)}
-        </select>
-      </div>
-      <div className={styles.addField} style={{ gridColumn: 'span 2' }}>
-        <label>区块链地址</label>
-        <input className={styles.input} placeholder="0x..." value={newAddr} onChange={e => setNewAddr(e.target.value)} />
-      </div>
-      <div className={styles.addField}>
-        <label>备注标签</label>
-        <input className={styles.input} placeholder="可选" value={newLabel} onChange={e => setNewLabel(e.target.value)} />
-      </div>
-      <div className={styles.addField}>
-        <label>监控类型</label>
-        <select className={styles.select} value={newType} onChange={e => setNewType(e.target.value)}>
-          <option value="transaction">交易监控</option>
-          <option value="balance">余额变动</option>
-          <option value="risk">风险评分</option>
-        </select>
-      </div>
-      <div className={styles.addField}>
-        <label>{newType === 'risk' ? '风险阈值 (0-100)' : newType === 'balance' ? '余额变动阈值 (ETH)' : '单笔金额阈值 (ETH)'}</label>
-        <input className={styles.input} type="number" value={newThreshold} onChange={e => setNewThreshold(e.target.value)} />
-      </div>
-    </div>
-    <div className={styles.addFormActions}>
-      <button className="btn btn-primary btn-sm">确认添加</button>
-      <button className="btn btn-sm" onClick={onClose}>取消</button>
-    </div>
-  </div>
-);
+const AddForm: React.FC<AddFormProps> = ({ newAddr, setNewAddr, newChain, setNewChain, newLabel, setNewLabel, newType, setNewType, newThreshold, setNewThreshold, onClose, t }) => {
+  const thresholdLabel = newType === 'risk' ? t.monitor.thresholdRisk
+    : newType === 'balance' ? t.monitor.thresholdBalance
+    : t.monitor.thresholdTx;
 
-const MonitorList: React.FC = () => (
+  return (
+    <div className={styles.addForm}>
+      <div className={styles.addFormTitle}>{t.monitor.addFormTitle}</div>
+      <div className={styles.addFormGrid}>
+        <div className={styles.addField}>
+          <label>{t.monitor.chain}</label>
+          <select className={styles.select} value={newChain} onChange={e => setNewChain(e.target.value)}>
+            {['ETH','BTC','TRX','SOL','BSC'].map(c => <option key={c}>{c}</option>)}
+          </select>
+        </div>
+        <div className={styles.addField} style={{ gridColumn: 'span 2' }}>
+          <label>{t.monitor.addressLabel}</label>
+          <input className={styles.input} placeholder="0x..." value={newAddr} onChange={e => setNewAddr(e.target.value)} />
+        </div>
+        <div className={styles.addField}>
+          <label>{t.monitor.noteLabel}</label>
+          <input className={styles.input} placeholder={t.monitor.optional} value={newLabel} onChange={e => setNewLabel(e.target.value)} />
+        </div>
+        <div className={styles.addField}>
+          <label>{t.monitor.monitorTypeLabel}</label>
+          <select className={styles.select} value={newType} onChange={e => setNewType(e.target.value)}>
+            <option value="transaction">{t.monitor.monitorType.transaction}</option>
+            <option value="balance">{t.monitor.monitorType.balance}</option>
+            <option value="risk">{t.monitor.monitorType.risk}</option>
+          </select>
+        </div>
+        <div className={styles.addField}>
+          <label>{thresholdLabel}</label>
+          <input className={styles.input} type="number" value={newThreshold} onChange={e => setNewThreshold(e.target.value)} />
+        </div>
+      </div>
+      <div className={styles.addFormActions}>
+        <button className="btn btn-primary btn-sm">{t.monitor.confirmAdd}</button>
+        <button className="btn btn-sm" onClick={onClose}>{t.common.cancel}</button>
+      </div>
+    </div>
+  );
+};
+
+const MonitorList: React.FC<{ t: any }> = ({ t }) => (
   MOCK_MONITORS.length === 0 ? (
-    <EmptyState title="暂无监控地址" description="添加地址开始实时监控" />
+    <EmptyState title={t.common.noData} description="" />
   ) : (
     <div className={styles.table}>
       <div className={styles.tableHeader}>
-        <span>地址</span><span>链</span><span>标签</span><span>监控类型</span><span>阈值</span><span>状态</span><span>预警次数</span><span>最近预警</span><span>操作</span>
+        <span>{t.common.address}</span>
+        <span>{t.common.chain}</span>
+        <span>{t.common.label}</span>
+        <span>{t.common.type}</span>
+        <span>{t.monitor.threshold}</span>
+        <span>{t.common.status}</span>
+        <span>{t.monitor.alertCount}</span>
+        <span>{t.monitor.lastAlert}</span>
+        <span>{t.common.actions}</span>
       </div>
       {MOCK_MONITORS.map(m => (
         <div key={m.id} className={styles.tableRow}>
           <span className={`${styles.addr} mono`}>{shortAddress(m.address)}</span>
           <span className={styles.chain}>{m.chain}</span>
           <span className={styles.label}>{m.label || '-'}</span>
-          <span className={styles.type}>{{ transaction: '交易', balance: '余额', risk: '风险' }[m.monitorType]}</span>
+          <span className={styles.type}>
+            {m.monitorType === 'transaction' ? t.monitor.monitorType.transaction
+              : m.monitorType === 'balance' ? t.monitor.monitorType.balance
+              : t.monitor.monitorType.risk}
+          </span>
           <span className={`${styles.threshold} mono`}>{m.threshold}{m.monitorType === 'risk' ? '' : ' ETH'}</span>
           <span className={`${styles.status} ${m.status === 'active' ? styles.active : styles.paused}`}>
-            {m.status === 'active' ? '● 监控中' : '○ 已暂停'}
+            {m.status === 'active' ? t.monitor.monitoringActive : t.monitor.monitoringPaused}
           </span>
           <span className={`${styles.alertCount} ${m.alertCount > 0 ? styles.hasAlert : ''}`}>{m.alertCount}</span>
           <span className={styles.lastAlert}>{m.lastAlert ? formatDate(m.lastAlert) : '-'}</span>
           <div className={styles.actions}>
-            <button className="btn btn-sm">{m.status === 'active' ? '暂停' : '启动'}</button>
-            <button className="btn btn-sm" style={{ color: 'var(--color-danger)' }}>删除</button>
+            <button className="btn btn-sm">{m.status === 'active' ? t.common.pause : t.common.resume}</button>
+            <button className="btn btn-sm" style={{ color: 'var(--color-danger)' }}>{t.common.delete}</button>
           </div>
         </div>
       ))}
@@ -158,9 +178,8 @@ const SEVERITY_COLOR: Record<string, string> = {
   low: 'var(--risk-safe)',
 };
 
-const AlertList: React.FC = () => {
+const AlertList: React.FC<{ t: any }> = ({ t }) => {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-  const { t } = useI18n();
   const alerts = filter === 'unread' ? MOCK_ALERTS.filter(a => !a.read) : MOCK_ALERTS;
   const SEVERITY_LABEL: Record<string, string> = {
     critical: t.monitor.severity.critical,

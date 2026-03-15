@@ -1,55 +1,186 @@
 @import './reset.css';
 @import './variables.css';
 
-#root { min-height: 100vh; display: flex; flex-direction: column; }
+/* ── Base ─────────────────────────────────────────────────── */
+html {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-/* 通用工具类 */
-.container { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 var(--space-6); }
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Layout Utilities ─────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* ── Typography Utilities ─────────────────────────────────── */
 .mono { font-family: var(--font-mono); }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* 按钮基础 - 无圆角 */
-.btn {
-  display: inline-flex; align-items: center; gap: var(--space-2);
-  padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm);
-  border: 1px solid var(--color-border); background: var(--color-bg-card);
-  color: var(--color-text); transition: all var(--transition); cursor: pointer;
-  border-radius: 0;
+.label-caps {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
-.btn:hover { border-color: var(--color-border-light); background: var(--color-bg-input); }
-.btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
-.btn-primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
-.btn-sm { padding: var(--space-1) var(--space-3); font-size: var(--font-size-xs); }
 
-/* 输入框 - 无圆角 */
+/* ── Buttons ──────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: 0;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+  white-space: nowrap;
+  user-select: none;
+}
+.btn:hover {
+  border-color: var(--color-border-light);
+  color: var(--color-text);
+  background: var(--color-bg-hover);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  font-weight: var(--font-weight-semibold);
+}
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #fff;
+}
+.btn-sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+}
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-text-muted);
+}
+.btn-ghost:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* ── Inputs ───────────────────────────────────────────────── */
 .input {
-  width: 100%; padding: var(--space-2) var(--space-3);
-  background: var(--color-bg-input); border: 1px solid var(--color-border);
-  color: var(--color-text); font-size: var(--font-size-base);
-  transition: border-color var(--transition); border-radius: 0;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-family: var(--font-sans);
+  border-radius: 0;
+  transition: border-color var(--transition);
+  outline: none;
 }
 .input:focus { border-color: var(--color-accent); }
 .input::placeholder { color: var(--color-text-muted); }
+.input:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* 卡片 - 无圆角 */
-.card {
-  background: var(--color-bg-card); border: 1px solid var(--color-border);
-  padding: var(--space-4); border-radius: 0;
+select.input, select {
+  appearance: none;
+  cursor: pointer;
 }
 
-/* 风险等级色 */
+/* ── Cards ────────────────────────────────────────────────── */
+.card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  padding: var(--space-4);
+  border-radius: 0;
+}
+.card-elevated {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  padding: var(--space-4);
+}
+
+/* ── Risk Colors ──────────────────────────────────────────── */
 .risk-critical { color: var(--risk-critical); }
 .risk-high { color: var(--risk-high); }
 .risk-medium { color: var(--risk-medium); }
 .risk-low { color: var(--risk-low); }
 .risk-safe { color: var(--risk-safe); }
 
-/* 标签 */
+/* ── Tags ─────────────────────────────────────────────────── */
 .tag {
-  display: inline-flex; align-items: center; padding: 1px var(--space-2);
-  font-size: var(--font-size-xs); border: 1px solid var(--color-border);
-  background: var(--color-bg-elevated); border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  border-radius: 0;
+  white-space: nowrap;
 }
-.tag-danger { border-color: var(--risk-critical); color: var(--risk-critical); background: rgba(192,57,43,0.1); }
-.tag-warning { border-color: var(--risk-medium); color: var(--risk-medium); background: rgba(212,160,23,0.1); }
-.tag-safe { border-color: var(--risk-safe); color: var(--risk-safe); background: rgba(46,204,113,0.1); }
+.tag-danger {
+  border-color: rgba(192, 57, 43, 0.4);
+  color: var(--risk-critical);
+  background: var(--color-accent-dim);
+}
+.tag-warning {
+  border-color: rgba(200, 150, 12, 0.4);
+  color: var(--risk-medium);
+  background: rgba(200, 150, 12, 0.08);
+}
+.tag-safe {
+  border-color: rgba(30, 132, 73, 0.4);
+  color: var(--risk-safe);
+  background: rgba(30, 132, 73, 0.08);
+}
+.tag-info {
+  border-color: rgba(26, 111, 168, 0.4);
+  color: var(--color-info);
+  background: rgba(26, 111, 168, 0.08);
+}
+
+/* ── Dividers ─────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-4) 0;
+}
+
+/* ── Scrollbars ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-light); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* ── Selection ────────────────────────────────────────────── */
+::selection {
+  background: var(--color-accent-dim);
+  color: var(--color-text);
+}

@@ -5,6 +5,7 @@ import { CopyButton } from '../../components/common/CopyButton';
 import { RiskBadge } from '../../components/common/RiskBadge';
 import { StatCard } from '../../components/common/StatCard';
 import { EmptyState } from '../../components/common/EmptyState';
+import { useI18n } from '../../hooks/useI18n';
 import { shortAddress, formatDate, formatAmount } from '../../utils/format';
 import styles from './TransactionPage.module.css';
 
@@ -23,7 +24,6 @@ const MOCK_TX = {
   confirmations: 847293,
 };
 
-// Mock path hops for fund flow
 const FLOW_HOPS = [
   { addr: '0xd90e2f...F31b', label: 'Bybit Hot Wallet', amount: '401,346 ETH', risk: 20 },
   { addr: '0x47666F...86E2', label: 'Hacker Address', amount: '401,346 ETH', risk: 94 },
@@ -37,6 +37,7 @@ type TxTab = 'detail' | 'flow' | 'timeline';
 export const TransactionPage: React.FC = () => {
   const { hash: paramHash } = useParams<{ hash?: string }>();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [query, setQuery] = useState(paramHash || '');
   const [searched, setSearched] = useState(!!paramHash);
   const [tab, setTab] = useState<TxTab>('detail');
@@ -49,6 +50,12 @@ export const TransactionPage: React.FC = () => {
     setSearched(true);
   };
 
+  const TAB_LABELS: Record<TxTab, string> = {
+    detail: t.transaction.detail,
+    flow: t.transaction.flow,
+    timeline: t.transaction.timeline,
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.searchBar}>
@@ -56,12 +63,12 @@ export const TransactionPage: React.FC = () => {
           <input
             className={styles.input}
             type="text"
-            placeholder="输入交易哈希..."
+            placeholder={t.transaction.placeholder}
             value={query}
             onChange={e => setQuery(e.target.value)}
             autoFocus={!paramHash}
           />
-          <button type="submit" className="btn btn-primary">查询</button>
+          <button type="submit" className="btn btn-primary">{t.common.search}</button>
         </form>
       </div>
 
@@ -69,51 +76,50 @@ export const TransactionPage: React.FC = () => {
         <div className={styles.content}>
           <div className={styles.txHeader}>
             <div className={styles.txHashRow}>
-              <span className={styles.txHashLabel}>交易哈希</span>
+              <span className={styles.txHashLabel}>{t.transaction.txHash}</span>
               <span className={`${styles.txHash} mono`}>{MOCK_TX.hash}</span>
               <CopyButton text={MOCK_TX.hash} />
             </div>
             <div className={styles.txMeta}>
               <span className={styles.chainBadge}>{MOCK_TX.chain}</span>
-              <span className={styles.statusBadge}>已确认</span>
+              <span className={styles.statusBadge}>{t.transaction.confirmed}</span>
               <RiskBadge score={MOCK_TX.riskScore} />
             </div>
           </div>
 
           <div className={styles.statsRow}>
-            <StatCard label="交易金额" value={`${formatAmount(MOCK_TX.amount)} ETH`} sub={`≈ $1.46B`} danger />
-            <StatCard label="区块高度" value={MOCK_TX.blockNumber.toLocaleString()} />
-            <StatCard label="确认数" value={MOCK_TX.confirmations.toLocaleString()} />
-            <StatCard label="手续费" value={`${MOCK_TX.fee} ETH`} />
+            <StatCard label={t.common.amount} value={`${formatAmount(MOCK_TX.amount)} ETH`} sub={`≈ $1.46B`} danger />
+            <StatCard label={t.transaction.block} value={MOCK_TX.blockNumber.toLocaleString()} />
+            <StatCard label={t.transaction.confirmations} value={MOCK_TX.confirmations.toLocaleString()} />
+            <StatCard label={t.transaction.fee} value={`${MOCK_TX.fee} ETH`} />
           </div>
 
-          {/* Tabs */}
           <div className={styles.tabs}>
-            {(['detail', 'flow', 'timeline'] as TxTab[]).map(t => (
-              <button key={t} className={`${styles.tab} ${tab === t ? styles.activeTab : ''}`} onClick={() => setTab(t)}>
-                {{ detail: '交易详情', flow: '资金路径', timeline: '时间线' }[t]}
+            {(['detail', 'flow', 'timeline'] as TxTab[]).map(t2 => (
+              <button key={t2} className={`${styles.tab} ${tab === t2 ? styles.activeTab : ''}`} onClick={() => setTab(t2)}>
+                {TAB_LABELS[t2]}
               </button>
             ))}
           </div>
 
-          {tab === 'detail' && <DetailTab navigate={navigate} />}
-          {tab === 'flow' && <FlowTab />}
-          {tab === 'timeline' && <TimelineTab />}
+          {tab === 'detail' && <DetailTab navigate={navigate} t={t} />}
+          {tab === 'flow' && <FlowTab t={t} />}
+          {tab === 'timeline' && <TimelineTab t={t} />}
         </div>
       ) : (
-        <EmptyState title="输入交易哈希开始追踪" description="支持 BTC、ETH、TRX 等主流公链交易哈希" />
+        <EmptyState title={t.transaction.title} description={t.transaction.placeholder} />
       )}
     </div>
   );
 };
 
-const DetailTab: React.FC<{ navigate: (p: string) => void }> = ({ navigate }) => (
+const DetailTab: React.FC<{ navigate: (p: string) => void; t: any }> = ({ navigate, t }) => (
   <div className={styles.detailGrid}>
     <div className={styles.detailCard}>
-      <div className={styles.cardTitle}>交易详情</div>
+      <div className={styles.cardTitle}>{t.transaction.txDetail}</div>
       <div className={styles.detailRows}>
         <div className={styles.detailRow}>
-          <span>发送方</span>
+          <span>{t.transaction.from}</span>
           <div className={styles.addrCell}>
             <button className={`${styles.addrLink} mono`} onClick={() => navigate(`/address/ETH/${MOCK_TX.from}`)}>
               {shortAddress(MOCK_TX.from, 10, 8)}
@@ -122,7 +128,7 @@ const DetailTab: React.FC<{ navigate: (p: string) => void }> = ({ navigate }) =>
           </div>
         </div>
         <div className={styles.detailRow}>
-          <span>接收方</span>
+          <span>{t.transaction.to}</span>
           <div className={styles.addrCell}>
             <button className={`${styles.addrLink} mono`} onClick={() => navigate(`/address/ETH/${MOCK_TX.to}`)}>
               {shortAddress(MOCK_TX.to, 10, 8)}
@@ -130,29 +136,29 @@ const DetailTab: React.FC<{ navigate: (p: string) => void }> = ({ navigate }) =>
             <CopyButton text={MOCK_TX.to} />
           </div>
         </div>
-        <div className={styles.detailRow}><span>时间</span><span className="mono">{formatDate(MOCK_TX.timestamp)}</span></div>
-        <div className={styles.detailRow}><span>区块</span><span className="mono">{MOCK_TX.blockNumber.toLocaleString()}</span></div>
-        <div className={styles.detailRow}><span>手续费</span><span className="mono">{MOCK_TX.fee} ETH</span></div>
-        <div className={styles.detailRow}><span>确认数</span><span className="mono">{MOCK_TX.confirmations.toLocaleString()}</span></div>
+        <div className={styles.detailRow}><span>{t.common.time}</span><span className="mono">{formatDate(MOCK_TX.timestamp)}</span></div>
+        <div className={styles.detailRow}><span>{t.transaction.block}</span><span className="mono">{MOCK_TX.blockNumber.toLocaleString()}</span></div>
+        <div className={styles.detailRow}><span>{t.transaction.fee}</span><span className="mono">{MOCK_TX.fee} ETH</span></div>
+        <div className={styles.detailRow}><span>{t.transaction.confirmations}</span><span className="mono">{MOCK_TX.confirmations.toLocaleString()}</span></div>
       </div>
     </div>
     <div className={styles.detailCard}>
-      <div className={styles.cardTitle}>风险分析</div>
+      <div className={styles.cardTitle}>{t.transaction.riskAnalysis}</div>
       <div className={styles.riskSummary}>
         <RiskBadge score={MOCK_TX.riskScore} size="lg" />
         <div className={styles.riskFlags}>
-          {['混币器关联', 'OFAC制裁地址', '大额异常转账'].map(f => (
+          {['Mixer Association', 'OFAC Sanctioned', 'Large Abnormal Transfer'].map(f => (
             <span key={f} className="tag tag-danger">{f}</span>
           ))}
         </div>
-        <p className={styles.riskNote}>该交易涉及高风险地址，资金来源存在混币器使用记录，建议进一步调查。</p>
-        <button className="btn btn-sm" onClick={() => navigate(`/address/ETH/${MOCK_TX.to}`)}>查看接收方详情 →</button>
+        <p className={styles.riskNote}>{t.transaction.riskNote}</p>
+        <button className="btn btn-sm" onClick={() => navigate(`/address/ETH/${MOCK_TX.to}`)}>{t.transaction.viewRecipient}</button>
       </div>
     </div>
   </div>
 );
 
-const FlowTab: React.FC = () => {
+const FlowTab: React.FC<{ t: any }> = ({ t }) => {
   const flowOption = {
     backgroundColor: 'transparent',
     tooltip: {
@@ -202,7 +208,7 @@ const FlowTab: React.FC = () => {
               {h.label && <div className={styles.hopLabel}>{h.label}</div>}
               <div className={styles.hopAmount}>{h.amount}</div>
               <div className={styles.hopRisk} style={{ color: h.risk > 80 ? 'var(--risk-critical)' : h.risk > 50 ? 'var(--risk-high)' : 'var(--risk-safe)' }}>
-                风险 {h.risk}
+                {t.transaction.risk} {h.risk}
               </div>
             </div>
             {i < FLOW_HOPS.length - 1 && <div className={styles.hopArrow}>→</div>}
@@ -214,7 +220,7 @@ const FlowTab: React.FC = () => {
   );
 };
 
-const TimelineTab: React.FC = () => {
+const TimelineTab: React.FC<{ t: any }> = ({ t }) => {
   const timeData = Array.from({ length: 30 }, (_, i) => {
     const d = new Date('2025-02-01');
     d.setDate(d.getDate() + i);
@@ -238,7 +244,7 @@ const TimelineTab: React.FC = () => {
     },
     yAxis: {
       type: 'value',
-      name: '交易数',
+      name: 'Tx',
       nameTextStyle: { color: '#555568', fontSize: 10 },
       axisLine: { lineStyle: { color: '#2a2a3a' } },
       axisLabel: { color: '#555568', fontSize: 10 },
@@ -250,7 +256,7 @@ const TimelineTab: React.FC = () => {
       itemStyle: { color: '#c0392b', opacity: 0.8 },
       barMaxWidth: 20,
       markLine: {
-        data: [{ type: 'average', name: '均值' }],
+        data: [{ type: 'average', name: 'Avg' }],
         lineStyle: { color: '#555568' },
         label: { color: '#555568', fontSize: 10 },
       },
@@ -259,11 +265,16 @@ const TimelineTab: React.FC = () => {
 
   return (
     <div className={styles.timelineWrap}>
-      <div className={styles.cardTitle}>交易活动时间线 · 近30天</div>
+      <div className={styles.cardTitle}>{t.transaction.activityTimeline}</div>
       <ReactECharts option={option} style={{ height: 280, width: '100%' }} theme="dark" />
       <div className={styles.txTable}>
         <div className={styles.txHeader}>
-          <span>交易哈希</span><span>时间</span><span>发送方</span><span>接收方</span><span>金额</span><span>状态</span>
+          <span>{t.transaction.txHash}</span>
+          <span>{t.common.time}</span>
+          <span>{t.transaction.from}</span>
+          <span>{t.transaction.to}</span>
+          <span>{t.common.amount}</span>
+          <span>{t.common.status}</span>
         </div>
         {Array.from({ length: 5 }, (_, i) => ({
           hash: `0x${Math.random().toString(16).slice(2).padEnd(64, '0')}`,
@@ -278,7 +289,7 @@ const TimelineTab: React.FC = () => {
             <span className={`${styles.txAddr} mono`}>{shortAddress(tx.from)}</span>
             <span className={`${styles.txAddr} mono`}>{shortAddress(tx.to)}</span>
             <span className={`${styles.txAmount} mono`}>{tx.amount} ETH</span>
-            <span className={styles.txStatus}>已确认</span>
+            <span className={styles.txStatus}>{t.transaction.confirmed}</span>
           </div>
         ))}
       </div>

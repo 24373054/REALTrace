@@ -166,6 +166,7 @@
   height: 100%;
   display: flex;
   overflow: hidden;
+  background: var(--color-bg);
 }
 
 .backBtn {
@@ -177,16 +178,15 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(192, 57, 43, 0.5);
-  color: #fff;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   font-size: 12px;
   cursor: pointer;
-  backdrop-filter: blur(4px);
   transition: border-color 0.15s, background 0.15s;
 }
 
 .backBtn:hover {
-  background: rgba(0, 0, 0, 0.9);
+  background: var(--color-bg-input);
   border-color: var(--color-accent);
 }

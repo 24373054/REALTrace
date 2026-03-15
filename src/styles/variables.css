@@ -1,39 +1,70 @@
-/* ChainTrace Design Tokens - 专业金融安全工具风格 */
-/* 无渐变、无圆角、无AI风格 */
+/* ChainTrace Design System - Professional Blockchain Security Platform */
+/* Cold, restrained, high information density. No gradients, no rounded corners. */
 
 :root {
-  /* 主色 - 冷灰 + 警示红 */
-  --color-primary: #1a1a2e;
-  --color-primary-light: #16213e;
+  /* ── Core Palette ─────────────────────────────────────── */
   --color-accent: #c0392b;
   --color-accent-hover: #a93226;
+  --color-accent-dim: rgba(192, 57, 43, 0.12);
 
-  /* 语义色 */
+  /* ── Semantic Colors ──────────────────────────────────── */
   --color-danger: #c0392b;
-  --color-warning: #d4a017;
-  --color-safe: #27ae60;
-  --color-info: #2980b9;
+  --color-warning: #c8960c;
+  --color-safe: #1e8449;
+  --color-info: #1a6fa8;
 
-  /* 风险等级色 */
+  /* ── Risk Scale ───────────────────────────────────────── */
   --risk-critical: #c0392b;
-  --risk-high: #e67e22;
-  --risk-medium: #d4a017;
-  --risk-low: #27ae60;
-  --risk-safe: #2ecc71;
+  --risk-high: #d4680a;
+  --risk-medium: #c8960c;
+  --risk-low: #1e8449;
+  --risk-safe: #27ae60;
 
-  /* 中性色 */
-  --color-bg: #0a0a0f;
-  --color-bg-elevated: #111118;
-  --color-bg-card: #16161e;
-  --color-bg-input: #1c1c26;
-  --color-border: #2a2a3a;
-  --color-border-light: #333346;
-  --color-text: #e0e0e6;
-  --color-text-secondary: #8888a0;
-  --color-text-muted: #555568;
-  --color-text-inverse: #0a0a0f;
+  /* ── Dark Theme (default) ─────────────────────────────── */
+  --color-bg: #09090e;
+  --color-bg-elevated: #0f0f16;
+  --color-bg-card: #141420;
+  --color-bg-input: #1a1a28;
+  --color-bg-hover: #1e1e2e;
+  --color-border: #252535;
+  --color-border-light: #303048;
+  --color-border-accent: rgba(192, 57, 43, 0.3);
+  --color-text: #dddde8;
+  --color-text-secondary: #8080a0;
+  --color-text-muted: #4a4a68;
+  --color-text-inverse: #09090e;
 
-  /* 间距 */
+  /* ── Typography ───────────────────────────────────────── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --font-size-2xs: 10px;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 15px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 22px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 36px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+  --line-height-relaxed: 1.7;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.04em;
+  --letter-spacing-wider: 0.08em;
+  --letter-spacing-widest: 0.12em;
+
+  /* ── Spacing ──────────────────────────────────────────── */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -43,84 +74,89 @@
   --space-8: 32px;
   --space-10: 40px;
   --space-12: 48px;
+  --space-16: 64px;
 
-  /* 字体 */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-  --font-size-xs: 11px;
-  --font-size-sm: 12px;
-  --font-size-base: 13px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 22px;
-  --font-size-3xl: 28px;
-
-  /* 无圆角 */
+  /* ── No border radius ─────────────────────────────────── */
   --radius: 0px;
-  --radius-sm: 1px;
+  --radius-sm: 0px;
 
-  /* 边框 */
+  /* ── Borders ──────────────────────────────────────────── */
   --border: 1px solid var(--color-border);
+  --border-light: 1px solid var(--color-border-light);
 
-  /* 阴影 - 极简 */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.4);
+  /* ── Shadows ──────────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
 
-  /* 过渡 */
-  --transition: 150ms ease;
+  /* ── Transitions ──────────────────────────────────────── */
+  --transition: 120ms ease;
+  --transition-slow: 250ms ease;
+
+  /* ── Layout ───────────────────────────────────────────── */
+  --header-height: 48px;
+  --sidebar-width: 200px;
+  --content-max-width: 1440px;
 }
 
 /* ─── Light Theme ─────────────────────────────────────────── */
 [data-theme="light"] {
-  --color-bg: #f4f4f8;
+  --color-bg: #f2f2f6;
   --color-bg-elevated: #ffffff;
-  --color-bg-card: #f9f9fc;
+  --color-bg-card: #fafafa;
   --color-bg-input: #ffffff;
-  --color-border: #d0d0de;
-  --color-border-light: #b8b8cc;
-  --color-text: #0a0a1a;
-  --color-text-secondary: #444460;
-  --color-text-muted: #888899;
+  --color-bg-hover: #f0f0f5;
+  --color-border: #d8d8e8;
+  --color-border-light: #c0c0d8;
+  --color-border-accent: rgba(192, 57, 43, 0.25);
+  --color-text: #0a0a18;
+  --color-text-secondary: #404060;
+  --color-text-muted: #808098;
   --color-text-inverse: #ffffff;
-  --color-accent: #c0392b;
-  --color-accent-hover: #a93226;
-  --color-danger: #c0392b;
-  --color-warning: #b8860b;
-  --color-safe: #1a7a40;
-  --color-info: #1a5f8a;
-  --risk-critical: #c0392b;
-  --risk-high: #c0620a;
-  --risk-medium: #b8860b;
-  --risk-low: #1a7a40;
-  --risk-safe: #1a9a50;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.15);
+  --color-accent: #b03020;
+  --color-accent-hover: #922818;
+  --color-accent-dim: rgba(176, 48, 32, 0.08);
+  --color-danger: #b03020;
+  --color-warning: #9a7008;
+  --color-safe: #166038;
+  --color-info: #145a88;
+  --risk-critical: #b03020;
+  --risk-high: #b05008;
+  --risk-medium: #9a7008;
+  --risk-low: #166038;
+  --risk-safe: #1a8040;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 /* ─── High Contrast Theme ─────────────────────────────────── */
 [data-theme="high-contrast"] {
   --color-bg: #000000;
-  --color-bg-elevated: #0a0a0a;
-  --color-bg-card: #111111;
-  --color-bg-input: #0d0d0d;
-  --color-border: #444444;
-  --color-border-light: #666666;
+  --color-bg-elevated: #080808;
+  --color-bg-card: #0e0e0e;
+  --color-bg-input: #0a0a0a;
+  --color-bg-hover: #141414;
+  --color-border: #505050;
+  --color-border-light: #707070;
+  --color-border-accent: rgba(255, 60, 60, 0.5);
   --color-text: #ffffff;
-  --color-text-secondary: #cccccc;
-  --color-text-muted: #888888;
+  --color-text-secondary: #d0d0d0;
+  --color-text-muted: #909090;
   --color-text-inverse: #000000;
-  --color-accent: #ff4444;
-  --color-accent-hover: #ff2222;
-  --color-danger: #ff4444;
+  --color-accent: #ff3c3c;
+  --color-accent-hover: #ff1a1a;
+  --color-accent-dim: rgba(255, 60, 60, 0.15);
+  --color-danger: #ff3c3c;
   --color-warning: #ffcc00;
-  --color-safe: #00ff88;
-  --color-info: #44aaff;
-  --risk-critical: #ff4444;
+  --color-safe: #00e070;
+  --color-info: #40aaff;
+  --risk-critical: #ff3c3c;
   --risk-high: #ff8800;
   --risk-medium: #ffcc00;
-  --risk-low: #00ff88;
-  --risk-safe: #00ff88;
-  --shadow-sm: 0 0 0 1px #444;
-  --shadow-md: 0 0 0 2px #666;
+  --risk-low: #00e070;
+  --risk-safe: #00e070;
+  --shadow-sm: 0 0 0 1px #505050;
+  --shadow-md: 0 0 0 2px #707070;
+  --shadow-lg: 0 0 0 3px #909090;
 }

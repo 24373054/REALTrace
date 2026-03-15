@@ -18,6 +18,8 @@ import { fetchGraph } from '../../../services/api';
 import { loadHackerTraceGraph, HACKER_ROOT_ADDRESS } from '../../../services/hackerTraceService';
 import { analyzeGraphWithGemini } from '../../../services/geminiService';
 import { GraphData, GraphLink, GraphNode, ChainType, NetworkType } from '../../../types';
+import { useAppStore } from '../../stores/app';
+import { useI18n } from '../../hooks/useI18n';
 import jsPDF from 'jspdf';
 import type { CaseConfig } from '../../../components/cybertrace/HackerTraceView';
 import styles from './TracePage.module.css';
@@ -76,6 +78,9 @@ export const TracePage: React.FC = () => {
   const [isExpanding, setIsExpanding] = useState(false);
   const [chain, setChain] = useState<ChainType>(ChainType.SOLANA);
   const [network] = useState<NetworkType>(NetworkType.MAINNET);
+  const { theme } = useAppStore();
+  const { t } = useI18n();
+  const isDarkMode = theme !== 'light';
 
   useEffect(() => {
     fetchGraph(INITIAL_ADDRESS, chain).then(newData => {
@@ -297,7 +302,7 @@ export const TracePage: React.FC = () => {
     return (
       <div className={styles.cyberWrap}>
         <button className={styles.backBtn} onClick={() => setViewLayout('standard')}>
-          <X size={14} /> 返回主视图
+          <X size={14} /> {t.trace.backToMain}
         </button>
         <HackerTraceView cases={hackerCases} />
       </div>
@@ -323,10 +328,10 @@ export const TracePage: React.FC = () => {
             value={addressInput}
             onChange={e => setAddressInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            placeholder="输入区块链地址..."
+            placeholder={t.trace.enterAddress}
           />
           <button className={styles.searchBtn} onClick={handleSearch}>
-            <RefreshCw size={14} /> 查询
+            <RefreshCw size={14} /> {t.trace.query}
           </button>
         </div>
 
@@ -349,26 +354,26 @@ export const TracePage: React.FC = () => {
           {/* View mode */}
           <div className={styles.toolGroup}>
             <button className={`${styles.toolBtn} ${viewMode === 'all' ? styles.active : ''}`} onClick={() => setViewMode('all')}>
-              <PanelLeft size={14} /> 全部
+              <PanelLeft size={14} /> {t.trace.all}
             </button>
             <button className={`${styles.toolBtn} ${viewMode === 'incoming' ? styles.activeGreen : ''}`} onClick={() => setViewMode('incoming')}>
-              <ArrowDownLeft size={14} /> 入账
+              <ArrowDownLeft size={14} /> {t.trace.incoming}
             </button>
             <button className={`${styles.toolBtn} ${viewMode === 'outgoing' ? styles.activeRed : ''}`} onClick={() => setViewMode('outgoing')}>
-              <ArrowUpRight size={14} /> 出账
+              <ArrowUpRight size={14} /> {t.trace.outgoing}
             </button>
           </div>
 
           {/* Special actions */}
           <div className={styles.toolGroup}>
-            <button className={styles.toolBtnRed} onClick={handleLoadHackerTrace} title="载入黑客攻击链路">黑客链路</button>
-            <button className={styles.toolBtn} onClick={() => setViewLayout('cyber')} title="切换到 CyberTrace 视图">
+            <button className={styles.toolBtnRed} onClick={handleLoadHackerTrace} title={t.trace.hackerTrace}>{t.trace.hackerTrace}</button>
+            <button className={styles.toolBtn} onClick={() => setViewLayout('cyber')} title="CyberTrace">
               <Eye size={14} /> Cyber
             </button>
           </div>
 
           <div className={styles.statsLabel}>
-            Depth: {depthLimit} | Tx: {filteredGraph.links.length}
+            {t.trace.depth}: {depthLimit} | Tx: {filteredGraph.links.length}
           </div>
         </div>
       </div>
@@ -381,7 +386,7 @@ export const TracePage: React.FC = () => {
             onNodeClick={node => setSelectedNode(node)}
             selectedNodeId={selectedNode?.id}
             ref={graphRef}
-            isDarkMode={true}
+            isDarkMode={isDarkMode}
           />
         </div>
         <AnalysisPanel
@@ -399,7 +404,7 @@ export const TracePage: React.FC = () => {
           isExpanding={isExpanding}
           chain={chain}
           network={network}
-          isDarkMode={true}
+          isDarkMode={isDarkMode}
         />
       </div>
     </div>

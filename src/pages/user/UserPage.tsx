@@ -33,7 +33,7 @@ export const UserPage: React.FC = () => {
           <div className={styles.username}>{user.username}</div>
           <div className={styles.email}>{user.email}</div>
           <div className={styles.roleBadge}>{user.role.toUpperCase()}</div>
-          <div className={styles.expiry}>有效期至 2026-03-15</div>
+          <div className={styles.expiry}>{t.user.expiresAt} 2026-03-15</div>
         </div>
         <nav className={styles.nav}>
           {([
@@ -54,65 +54,65 @@ export const UserPage: React.FC = () => {
       </div>
 
       <div className={styles.content}>
-        {tab === 'profile' && <ProfileTab user={user} onUpdate={updateUser} />}
-        {tab === 'settings' && <SettingsTab />}
-        {tab === 'usage' && <UsageTab user={user} />}
-        {tab === 'favorites' && <FavoritesTab />}
-        {tab === 'history' && <HistoryTab />}
+        {tab === 'profile' && <ProfileTab user={user} onUpdate={updateUser} t={t} />}
+        {tab === 'settings' && <SettingsTab t={t} />}
+        {tab === 'usage' && <UsageTab user={user} t={t} />}
+        {tab === 'favorites' && <FavoritesTab t={t} />}
+        {tab === 'history' && <HistoryTab t={t} />}
       </div>
     </div>
   );
 };
 
-const ProfileTab: React.FC<{ user: any; onUpdate: (u: any) => void }> = ({ user, onUpdate }) => {
+const ProfileTab: React.FC<{ user: any; onUpdate: (u: any) => void; t: any }> = ({ user, onUpdate, t }) => {
   const [username, setUsername] = useState(user.username);
   const [saved, setSaved] = useState(false);
   const save = () => { onUpdate({ username }); setSaved(true); setTimeout(() => setSaved(false), 2000); };
   return (
     <div className={styles.tabContent}>
-      <div className={styles.tabTitle}>个人信息</div>
+      <div className={styles.tabTitle}>{t.user.profileInfo}</div>
       <div className={styles.formGrid}>
-        <div className={styles.field}><label>用户名</label><input className={styles.input} value={username} onChange={e => setUsername(e.target.value)} /></div>
-        <div className={styles.field}><label>邮箱</label><input className={styles.input} value={user.email} disabled /></div>
-        <div className={styles.field}><label>会员等级</label><input className={styles.input} value={user.role.toUpperCase()} disabled /></div>
-        <div className={styles.field}><label>注册时间</label><input className={styles.input} value={new Date(user.createdAt).toLocaleDateString('zh-CN')} disabled /></div>
+        <div className={styles.field}><label>{t.user.username}</label><input className={styles.input} value={username} onChange={e => setUsername(e.target.value)} /></div>
+        <div className={styles.field}><label>{t.user.email}</label><input className={styles.input} value={user.email} disabled /></div>
+        <div className={styles.field}><label>{t.user.memberLevel}</label><input className={styles.input} value={user.role.toUpperCase()} disabled /></div>
+        <div className={styles.field}><label>{t.user.registeredAt}</label><input className={styles.input} value={new Date(user.createdAt).toLocaleDateString()} disabled /></div>
       </div>
-      <button className="btn btn-primary btn-sm" onClick={save}>{saved ? '✓ 已保存' : '保存修改'}</button>
+      <button className="btn btn-primary btn-sm" onClick={save}>{saved ? t.user.saved : t.user.saveChanges}</button>
     </div>
   );
 };
 
-const SettingsTab: React.FC = () => (
+const SettingsTab: React.FC<{ t: any }> = ({ t }) => (
   <div className={styles.tabContent}>
-    <div className={styles.tabTitle}>账户设置</div>
+    <div className={styles.tabTitle}>{t.user.accountSettings}</div>
     <div className={styles.settingSection}>
-      <div className={styles.settingTitle}>修改密码</div>
+      <div className={styles.settingTitle}>{t.user.changePassword}</div>
       <div className={styles.formGrid}>
-        <div className={styles.field}><label>当前密码</label><input className={styles.input} type="password" placeholder="••••••••" /></div>
-        <div className={styles.field}><label>新密码</label><input className={styles.input} type="password" placeholder="至少 8 位" /></div>
-        <div className={styles.field}><label>确认新密码</label><input className={styles.input} type="password" placeholder="再次输入" /></div>
+        <div className={styles.field}><label>{t.user.currentPassword}</label><input className={styles.input} type="password" placeholder="••••••••" /></div>
+        <div className={styles.field}><label>{t.user.newPassword}</label><input className={styles.input} type="password" placeholder="Min 8 chars" /></div>
+        <div className={styles.field}><label>{t.user.confirmPassword}</label><input className={styles.input} type="password" placeholder="Repeat password" /></div>
       </div>
-      <button className="btn btn-primary btn-sm">更新密码</button>
+      <button className="btn btn-primary btn-sm">{t.user.updatePassword}</button>
     </div>
     <div className={styles.settingSection}>
-      <div className={styles.settingTitle}>双重验证 (2FA)</div>
+      <div className={styles.settingTitle}>{t.user.twoFactor}</div>
       <div className={styles.settingRow}>
         <span className={styles.settingLabel}>Google Authenticator</span>
-        <span className={styles.settingStatus}>未开启</span>
-        <button className="btn btn-sm">开启</button>
+        <span className={styles.settingStatus}>{t.user.notEnabled}</span>
+        <button className="btn btn-sm">{t.user.enable}</button>
       </div>
     </div>
   </div>
 );
 
-const FavoritesTab: React.FC = () => {
+const FavoritesTab: React.FC<{ t: any }> = ({ t }) => {
   const navigate = useNavigate();
   const { favorites, removeFavorite } = useAppStore();
   return (
     <div className={styles.tabContent}>
-      <div className={styles.tabTitle}>我的收藏</div>
+      <div className={styles.tabTitle}>{t.user.favorites}</div>
       {favorites.length === 0 ? (
-        <div className={styles.emptyHint}>暂无收藏地址。在地址详情页点击"收藏"按钮添加。</div>
+        <div className={styles.emptyHint}>{t.user.noFavorites}</div>
       ) : (
         <div className={styles.historyList}>
           {favorites.map((f, i) => (
@@ -122,8 +122,8 @@ const FavoritesTab: React.FC = () => {
                 <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>{f.chain}{f.label ? ` · ${f.label}` : ''}</span>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
-                <button className="btn btn-sm" onClick={() => navigate(`/address/${f.chain}/${f.address}`)}>查看</button>
-                <button className="btn btn-sm" style={{ color: 'var(--color-danger)' }} onClick={() => removeFavorite(f.address)}>删除</button>
+                <button className="btn btn-sm" onClick={() => navigate(`/address/${f.chain}/${f.address}`)}>{t.common.view}</button>
+                <button className="btn btn-sm" style={{ color: 'var(--color-danger)' }} onClick={() => removeFavorite(f.address)}>{t.common.delete}</button>
               </div>
             </div>
           ))}
@@ -133,16 +133,16 @@ const FavoritesTab: React.FC = () => {
   );
 };
 
-const HistoryTab: React.FC = () => {
+const HistoryTab: React.FC<{ t: any }> = ({ t }) => {
   const { searchHistory, clearSearchHistory } = useAppStore();
   return (
     <div className={styles.tabContent}>
       <div className={styles.tabTitleRow}>
-        <span className={styles.tabTitle}>搜索历史</span>
-        {searchHistory.length > 0 && <button className="btn btn-sm" onClick={clearSearchHistory}>清空历史</button>}
+        <span className={styles.tabTitle}>{t.user.history}</span>
+        {searchHistory.length > 0 && <button className="btn btn-sm" onClick={clearSearchHistory}>{t.user.clearHistory}</button>}
       </div>
       {searchHistory.length === 0 ? (
-        <div className={styles.emptyHint}>暂无搜索历史</div>
+        <div className={styles.emptyHint}>{t.user.noHistory}</div>
       ) : (
         <div className={styles.historyList}>
           {searchHistory.map((h: string, i: number) => (
@@ -156,7 +156,7 @@ const HistoryTab: React.FC = () => {
   );
 };
 
-const UsageTab: React.FC<{ user: any }> = ({ user }) => {
+const UsageTab: React.FC<{ user: any; t: any }> = ({ user, t }) => {
   const navigate = useNavigate();
   const tierLimits: Record<string, { queries: number | 'unlimited'; exports: number | 'unlimited'; monitors: number | 'unlimited'; api: number | 'unlimited' }> = {
     free:       { queries: 10,          exports: 3,           monitors: 2,           api: 0 },
@@ -168,24 +168,24 @@ const UsageTab: React.FC<{ user: any }> = ({ user }) => {
   const todayUsage = { queries: 7, exports: 1, monitors: 2, api: 234 };
   return (
     <div className={styles.tabContent} style={{ maxWidth: 700 }}>
-      <div className={styles.tabTitle}>用量统计</div>
+      <div className={styles.tabTitle}>{t.user.usage}</div>
       <div className={styles.usageSection}>
-        <div className={styles.usageSectionTitle}>今日用量</div>
+        <div className={styles.usageSectionTitle}>{t.user.todayUsage}</div>
         <div className={styles.usageBars}>
-          <UsageBar label="地址查询" used={todayUsage.queries} total={limits.queries} unit=" 次" />
-          <UsageBar label="报告导出" used={todayUsage.exports} total={limits.exports} unit=" 次" />
-          <UsageBar label="监控地址" used={todayUsage.monitors} total={limits.monitors} unit=" 个" />
-          <UsageBar label="API 调用" used={todayUsage.api} total={limits.api} unit=" 次" />
+          <UsageBar label={t.user.addressQuery} used={todayUsage.queries} total={limits.queries} unit=" " />
+          <UsageBar label={t.user.reportExport} used={todayUsage.exports} total={limits.exports} unit=" " />
+          <UsageBar label={t.user.monitorAddresses} used={todayUsage.monitors} total={limits.monitors} unit=" " />
+          <UsageBar label="API" used={todayUsage.api} total={limits.api} unit=" " />
         </div>
       </div>
       <div className={styles.usageSection}>
-        <div className={styles.usageSectionTitle}>本月统计</div>
+        <div className={styles.usageSectionTitle}>{t.user.monthlyStats}</div>
         <div className={styles.usageStats}>
           {[
-            { label: '总查询次数', value: '142', sub: '较上月 +23%' },
-            { label: '导出报告', value: '18', sub: '较上月 +5%' },
-            { label: '触发预警', value: '7', sub: '较上月 -2' },
-            { label: 'API 调用', value: '4,821', sub: '较上月 +12%' },
+            { label: t.user.totalQueries, value: '142', sub: `${t.user.vsLastMonth} +23%` },
+            { label: t.user.reportsExported, value: '18', sub: `${t.user.vsLastMonth} +5%` },
+            { label: t.user.alertsTriggered, value: '7', sub: `${t.user.vsLastMonth} -2` },
+            { label: t.user.apiCalls, value: '4,821', sub: `${t.user.vsLastMonth} +12%` },
           ].map((s, i) => (
             <div key={i} className={styles.usageStat}>
               <span className={styles.usageStatValue}>{s.value}</span>
@@ -197,8 +197,8 @@ const UsageTab: React.FC<{ user: any }> = ({ user }) => {
       </div>
       {user.role === 'free' && (
         <div className={styles.upgradeHint}>
-          <span>免费版每日查询仅 10 次。升级获得更多配额。</span>
-          <button className="btn btn-primary btn-sm" onClick={() => navigate(ROUTES.MEMBER)}>查看会员方案</button>
+          <span>{t.user.upgradeHint}</span>
+          <button className="btn btn-primary btn-sm" onClick={() => navigate(ROUTES.MEMBER)}>{t.user.viewPlans}</button>
         </div>
       )}
     </div>

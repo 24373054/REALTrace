@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUserStore } from '../../stores/user';
+import { useI18n } from '../../hooks/useI18n';
 import { ROUTES } from '../../constants/routes';
 import styles from './AuthPage.module.css';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useUserStore();
+  const { t } = useI18n();
   const [form, setForm] = useState({ username: '', email: '', password: '', confirm: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,9 +18,18 @@ export const RegisterPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!form.username || !form.email || !form.password) { setError('请填写所有必填项'); return; }
-    if (form.password !== form.confirm) { setError('两次密码不一致'); return; }
-    if (form.password.length < 8) { setError('密码至少 8 位'); return; }
+    if (!form.username || !form.email || !form.password) {
+      setError(t.nav.register + ' - ' + t.common.confirm);
+      return;
+    }
+    if (form.password !== form.confirm) {
+      setError('Passwords do not match');
+      return;
+    }
+    if (form.password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
     setLoading(true);
     setTimeout(() => {
       login({ id: '1', email: form.email, username: form.username, role: 'free', createdAt: new Date().toISOString() }, 'mock-token-xxx');
@@ -34,31 +45,31 @@ export const RegisterPage: React.FC = () => {
           <span className={styles.logoMark}>CT</span>
           <span className={styles.logoText}>ChainTrace</span>
         </div>
-        <div className={styles.title}>创建账户</div>
+        <div className={styles.title}>{t.nav.register}</div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.field}>
-            <label className={styles.label}>用户名</label>
-            <input className={styles.input} placeholder="用户名" value={form.username} onChange={set('username')} autoFocus />
+            <label className={styles.label}>{t.user.username}</label>
+            <input className={styles.input} placeholder={t.user.username} value={form.username} onChange={set('username')} autoFocus />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>邮箱</label>
+            <label className={styles.label}>{t.user.email}</label>
             <input className={styles.input} type="email" placeholder="your@email.com" value={form.email} onChange={set('email')} />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>密码</label>
-            <input className={styles.input} type="password" placeholder="至少 8 位" value={form.password} onChange={set('password')} />
+            <label className={styles.label}>{t.user.newPassword}</label>
+            <input className={styles.input} type="password" placeholder="Min 8 chars" value={form.password} onChange={set('password')} />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>确认密码</label>
-            <input className={styles.input} type="password" placeholder="再次输入密码" value={form.confirm} onChange={set('confirm')} />
+            <label className={styles.label}>{t.user.confirmPassword}</label>
+            <input className={styles.input} type="password" placeholder="Repeat password" value={form.confirm} onChange={set('confirm')} />
           </div>
           {error && <div className={styles.error}>{error}</div>}
           <button type="submit" className={`${styles.submitBtn} ${loading ? styles.loading : ''}`} disabled={loading}>
-            {loading ? '注册中...' : '注册'}
+            {loading ? t.common.loading : t.nav.register}
           </button>
         </form>
         <div className={styles.footer}>
-          已有账户？<Link to={ROUTES.LOGIN} className={styles.link}>立即登录</Link>
+          Already have an account? <Link to={ROUTES.LOGIN} className={styles.link}>{t.nav.login}</Link>
         </div>
       </div>
     </div>

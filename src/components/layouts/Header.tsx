@@ -161,6 +161,7 @@ export const Header: React.FC = () => {
                   <button onClick={() => { navigate(ROUTES.USER); closeAll(); }}>{t.nav.profile}</button>
                   <button onClick={() => { navigate(ROUTES.USER_SETTINGS); closeAll(); }}>{t.nav.settings}</button>
                   <button onClick={() => { navigate(ROUTES.REPORT); closeAll(); }}>{t.nav.myReports}</button>
+                  <button onClick={() => { navigate('/api-docs'); closeAll(); }}>{locale === 'zh' ? 'API 文档' : 'API Docs'}</button>
                   <div className={styles.divider} />
                   <button className={styles.logoutBtn} onClick={() => { logout(); navigate(ROUTES.HOME); }}>{t.nav.logout}</button>
                 </div>

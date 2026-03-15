@@ -17,4 +17,5 @@ export const ROUTES = {
   TRACE: '/trace',
   NOTIFICATIONS: '/notifications',
   HELP: '/help',
+  API_DOCS: '/api-docs',
 } as const;

@@ -61,3 +61,18 @@
 .alertLabel { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
 .alertTime { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-left: auto; }
 .unreadDot { width: 6px; height: 6px; background: var(--color-accent); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+
+@media (max-width: 1024px) {
+  .tableHeader, .tableRow { grid-template-columns: 2fr 60px 1.5fr 1fr 90px 1.5fr; }
+  .tableHeader span:nth-child(n+7), .tableRow > *:nth-child(n+7) { display: none; }
+  .addFormGrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .page { padding: var(--space-4); }
+  .header { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+  .tableHeader, .tableRow { grid-template-columns: 2fr 60px 90px; }
+  .tableHeader span:nth-child(n+4), .tableRow > *:nth-child(n+4) { display: none; }
+  .addFormGrid { grid-template-columns: 1fr; }
+  .statsRow { flex-wrap: wrap; }
+  .statItem { min-width: 50%; }
+}

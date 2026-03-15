@@ -1,0 +1,51 @@
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-bg-card) 25%, var(--color-bg-elevated) 50%, var(--color-bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  display: block;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 5), 1fr);
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 5), 1fr);
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tableRow:last-child { border-bottom: none; }

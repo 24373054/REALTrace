@@ -308,6 +308,7 @@ export const zh = {
     addressQuery: '地址查询',
     reportExport: '报告导出',
     monitorAddresses: '监控地址',
+    orders: '订单记录',
   },
   settings: {
     language: '语言',

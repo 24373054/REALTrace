@@ -7,13 +7,13 @@ import { UsageBar } from '../../components/common/UsageBar';
 import { ROUTES } from '../../constants/routes';
 import styles from './UserPage.module.css';
 
-type UserTab = 'profile' | 'settings' | 'favorites' | 'history' | 'usage';
+type UserTab = 'profile' | 'settings' | 'favorites' | 'history' | 'usage' | 'orders';
 
 export const UserPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, updateUser } = useUserStore();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [tab, setTab] = useState<UserTab>(
     location.pathname.includes('settings') ? 'settings' :
     location.pathname.includes('favorites') ? 'favorites' :
@@ -42,6 +42,7 @@ export const UserPage: React.FC = () => {
             ['usage', t.user.usage],
             ['favorites', t.user.favorites],
             ['history', t.user.history],
+            ['orders', t.user.orders],
           ] as [UserTab, string][]).map(([tb, label]) => (
             <button key={tb} className={`${styles.navItem} ${tab === tb ? styles.active : ''}`} onClick={() => setTab(tb)}>
               {label}
@@ -59,6 +60,7 @@ export const UserPage: React.FC = () => {
         {tab === 'usage' && <UsageTab user={user} t={t} />}
         {tab === 'favorites' && <FavoritesTab t={t} />}
         {tab === 'history' && <HistoryTab t={t} />}
+        {tab === 'orders' && <OrdersTab t={t} locale={locale} />}
       </div>
     </div>
   );
@@ -201,6 +203,56 @@ const UsageTab: React.FC<{ user: any; t: any }> = ({ user, t }) => {
           <button className="btn btn-primary btn-sm" onClick={() => navigate(ROUTES.MEMBER)}>{t.user.viewPlans}</button>
         </div>
       )}
+    </div>
+  );
+};
+
+const MOCK_ORDERS = [
+  { id: 'ORD20260312000001', plan: 'Basic', duration: '1 Month', amount: 29, status: 'completed', payMethod: 'Alipay', time: '2026-03-12T10:05:00Z' },
+  { id: 'ORD20260112000042', plan: 'Basic', duration: '1 Month', amount: 29, status: 'completed', payMethod: 'WeChat Pay', time: '2026-01-12T14:22:00Z' },
+  { id: 'ORD20251212000018', plan: 'Free', duration: '-', amount: 0, status: 'completed', payMethod: '-', time: '2025-12-12T09:00:00Z' },
+];
+
+const OrdersTab: React.FC<{ t: any; locale: string }> = ({ t, locale }) => {
+  const STATUS_COLORS: Record<string, string> = {
+    completed: 'var(--color-success)',
+    pending: 'var(--color-warning)',
+    refunded: 'var(--color-text-muted)',
+  };
+
+  return (
+    <div className={styles.tabContent}>
+      <div className={styles.tabTitle}>{t.user.orders}</div>
+      <div className={styles.ordersTable}>
+        <div className={styles.ordersHeader}>
+          <span>{locale === 'zh' ? '订单号' : 'Order No.'}</span>
+          <span>{locale === 'zh' ? '方案' : 'Plan'}</span>
+          <span>{locale === 'zh' ? '时长' : 'Duration'}</span>
+          <span>{locale === 'zh' ? '金额' : 'Amount'}</span>
+          <span>{locale === 'zh' ? '支付方式' : 'Payment'}</span>
+          <span>{locale === 'zh' ? '状态' : 'Status'}</span>
+          <span>{locale === 'zh' ? '时间' : 'Time'}</span>
+          <span>{locale === 'zh' ? '操作' : 'Actions'}</span>
+        </div>
+        {MOCK_ORDERS.map(o => (
+          <div key={o.id} className={styles.ordersRow}>
+            <span className={`${styles.orderId} mono`}>{o.id}</span>
+            <span>{o.plan}</span>
+            <span>{o.duration}</span>
+            <span className="mono">{o.amount > 0 ? `¥${o.amount}` : '-'}</span>
+            <span>{o.payMethod}</span>
+            <span style={{ color: STATUS_COLORS[o.status] }}>
+              {o.status === 'completed' ? (locale === 'zh' ? '已完成' : 'Completed') : o.status}
+            </span>
+            <span className={styles.orderTime}>{new Date(o.time).toLocaleDateString()}</span>
+            <div className={styles.orderActions}>
+              {o.amount > 0 && (
+                <button className="btn btn-sm">{locale === 'zh' ? '下载发票' : 'Invoice'}</button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

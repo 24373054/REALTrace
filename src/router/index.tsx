@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { PrivateRoute } from '../components/common/PrivateRoute';
 import { ROUTES } from '../constants/routes';
 
 const HomePage = lazy(() => import('../pages/home/HomePage').then(m => ({ default: m.HomePage })));
@@ -17,10 +18,15 @@ const RegisterPage = lazy(() => import('../pages/auth/RegisterPage').then(m => (
 const TracePage = lazy(() => import('../pages/trace/TracePage').then(m => ({ default: m.TracePage })));
 const NotificationsPage = lazy(() => import('../pages/notifications/NotificationsPage').then(m => ({ default: m.NotificationsPage })));
 const HelpPage = lazy(() => import('../pages/help/HelpPage').then(m => ({ default: m.HelpPage })));
+const ApiDocsPage = lazy(() => import('../pages/api-docs/ApiDocsPage').then(m => ({ default: m.ApiDocsPage })));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 const Wrap = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<LoadingSpinner fullPage text="加载中..." />}>{children}</Suspense>
+);
+
+const Private = ({ children }: { children: React.ReactNode }) => (
+  <PrivateRoute><Wrap>{children}</Wrap></PrivateRoute>
 );
 
 export const router = createBrowserRouter([
@@ -34,16 +40,17 @@ export const router = createBrowserRouter([
       { path: 'transaction', element: <Wrap><TransactionPage /></Wrap> },
       { path: 'transaction/:hash', element: <Wrap><TransactionPage /></Wrap> },
       { path: 'analysis', element: <Wrap><AnalysisPage /></Wrap> },
-      { path: 'monitor', element: <Wrap><MonitorPage /></Wrap> },
-      { path: 'report', element: <Wrap><ReportPage /></Wrap> },
-      { path: 'user', element: <Wrap><UserPage /></Wrap> },
-      { path: 'user/settings', element: <Wrap><UserPage /></Wrap> },
-      { path: 'user/favorites', element: <Wrap><UserPage /></Wrap> },
-      { path: 'user/history', element: <Wrap><UserPage /></Wrap> },
-      { path: 'member', element: <Wrap><MemberPage /></Wrap> },
       { path: 'trace', element: <Wrap><TracePage /></Wrap> },
-      { path: 'notifications', element: <Wrap><NotificationsPage /></Wrap> },
       { path: 'help', element: <Wrap><HelpPage /></Wrap> },
+      { path: 'monitor', element: <Private><MonitorPage /></Private> },
+      { path: 'report', element: <Private><ReportPage /></Private> },
+      { path: 'user', element: <Private><UserPage /></Private> },
+      { path: 'user/settings', element: <Private><UserPage /></Private> },
+      { path: 'user/favorites', element: <Private><UserPage /></Private> },
+      { path: 'user/history', element: <Private><UserPage /></Private> },
+      { path: 'member', element: <Private><MemberPage /></Private> },
+      { path: 'notifications', element: <Private><NotificationsPage /></Private> },
+      { path: 'api-docs', element: <Private><ApiDocsPage /></Private> },
       { path: 'login', element: <Wrap><LoginPage /></Wrap> },
       { path: 'register', element: <Wrap><RegisterPage /></Wrap> },
       { path: '*', element: <Wrap><NotFoundPage /></Wrap> },

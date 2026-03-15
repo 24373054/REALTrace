@@ -9,10 +9,10 @@ import { ROUTES } from '../../constants/routes';
 import styles from './HomePage.module.css';
 
 const MOCK_STATS = [
-  { label: '累计查询次数', value: '2,847,391', sub: '今日 +12,847' },
-  { label: '已分析地址', value: '891,204', sub: '覆盖 6 条链' },
-  { label: '风险地址标记', value: '34,891', sub: '高风险 8,234' },
-  { label: '今日预警', value: '1,247', sub: '较昨日 +18%', danger: true },
+  { key: 'queries', value: '2,847,391', sub: '+12,847' },
+  { key: 'addresses', value: '891,204', sub: '6 chains' },
+  { key: 'flagged', value: '34,891', sub: 'High: 8,234', danger: false },
+  { key: 'alerts', value: '1,247', sub: '+18%', danger: true },
 ];
 
 const QUICK_CASES = [
@@ -114,7 +114,7 @@ export const HomePage: React.FC = () => {
       <section className={styles.statsSection}>
         <div className={styles.statsGrid}>
           {MOCK_STATS.map((s, i) => (
-            <StatCard key={i} label={s.label} value={s.value} sub={s.sub} danger={!!s.danger} />
+            <StatCard key={i} label={t.home.stats[s.key as keyof typeof t.home.stats]} value={s.value} sub={s.sub} danger={!!s.danger} />
           ))}
         </div>
       </section>

@@ -62,3 +62,10 @@
   transition: all var(--transition);
 }
 .demoBannerClose:hover { border-color: var(--color-border-light); color: var(--color-text); }
+
+/* ── Mobile ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .footer { padding: var(--space-2) var(--space-4); }
+  .footerLinks { gap: var(--space-3); }
+  .demoBanner { padding: var(--space-2) var(--space-4); }
+}

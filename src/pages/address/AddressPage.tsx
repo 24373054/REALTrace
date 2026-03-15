@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppStore } from '../../stores/app';
+import { useI18n } from '../../hooks/useI18n';
 import { SUPPORTED_CHAINS } from '../../constants/config';
 import { EmptyState } from '../../components/common/EmptyState';
 import { AddressDetail } from './AddressDetail';
@@ -10,6 +11,7 @@ export const AddressPage: React.FC = () => {
   const { chain: paramChain, id: paramAddr } = useParams<{ chain?: string; id?: string }>();
   const navigate = useNavigate();
   const { searchHistory, addSearchHistory } = useAppStore();
+  const { t } = useI18n();
   const [query, setQuery] = useState(paramAddr || '');
   const [chain, setChain] = useState(paramChain || 'ETH');
 
@@ -31,12 +33,12 @@ export const AddressPage: React.FC = () => {
           <input
             className={styles.input}
             type="text"
-            placeholder="输入区块链地址..."
+            placeholder={t.address.placeholder}
             value={query}
             onChange={e => setQuery(e.target.value)}
             autoFocus={!paramAddr}
           />
-          <button type="submit" className="btn btn-primary">查询</button>
+          <button type="submit" className="btn btn-primary">{t.common.search}</button>
         </form>
       </div>
 
@@ -46,7 +48,7 @@ export const AddressPage: React.FC = () => {
         <div className={styles.content}>
           {searchHistory.length > 0 && (
             <div className={styles.historySection}>
-              <div className={styles.historyTitle}>最近查询</div>
+              <div className={styles.historyTitle}>{t.address.history}</div>
               <div className={styles.historyList}>
                 {searchHistory.slice(0, 10).map((h, i) => (
                   <button key={i} className={styles.historyItem} onClick={() => navigate(`/address/ETH/${h}`)}>
@@ -56,7 +58,7 @@ export const AddressPage: React.FC = () => {
               </div>
             </div>
           )}
-          <EmptyState title="输入地址开始查询" description="支持 BTC、ETH、TRX、SOL 等主流公链地址" />
+          <EmptyState title={t.address.title} description={t.address.placeholder} />
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useUserStore } from '../../stores/user';
 import { useI18n } from '../../hooks/useI18n';
 import { ROUTES } from '../../constants/routes';
@@ -7,12 +7,15 @@ import styles from './AuthPage.module.css';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useUserStore();
   const { t, locale } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const from = (location.state as { from?: string })?.from || ROUTES.HOME;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +24,7 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     setTimeout(() => {
       login({ id: '1', email, username: email.split('@')[0], role: 'pro', createdAt: new Date().toISOString() }, 'mock-token-xxx');
-      navigate(ROUTES.HOME);
+      navigate(from, { replace: true });
       setLoading(false);
     }, 800);
   };

@@ -304,6 +304,7 @@ export const en = {
     addressQuery: 'Address Queries',
     reportExport: 'Report Exports',
     monitorAddresses: 'Monitor Addresses',
+    orders: 'Orders',
   },
   settings: {
     language: 'Language',

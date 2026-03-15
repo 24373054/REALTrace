@@ -184,3 +184,21 @@ select.input, select {
   background: var(--color-accent-dim);
   color: var(--color-text);
 }
+
+/* ── Mobile Responsive ────────────────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 44px;
+    --space-6: 16px;
+  }
+
+  .container { padding: 0 var(--space-4); }
+
+  /* Hide non-essential text on mobile */
+  .hide-mobile { display: none !important; }
+  .show-mobile { display: flex !important; }
+}
+
+@media (min-width: 769px) {
+  .show-mobile { display: none !important; }
+}

@@ -1,0 +1,192 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.toolbar {
+  flex-shrink: 0;
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.searchRow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.chainSelect {
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 5px 8px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  min-width: 60px;
+}
+
+.addressInput {
+  flex: 1;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 5px 10px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  outline: none;
+}
+
+.addressInput:focus {
+  border-color: var(--color-accent);
+}
+
+.searchBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.searchBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.toolRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.toolGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  padding: 2px;
+}
+
+.toolBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.toolBtn:hover {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.toolBtn.active {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.toolBtn.activeGreen {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.toolBtn.activeRed {
+  color: var(--color-accent);
+  background: rgba(192, 57, 43, 0.1);
+}
+
+.toolBtnRed {
+  background: transparent;
+  border: none;
+  color: var(--color-accent);
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.toolBtnRed:hover {
+  background: rgba(192, 57, 43, 0.1);
+}
+
+.depthLabel {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding: 0 4px;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.statsLabel {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  margin-left: auto;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.graphArea {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Cyber view */
+.cyberWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.backBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(192, 57, 43, 0.5);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.backBtn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: var(--color-accent);
+}

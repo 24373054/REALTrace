@@ -1,0 +1,37 @@
+.page { display: flex; flex-direction: column; padding: var(--space-6); gap: var(--space-6); max-width: 1200px; margin: 0 auto; width: 100%; overflow-y: auto; }
+.header { display: flex; align-items: center; justify-content: space-between; }
+.headerTitle { font-size: var(--font-size-xl); font-weight: 600; color: var(--color-text); }
+.currentPlan { font-size: var(--font-size-sm); color: var(--color-text-secondary); display: flex; align-items: center; gap: var(--space-2); }
+.planName { font-family: var(--font-mono); color: var(--color-warning); font-weight: 600; }
+.expiry { color: var(--color-text-muted); font-size: var(--font-size-xs); }
+/* Usage summary */
+.usageSummary { background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+.usageSummaryTitle { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.usageBars { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+.durationRow { display: flex; align-items: center; gap: var(--space-3); }
+.durationLabel { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+.durationBtn { padding: var(--space-2) var(--space-4); background: var(--color-bg-card); border: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: var(--font-size-sm); cursor: pointer; transition: all var(--transition); display: flex; align-items: center; gap: var(--space-2); }
+.durationBtn:hover { border-color: var(--color-border-light); color: var(--color-text); }
+.durationActive { border-color: var(--color-accent); color: var(--color-text); background: var(--color-bg-elevated); }
+.discount { font-size: var(--font-size-xs); color: var(--color-accent); font-family: var(--font-mono); }
+.plansGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+.planCard { background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); position: relative; }
+.currentCard { border-color: var(--color-accent); }
+.currentBadge { position: absolute; top: -1px; right: var(--space-4); background: var(--color-accent); color: #fff; font-size: var(--font-size-xs); padding: 2px var(--space-2); }
+.planName { font-size: var(--font-size-md); font-weight: 600; color: var(--color-text); }
+.planPrice { display: flex; align-items: baseline; gap: 2px; }
+.priceCurrency { font-size: var(--font-size-md); color: var(--color-text-secondary); }
+.priceNum { font-size: var(--font-size-3xl); font-weight: 700; font-family: var(--font-mono); color: var(--color-text); }
+.pricePeriod { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+.planFeatures { display: flex; flex-direction: column; gap: 0; flex: 1; }
+.feature { display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border); }
+.feature:last-child { border-bottom: none; }
+.featureLabel { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.featureValue { font-size: var(--font-size-xs); font-family: var(--font-mono); color: var(--color-text); }
+.planBtn { padding: var(--space-3); font-size: var(--font-size-sm); font-weight: 600; cursor: pointer; border: none; transition: all var(--transition); }
+.planBtnCurrent { background: var(--color-bg-elevated); color: var(--color-text-muted); cursor: not-allowed; border: 1px solid var(--color-border); }
+.payMethods { display: flex; align-items: center; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
+.payLabel { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.payMethod { padding: 2px var(--space-3); border: 1px solid var(--color-border); font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+@media (max-width: 1024px) { .plansGrid { grid-template-columns: repeat(2, 1fr); } .usageBars { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .plansGrid { grid-template-columns: 1fr; } }

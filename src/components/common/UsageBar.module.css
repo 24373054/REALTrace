@@ -1,0 +1,9 @@
+.wrap { display: flex; flex-direction: column; gap: var(--space-1); }
+.top { display: flex; justify-content: space-between; align-items: center; }
+.label { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.value { font-size: var(--font-size-xs); font-family: var(--font-mono); color: var(--color-text-secondary); }
+.track { height: 3px; background: var(--color-bg-elevated); border: 1px solid var(--color-border); }
+.fill { height: 100%; background: var(--color-info); transition: width 0.4s; }
+.fill.warn { background: var(--color-warning); }
+.fill.danger { background: var(--color-danger); }
+.unlimited { height: 100%; background: var(--risk-safe); width: 100%; opacity: 0.4; }

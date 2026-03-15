@@ -1,0 +1,117 @@
+.page {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  padding: var(--space-6);
+  overflow-y: auto;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.logoMark {
+  width: 32px;
+  height: 32px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input {
+  padding: var(--space-3) var(--space-3);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  transition: border-color var(--transition);
+}
+.input:focus { border-color: var(--color-accent); outline: none; }
+.input::placeholder { color: var(--color-text-muted); }
+
+.error {
+  padding: var(--space-2) var(--space-3);
+  background: rgba(192,57,43,0.1);
+  border: 1px solid var(--color-danger);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.submitBtn {
+  padding: var(--space-3);
+  background: var(--color-accent);
+  border: none;
+  color: #fff;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.submitBtn:hover:not(:disabled) { background: var(--color-accent-hover); }
+.submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.loading { opacity: 0.7; }
+
+.footer {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.link {
+  color: var(--color-accent);
+  margin-left: var(--space-1);
+}
+.link:hover { text-decoration: underline; }

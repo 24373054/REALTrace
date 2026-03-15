@@ -1,0 +1,42 @@
+.page { display: flex; flex-direction: column; padding: var(--space-6); gap: var(--space-4); overflow-y: auto; }
+.header { display: flex; align-items: center; justify-content: space-between; }
+.tabs { display: flex; }
+.tab { padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm); color: var(--color-text-secondary); background: none; border: 1px solid var(--color-border); border-right: none; cursor: pointer; transition: all var(--transition); }
+.tab:last-child { border-right: 1px solid var(--color-border); }
+.tab.active { color: var(--color-text); background: var(--color-bg-card); }
+.content { flex: 1; }
+.table { border: 1px solid var(--color-border); }
+.tableHeader { display: grid; grid-template-columns: 3fr 80px 1.5fr 60px 80px 2fr 80px 1.5fr; gap: var(--space-3); padding: var(--space-2) var(--space-4); background: var(--color-bg-elevated); font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--color-border); }
+.tableRow { display: grid; grid-template-columns: 3fr 80px 1.5fr 60px 80px 2fr 80px 1.5fr; gap: var(--space-3); padding: var(--space-3) var(--space-4); align-items: center; border-bottom: 1px solid var(--color-border); transition: background var(--transition); font-size: var(--font-size-sm); }
+.tableRow:last-child { border-bottom: none; }
+.tableRow:hover { background: var(--color-bg-elevated); }
+.reportTitle { color: var(--color-text); font-weight: 500; }
+.reportType { color: var(--color-text-secondary); }
+.target { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.chain { font-family: var(--font-mono); font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.status { font-size: var(--font-size-xs); }
+.ready { color: var(--risk-safe); }
+.generating { color: var(--color-warning); }
+.date { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.size { font-family: var(--font-mono); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.actions { display: flex; gap: var(--space-2); }
+/* Modal */
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: var(--color-bg-elevated); border: 1px solid var(--color-border); width: 480px; max-width: 95vw; display: flex; flex-direction: column; }
+.modalHeader { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--color-border); }
+.modalTitle { font-size: var(--font-size-md); font-weight: 600; color: var(--color-text); }
+.modalClose { background: none; border: none; color: var(--color-text-muted); cursor: pointer; font-size: var(--font-size-lg); padding: 0; }
+.modalClose:hover { color: var(--color-text); }
+.modalBody { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+.modalField { display: flex; flex-direction: column; gap: var(--space-2); }
+.modalField label { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.modalInput { padding: var(--space-2) var(--space-3); background: var(--color-bg-input); border: 1px solid var(--color-border); color: var(--color-text); font-size: var(--font-size-sm); font-family: var(--font-mono); }
+.modalInput:focus { border-color: var(--color-accent); outline: none; }
+.modalSelect { padding: var(--space-2) var(--space-3); background: var(--color-bg-input); border: 1px solid var(--color-border); color: var(--color-text); font-size: var(--font-size-sm); }
+.modalRow { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.radioGroup { display: flex; gap: 0; }
+.radioItem { padding: var(--space-2) var(--space-3); font-size: var(--font-size-xs); color: var(--color-text-muted); border: 1px solid var(--color-border); border-right: none; cursor: pointer; transition: all var(--transition); }
+.radioItem:last-child { border-right: 1px solid var(--color-border); }
+.radioItem:hover { color: var(--color-text); }
+.radioActive { color: var(--color-text); background: var(--color-bg-card); border-color: var(--color-accent); }
+.modalFooter { display: flex; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-top: 1px solid var(--color-border); }

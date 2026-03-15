@@ -1,0 +1,13 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-6);
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+}
+.icon { font-size: 32px; opacity: 0.3; }
+.title { font-size: var(--font-size-md); color: var(--color-text-secondary); }
+.desc { font-size: var(--font-size-sm); text-align: center; max-width: 320px; }
+.action { margin-top: var(--space-2); }

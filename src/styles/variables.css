@@ -1,0 +1,72 @@
+/* ChainTrace Design Tokens - 专业金融安全工具风格 */
+/* 无渐变、无圆角、无AI风格 */
+
+:root {
+  /* 主色 - 冷灰 + 警示红 */
+  --color-primary: #1a1a2e;
+  --color-primary-light: #16213e;
+  --color-accent: #c0392b;
+  --color-accent-hover: #a93226;
+
+  /* 语义色 */
+  --color-danger: #c0392b;
+  --color-warning: #d4a017;
+  --color-safe: #27ae60;
+  --color-info: #2980b9;
+
+  /* 风险等级色 */
+  --risk-critical: #c0392b;
+  --risk-high: #e67e22;
+  --risk-medium: #d4a017;
+  --risk-low: #27ae60;
+  --risk-safe: #2ecc71;
+
+  /* 中性色 */
+  --color-bg: #0a0a0f;
+  --color-bg-elevated: #111118;
+  --color-bg-card: #16161e;
+  --color-bg-input: #1c1c26;
+  --color-border: #2a2a3a;
+  --color-border-light: #333346;
+  --color-text: #e0e0e6;
+  --color-text-secondary: #8888a0;
+  --color-text-muted: #555568;
+  --color-text-inverse: #0a0a0f;
+
+  /* 间距 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* 字体 */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 22px;
+  --font-size-3xl: 28px;
+
+  /* 无圆角 */
+  --radius: 0px;
+  --radius-sm: 1px;
+
+  /* 边框 */
+  --border: 1px solid var(--color-border);
+
+  /* 阴影 - 极简 */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.4);
+
+  /* 过渡 */
+  --transition: 150ms ease;
+}

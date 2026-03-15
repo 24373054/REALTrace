@@ -1,0 +1,6 @@
+.wrap { display: flex; flex-direction: column; gap: var(--space-1); }
+.track { height: 4px; background: var(--color-bg-input); width: 100%; }
+.fill { height: 100%; transition: width 0.4s ease; }
+.meta { display: flex; justify-content: space-between; align-items: center; }
+.score { font-family: var(--font-mono); font-size: var(--font-size-sm); font-weight: 600; }
+.label { font-size: var(--font-size-xs); color: var(--color-text-secondary); }

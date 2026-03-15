@@ -1,0 +1,12 @@
+.page { display: flex; flex-direction: column; min-height: 100%; overflow-y: auto; }
+.searchBar { padding: var(--space-4) var(--space-6); background: var(--color-bg-elevated); border-bottom: 1px solid var(--color-border); }
+.form { display: flex; gap: var(--space-3); max-width: 800px; }
+.chainSelect { padding: var(--space-2) var(--space-3); background: var(--color-bg-card); border: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: var(--font-size-sm); font-family: var(--font-mono); min-width: 120px; }
+.input { flex: 1; padding: var(--space-2) var(--space-3); background: var(--color-bg-input); border: 1px solid var(--color-border); color: var(--color-text); font-size: var(--font-size-sm); font-family: var(--font-mono); }
+.input:focus { border-color: var(--color-accent); }
+.content { flex: 1; padding: var(--space-6); }
+.historySection { margin-bottom: var(--space-6); }
+.historyTitle { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--space-3); }
+.historyList { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.historyItem { padding: var(--space-1) var(--space-3); background: var(--color-bg-card); border: 1px solid var(--color-border); font-size: var(--font-size-xs); color: var(--color-text-secondary); cursor: pointer; transition: all var(--transition); }
+.historyItem:hover { border-color: var(--color-border-light); color: var(--color-text); }

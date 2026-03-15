@@ -1,0 +1,63 @@
+.page { display: flex; flex-direction: column; padding: var(--space-6); gap: var(--space-4); overflow-y: auto; min-height: 100%; }
+.header { display: flex; align-items: center; justify-content: space-between; }
+.headerLeft { display: flex; align-items: center; gap: var(--space-4); }
+.title { font-size: var(--font-size-lg); font-weight: 600; color: var(--color-text); }
+.viewTabs { display: flex; border: 1px solid var(--color-border); }
+.viewTab { padding: var(--space-1) var(--space-4); font-size: var(--font-size-xs); color: var(--color-text-muted); background: none; border: none; border-right: 1px solid var(--color-border); cursor: pointer; display: flex; align-items: center; gap: var(--space-2); transition: all var(--transition); }
+.viewTab:last-child { border-right: none; }
+.viewTab:hover { color: var(--color-text); background: var(--color-bg-card); }
+.viewTabActive { color: var(--color-text); background: var(--color-bg-card); }
+.unreadBadge { background: var(--color-accent); color: #fff; font-size: 10px; padding: 0 5px; min-width: 16px; text-align: center; }
+.addForm { background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-5); }
+.addFormTitle { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-text-secondary); margin-bottom: var(--space-4); text-transform: uppercase; letter-spacing: 0.5px; }
+.addFormGrid { display: grid; grid-template-columns: 100px 1fr 1fr 1fr 1fr; gap: var(--space-3); align-items: end; }
+.addField { display: flex; flex-direction: column; gap: var(--space-1); }
+.addField label { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.addFormActions { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+.select { padding: var(--space-2) var(--space-3); background: var(--color-bg-elevated); border: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.input { padding: var(--space-2) var(--space-3); background: var(--color-bg-input); border: 1px solid var(--color-border); color: var(--color-text); font-size: var(--font-size-sm); font-family: var(--font-mono); width: 100%; }
+.input:focus { border-color: var(--color-accent); outline: none; }
+.statsRow { display: flex; gap: 0; border: 1px solid var(--color-border); }
+.statItem { flex: 1; display: flex; flex-direction: column; align-items: center; padding: var(--space-4); border-right: 1px solid var(--color-border); background: var(--color-bg-card); }
+.statItem:last-child { border-right: none; }
+.statValue { font-size: var(--font-size-2xl); font-weight: 700; font-family: var(--font-mono); color: var(--color-text); }
+.statDanger { color: var(--risk-critical); }
+.statLabel { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.table { border: 1px solid var(--color-border); }
+.tableHeader { display: grid; grid-template-columns: 2fr 60px 1.5fr 1fr 1fr 90px 80px 2fr 1.5fr; gap: var(--space-3); padding: var(--space-2) var(--space-4); background: var(--color-bg-elevated); font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--color-border); }
+.tableRow { display: grid; grid-template-columns: 2fr 60px 1.5fr 1fr 1fr 90px 80px 2fr 1.5fr; gap: var(--space-3); padding: var(--space-3) var(--space-4); align-items: center; border-bottom: 1px solid var(--color-border); transition: background var(--transition); font-size: var(--font-size-sm); }
+.tableRow:last-child { border-bottom: none; }
+.tableRow:hover { background: var(--color-bg-elevated); }
+.addr { color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+.chain { color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--font-size-xs); }
+.label { color: var(--color-text); }
+.type { color: var(--color-text-secondary); }
+.threshold { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.status { font-size: var(--font-size-xs); }
+.active { color: var(--risk-safe); }
+.paused { color: var(--color-text-muted); }
+.alertCount { font-family: var(--font-mono); font-weight: 600; color: var(--color-text-muted); }
+.hasAlert { color: var(--risk-critical); }
+.lastAlert { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.actions { display: flex; gap: var(--space-2); }
+.alertSection { display: flex; flex-direction: column; gap: var(--space-3); }
+.alertToolbar { display: flex; align-items: center; justify-content: space-between; }
+.filterBtns { display: flex; border: 1px solid var(--color-border); }
+.filterBtn { padding: var(--space-1) var(--space-4); font-size: var(--font-size-xs); color: var(--color-text-muted); background: none; border: none; border-right: 1px solid var(--color-border); cursor: pointer; transition: all var(--transition); }
+.filterBtn:last-child { border-right: none; }
+.filterBtn:hover { color: var(--color-text); }
+.filterActive { color: var(--color-text); background: var(--color-bg-card); }
+.alertList { display: flex; flex-direction: column; border: 1px solid var(--color-border); }
+.alertItem { display: flex; align-items: flex-start; gap: var(--space-4); padding: var(--space-4); border-bottom: 1px solid var(--color-border); position: relative; transition: background var(--transition); }
+.alertItem:last-child { border-bottom: none; }
+.alertItem:hover { background: var(--color-bg-elevated); }
+.alertUnread { background: rgba(192,57,43,0.04); }
+.alertSeverity { padding: 2px var(--space-2); font-size: 10px; font-weight: 700; color: #fff; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+.alertBody { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
+.alertMsg { font-size: var(--font-size-sm); color: var(--color-text); }
+.alertMeta { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.alertAddr { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.alertChain { font-size: var(--font-size-xs); color: var(--color-text-muted); padding: 0 var(--space-1); border: 1px solid var(--color-border); }
+.alertLabel { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.alertTime { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-left: auto; }
+.unreadDot { width: 6px; height: 6px; background: var(--color-accent); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }

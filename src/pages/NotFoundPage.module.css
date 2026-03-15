@@ -1,0 +1,5 @@
+.page { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100%; gap: var(--space-4); padding: var(--space-8); }
+.code { font-size: 96px; font-weight: 700; font-family: var(--font-mono); color: var(--color-border); line-height: 1; }
+.title { font-size: var(--font-size-xl); font-weight: 600; color: var(--color-text); }
+.desc { font-size: var(--font-size-sm); color: var(--color-text-muted); text-align: center; max-width: 400px; }
+.actions { display: flex; gap: var(--space-3); margin-top: var(--space-4); }

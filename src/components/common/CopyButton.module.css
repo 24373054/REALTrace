@@ -1,0 +1,15 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn:hover { color: var(--color-text-secondary); border-color: var(--color-border); }
+.copied { color: var(--risk-safe) !important; }

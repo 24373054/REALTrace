@@ -1,4 +1,4 @@
-.page { display: flex; flex-direction: column; overflow-y: auto; }
+.page { display: flex; flex-direction: column; overflow-y: auto; animation: fadeIn var(--transition-page) var(--ease-out) both; }
 
 /* Live ticker */
 .ticker {
@@ -75,9 +75,12 @@
   border: 1px solid var(--color-border);
   background: var(--color-bg-input);
   height: 44px;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
-.heroSearch:focus-within { border-color: var(--color-border-light); }
+.heroSearch:focus-within {
+  border-color: var(--color-border-light);
+  box-shadow: 0 0 0 3px var(--color-accent-dim);
+}
 
 .heroChain {
   padding: 0 var(--space-3);
@@ -113,11 +116,15 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background var(--transition);
+  transition: background var(--transition), box-shadow var(--transition);
   white-space: nowrap;
   letter-spacing: var(--letter-spacing-wide);
 }
-.heroBtn:hover { background: var(--color-accent-hover); }
+.heroBtn:hover {
+  background: var(--color-accent-hover);
+  box-shadow: 0 2px 16px var(--color-accent-glow);
+}
+.heroBtn:active { transform: translateY(1px); }
 
 .heroHints {
   display: flex;
@@ -196,13 +203,16 @@
   padding: var(--space-5);
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
+  border-top: 2px solid transparent;
   text-align: left;
   cursor: pointer;
-  transition: border-color var(--transition), background var(--transition);
+  transition: border-color var(--transition-slow), background var(--transition), box-shadow var(--transition-slow);
 }
 .quickCard:hover {
   border-color: var(--color-border-light);
+  border-top-color: var(--color-accent);
   background: var(--color-bg-hover);
+  box-shadow: var(--shadow-sm);
 }
 
 .quickIcon { font-size: 18px; color: var(--color-accent); }
@@ -230,10 +240,14 @@
   padding: var(--space-3) var(--space-4);
   align-items: center;
   border-bottom: 1px solid var(--color-border);
-  transition: background var(--transition);
+  transition: background var(--transition), border-left-color var(--transition);
+  border-left: 2px solid transparent;
 }
 .caseRow:last-child { border-bottom: none; }
-.caseRow:hover { background: var(--color-bg-elevated); }
+.caseRow:hover {
+  background: var(--color-bg-elevated);
+  border-left-color: var(--color-accent);
+}
 .caseLabel { font-size: var(--font-size-sm); color: var(--color-text); font-weight: var(--font-weight-medium); }
 .caseChain { font-size: var(--font-size-xs); font-family: var(--font-mono); color: var(--color-text-secondary); }
 .caseAddr { font-size: var(--font-size-xs); font-family: var(--font-mono); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

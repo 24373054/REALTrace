@@ -18,6 +18,52 @@ html {
   flex-direction: column;
 }
 
+/* ── Keyframes ────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInFast {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+@keyframes pulse-accent {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes borderGlow {
+  0%, 100% { border-color: var(--color-border); }
+  50%       { border-color: var(--color-border-light); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Page Entry Animation ─────────────────────────────────── */
+.page-enter {
+  animation: fadeIn var(--transition-page) var(--ease-out) both;
+}
+
 /* ── Layout Utilities ─────────────────────────────────────── */
 .container {
   width: 100%;
@@ -27,7 +73,7 @@ html {
 }
 
 /* ── Typography Utilities ─────────────────────────────────── */
-.mono { font-family: var(--font-mono); }
+.mono    { font-family: var(--font-mono); }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .label-caps {
   font-size: var(--font-size-xs);
@@ -51,34 +97,56 @@ html {
   color: var(--color-text-secondary);
   cursor: pointer;
   border-radius: 0;
-  transition: border-color var(--transition), color var(--transition), background var(--transition);
+  transition:
+    border-color var(--transition),
+    color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
   white-space: nowrap;
   user-select: none;
+  position: relative;
+  overflow: hidden;
 }
+
+/* Subtle press effect */
+.btn:active { transform: translateY(1px); }
+
 .btn:hover {
   border-color: var(--color-border-light);
   color: var(--color-text);
   background: var(--color-bg-hover);
 }
-.btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-border-focus);
 }
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .btn-primary {
   background: var(--color-accent);
   border-color: var(--color-accent);
   color: #fff;
   font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
 }
 .btn-primary:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
   color: #fff;
+  box-shadow: 0 2px 12px var(--color-accent-glow);
 }
+
 .btn-sm {
   padding: var(--space-1) var(--space-3);
   font-size: var(--font-size-xs);
 }
+
 .btn-ghost {
   background: transparent;
   border-color: transparent;
@@ -100,17 +168,17 @@ html {
   font-size: var(--font-size-base);
   font-family: var(--font-sans);
   border-radius: 0;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition);
   outline: none;
 }
-.input:focus { border-color: var(--color-accent); }
-.input::placeholder { color: var(--color-text-muted); }
-.input:disabled { opacity: 0.5; cursor: not-allowed; }
-
-select.input, select {
-  appearance: none;
-  cursor: pointer;
+.input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-dim);
 }
+.input::placeholder { color: var(--color-text-muted); }
+.input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+select.input, select { appearance: none; cursor: pointer; }
 
 /* ── Cards ────────────────────────────────────────────────── */
 .card {
@@ -118,7 +186,10 @@ select.input, select {
   border: 1px solid var(--color-border);
   padding: var(--space-4);
   border-radius: 0;
+  transition: border-color var(--transition-slow);
 }
+.card:hover { border-color: var(--color-border-light); }
+
 .card-elevated {
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border);
@@ -127,10 +198,10 @@ select.input, select {
 
 /* ── Risk Colors ──────────────────────────────────────────── */
 .risk-critical { color: var(--risk-critical); }
-.risk-high { color: var(--risk-high); }
-.risk-medium { color: var(--risk-medium); }
-.risk-low { color: var(--risk-low); }
-.risk-safe { color: var(--risk-safe); }
+.risk-high     { color: var(--risk-high); }
+.risk-medium   { color: var(--risk-medium); }
+.risk-low      { color: var(--risk-low); }
+.risk-safe     { color: var(--risk-safe); }
 
 /* ── Tags ─────────────────────────────────────────────────── */
 .tag {
@@ -144,26 +215,27 @@ select.input, select {
   background: var(--color-bg-elevated);
   border-radius: 0;
   white-space: nowrap;
+  transition: border-color var(--transition), background var(--transition);
 }
 .tag-danger {
-  border-color: rgba(192, 57, 43, 0.4);
+  border-color: rgba(192, 57, 43, 0.35);
   color: var(--risk-critical);
   background: var(--color-accent-dim);
 }
 .tag-warning {
-  border-color: rgba(200, 150, 12, 0.4);
+  border-color: rgba(200, 150, 12, 0.35);
   color: var(--risk-medium);
-  background: rgba(200, 150, 12, 0.08);
+  background: rgba(200, 150, 12, 0.07);
 }
 .tag-safe {
-  border-color: rgba(30, 132, 73, 0.4);
+  border-color: rgba(30, 132, 73, 0.35);
   color: var(--risk-safe);
-  background: rgba(30, 132, 73, 0.08);
+  background: rgba(30, 132, 73, 0.07);
 }
 .tag-info {
-  border-color: rgba(26, 111, 168, 0.4);
+  border-color: rgba(26, 111, 168, 0.35);
   color: var(--color-info);
-  background: rgba(26, 111, 168, 0.08);
+  background: rgba(26, 111, 168, 0.07);
 }
 
 /* ── Dividers ─────────────────────────────────────────────── */
@@ -173,8 +245,8 @@ select.input, select {
   margin: var(--space-4) 0;
 }
 
-/* ── Scrollbars ───────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
+/* ── Scrollbars — thin, unobtrusive ──────────────────────── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border-light); }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
@@ -185,20 +257,47 @@ select.input, select {
   color: var(--color-text);
 }
 
+/* ── Focus ring (keyboard nav) ────────────────────────────── */
+:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Dropdown / Popover entry ─────────────────────────────── */
+.dropdown-enter {
+  animation: fadeIn 140ms var(--ease-out) both;
+}
+
+/* ── Data table rows ──────────────────────────────────────── */
+.data-row {
+  transition: background var(--transition);
+}
+.data-row:hover { background: var(--color-bg-hover); }
+
+/* ── Stat number animation ────────────────────────────────── */
+.stat-value {
+  animation: countUp 300ms var(--ease-out) both;
+}
+
 /* ── Mobile Responsive ────────────────────────────────────── */
 @media (max-width: 768px) {
   :root {
     --header-height: 44px;
     --space-6: 16px;
   }
-
   .container { padding: 0 var(--space-4); }
-
-  /* Hide non-essential text on mobile */
   .hide-mobile { display: none !important; }
   .show-mobile { display: flex !important; }
 }
 
 @media (min-width: 769px) {
   .show-mobile { display: none !important; }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

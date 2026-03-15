@@ -1,4 +1,4 @@
-.wrap { display: flex; flex-direction: column; overflow-y: auto; }
+.wrap { display: flex; flex-direction: column; overflow-y: auto; animation: fadeIn var(--transition-page) var(--ease-out) both; }
 
 .header {
   display: flex;
@@ -51,10 +51,14 @@
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: color var(--transition), border-color var(--transition);
+  letter-spacing: var(--letter-spacing-wide);
 }
 .tab:hover { color: var(--color-text); }
-.activeTab { color: var(--color-text); border-bottom-color: var(--color-accent); }
+.activeTab {
+  color: var(--color-text);
+  border-bottom-color: var(--color-accent);
+}
 
 .tabContent { padding: var(--space-6); }
 

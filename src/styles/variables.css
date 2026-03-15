@@ -1,162 +1,179 @@
-/* ChainTrace Design System - Professional Blockchain Security Platform */
-/* Cold, restrained, high information density. No gradients, no rounded corners. */
+/* ChainTrace Design System — Professional Blockchain Security Platform */
+/* Aesthetic: Bloomberg Terminal × Coinbase Pro × Chainalysis              */
+/* Principles: cold precision, high density, zero decoration               */
 
 :root {
-  /* ── Core Palette ─────────────────────────────────────── */
-  --color-accent: #c0392b;
+  /* ── Core Accent ──────────────────────────────────────── */
+  --color-accent:       #c0392b;
   --color-accent-hover: #a93226;
-  --color-accent-dim: rgba(192, 57, 43, 0.12);
+  --color-accent-dim:   rgba(192, 57, 43, 0.10);
+  --color-accent-glow:  rgba(192, 57, 43, 0.18);
+  --color-accent-line:  rgba(192, 57, 43, 0.35);
 
-  /* ── Semantic Colors ──────────────────────────────────── */
-  --color-danger: #c0392b;
+  /* ── Semantic ─────────────────────────────────────────── */
+  --color-danger:  #c0392b;
   --color-warning: #c8960c;
-  --color-safe: #1e8449;
-  --color-info: #1a6fa8;
+  --color-success: #1e8449;
+  --color-info:    #1a6fa8;
 
   /* ── Risk Scale ───────────────────────────────────────── */
   --risk-critical: #c0392b;
-  --risk-high: #d4680a;
-  --risk-medium: #c8960c;
-  --risk-low: #1e8449;
-  --risk-safe: #27ae60;
+  --risk-high:     #d4680a;
+  --risk-medium:   #c8960c;
+  --risk-low:      #1e8449;
+  --risk-safe:     #27ae60;
 
   /* ── Dark Theme (default) ─────────────────────────────── */
-  --color-bg: #09090e;
-  --color-bg-elevated: #0f0f16;
-  --color-bg-card: #141420;
-  --color-bg-input: #1a1a28;
-  --color-bg-hover: #1e1e2e;
-  --color-border: #252535;
-  --color-border-light: #303048;
-  --color-border-accent: rgba(192, 57, 43, 0.3);
-  --color-text: #dddde8;
-  --color-text-secondary: #8080a0;
-  --color-text-muted: #4a4a68;
+  --color-bg:           #09090e;
+  --color-bg-elevated:  #0d0d14;
+  --color-bg-card:      #111119;
+  --color-bg-input:     #16161f;
+  --color-bg-hover:     #1a1a26;
+  --color-bg-overlay:   rgba(9, 9, 14, 0.85);
+  --color-border:       #1e1e2e;
+  --color-border-light: #2a2a3e;
+  --color-border-focus: rgba(192, 57, 43, 0.50);
+  --color-text:         #e0e0ea;
+  --color-text-secondary: #7070a0;
+  --color-text-muted:   #404060;
   --color-text-inverse: #09090e;
 
   /* ── Typography ───────────────────────────────────────── */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-  --font-size-2xs: 10px;
-  --font-size-xs: 11px;
-  --font-size-sm: 12px;
+  --font-size-2xs:  10px;
+  --font-size-xs:   11px;
+  --font-size-sm:   12px;
   --font-size-base: 13px;
-  --font-size-md: 14px;
-  --font-size-lg: 15px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 22px;
-  --font-size-3xl: 28px;
-  --font-size-4xl: 36px;
+  --font-size-md:   14px;
+  --font-size-lg:   15px;
+  --font-size-xl:   18px;
+  --font-size-2xl:  22px;
+  --font-size-3xl:  28px;
+  --font-size-4xl:  36px;
 
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
   --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  --font-weight-bold:     700;
 
-  --line-height-tight: 1.2;
-  --line-height-base: 1.5;
+  --line-height-tight:   1.2;
+  --line-height-base:    1.5;
   --line-height-relaxed: 1.7;
 
-  --letter-spacing-tight: -0.02em;
-  --letter-spacing-normal: 0;
-  --letter-spacing-wide: 0.04em;
-  --letter-spacing-wider: 0.08em;
-  --letter-spacing-widest: 0.12em;
+  --letter-spacing-tight:   -0.02em;
+  --letter-spacing-normal:   0;
+  --letter-spacing-wide:     0.04em;
+  --letter-spacing-wider:    0.08em;
+  --letter-spacing-widest:   0.12em;
 
   /* ── Spacing ──────────────────────────────────────────── */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
   --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
 
-  /* ── No border radius ─────────────────────────────────── */
-  --radius: 0px;
+  /* ── Zero radius (financial terminal aesthetic) ───────── */
+  --radius:    0px;
   --radius-sm: 0px;
 
   /* ── Borders ──────────────────────────────────────────── */
-  --border: 1px solid var(--color-border);
+  --border:       1px solid var(--color-border);
   --border-light: 1px solid var(--color-border-light);
 
-  /* ── Shadows ──────────────────────────────────────────── */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  /* ── Elevation Shadows ────────────────────────────────── */
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+  --shadow-accent: 0 0 0 1px var(--color-accent-line), 0 4px 20px var(--color-accent-glow);
 
-  /* ── Transitions ──────────────────────────────────────── */
-  --transition: 120ms ease;
-  --transition-slow: 250ms ease;
+  /* ── Transitions — tuned easing curves ───────────────── */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:    cubic-bezier(0.4, 0, 1, 1);
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition:      100ms var(--ease-out);
+  --transition-slow: 220ms var(--ease-out);
+  --transition-page: 180ms var(--ease-out);
 
   /* ── Layout ───────────────────────────────────────────── */
-  --header-height: 48px;
-  --sidebar-width: 200px;
+  --header-height:     48px;
+  --sidebar-width:     200px;
   --content-max-width: 1440px;
 }
 
 /* ─── Light Theme ─────────────────────────────────────────── */
 [data-theme="light"] {
-  --color-bg: #f2f2f6;
-  --color-bg-elevated: #ffffff;
-  --color-bg-card: #fafafa;
-  --color-bg-input: #ffffff;
-  --color-bg-hover: #f0f0f5;
-  --color-border: #d8d8e8;
-  --color-border-light: #c0c0d8;
-  --color-border-accent: rgba(192, 57, 43, 0.25);
-  --color-text: #0a0a18;
+  --color-bg:           #f0f0f5;
+  --color-bg-elevated:  #ffffff;
+  --color-bg-card:      #f8f8fc;
+  --color-bg-input:     #ffffff;
+  --color-bg-hover:     #ebebf2;
+  --color-bg-overlay:   rgba(240, 240, 245, 0.90);
+  --color-border:       #d0d0e0;
+  --color-border-light: #b8b8d0;
+  --color-border-focus: rgba(176, 48, 32, 0.40);
+  --color-text:         #0a0a18;
   --color-text-secondary: #404060;
-  --color-text-muted: #808098;
+  --color-text-muted:   #808098;
   --color-text-inverse: #ffffff;
-  --color-accent: #b03020;
+  --color-accent:       #b03020;
   --color-accent-hover: #922818;
-  --color-accent-dim: rgba(176, 48, 32, 0.08);
-  --color-danger: #b03020;
+  --color-accent-dim:   rgba(176, 48, 32, 0.08);
+  --color-accent-glow:  rgba(176, 48, 32, 0.14);
+  --color-accent-line:  rgba(176, 48, 32, 0.30);
+  --color-danger:  #b03020;
   --color-warning: #9a7008;
-  --color-safe: #166038;
-  --color-info: #145a88;
+  --color-success: #166038;
+  --color-info:    #145a88;
   --risk-critical: #b03020;
-  --risk-high: #b05008;
-  --risk-medium: #9a7008;
-  --risk-low: #166038;
-  --risk-safe: #1a8040;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --risk-high:     #b05008;
+  --risk-medium:   #9a7008;
+  --risk-low:      #166038;
+  --risk-safe:     #1a8040;
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.10);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --shadow-accent: 0 0 0 1px var(--color-accent-line), 0 4px 20px var(--color-accent-glow);
 }
 
 /* ─── High Contrast Theme ─────────────────────────────────── */
 [data-theme="high-contrast"] {
-  --color-bg: #000000;
-  --color-bg-elevated: #080808;
-  --color-bg-card: #0e0e0e;
-  --color-bg-input: #0a0a0a;
-  --color-bg-hover: #141414;
-  --color-border: #505050;
-  --color-border-light: #707070;
-  --color-border-accent: rgba(255, 60, 60, 0.5);
-  --color-text: #ffffff;
-  --color-text-secondary: #d0d0d0;
-  --color-text-muted: #909090;
+  --color-bg:           #000000;
+  --color-bg-elevated:  #060606;
+  --color-bg-card:      #0c0c0c;
+  --color-bg-input:     #080808;
+  --color-bg-hover:     #121212;
+  --color-bg-overlay:   rgba(0, 0, 0, 0.92);
+  --color-border:       #444444;
+  --color-border-light: #666666;
+  --color-border-focus: rgba(255, 60, 60, 0.60);
+  --color-text:         #ffffff;
+  --color-text-secondary: #cccccc;
+  --color-text-muted:   #888888;
   --color-text-inverse: #000000;
-  --color-accent: #ff3c3c;
+  --color-accent:       #ff3c3c;
   --color-accent-hover: #ff1a1a;
-  --color-accent-dim: rgba(255, 60, 60, 0.15);
-  --color-danger: #ff3c3c;
+  --color-accent-dim:   rgba(255, 60, 60, 0.15);
+  --color-accent-glow:  rgba(255, 60, 60, 0.25);
+  --color-accent-line:  rgba(255, 60, 60, 0.55);
+  --color-danger:  #ff3c3c;
   --color-warning: #ffcc00;
-  --color-safe: #00e070;
-  --color-info: #40aaff;
+  --color-success: #00e070;
+  --color-info:    #40aaff;
   --risk-critical: #ff3c3c;
-  --risk-high: #ff8800;
-  --risk-medium: #ffcc00;
-  --risk-low: #00e070;
-  --risk-safe: #00e070;
-  --shadow-sm: 0 0 0 1px #505050;
-  --shadow-md: 0 0 0 2px #707070;
-  --shadow-lg: 0 0 0 3px #909090;
+  --risk-high:     #ff8800;
+  --risk-medium:   #ffcc00;
+  --risk-low:      #00e070;
+  --risk-safe:     #00e070;
+  --shadow-sm: 0 0 0 1px #444444;
+  --shadow-md: 0 0 0 2px #666666;
+  --shadow-lg: 0 0 0 3px #888888;
+  --shadow-accent: 0 0 0 1px var(--color-accent-line), 0 0 16px var(--color-accent-glow);
 }

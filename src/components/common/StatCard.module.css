@@ -1,13 +1,57 @@
 .card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
+  border-top: 2px solid transparent;
   padding: var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  transition: border-color var(--transition-slow), box-shadow var(--transition-slow);
+  position: relative;
+  overflow: hidden;
 }
-.card.accent { border-left: 3px solid var(--color-accent); }
-.card.danger { border-left: 3px solid var(--risk-critical); }
-.label { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.value { font-size: var(--font-size-2xl); font-weight: 600; font-family: var(--font-mono); color: var(--color-text); }
-.sub { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+
+/* Subtle left-edge accent on hover */
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border-light);
+  transition: background var(--transition-slow);
+}
+.card:hover::before { background: var(--color-accent); }
+.card:hover {
+  border-color: var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.card.accent { border-top-color: var(--color-accent); }
+.card.danger  { border-top-color: var(--risk-critical); }
+.card.danger::before { background: var(--risk-critical); }
+
+.label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  font-weight: var(--font-weight-medium);
+}
+
+.value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  animation: countUp 280ms var(--ease-out) both;
+}
+
+.sub {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+}

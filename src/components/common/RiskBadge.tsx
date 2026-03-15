@@ -12,8 +12,14 @@ interface Props {
 export const RiskBadge: React.FC<Props> = ({ score, showScore = true, size = 'md' }) => {
   const locale = useAppStore(s => s.locale);
   const { label, color } = getRiskLabel(score, locale);
+  const isCritical = score > 80;
   return (
-    <span className={`${styles.badge} ${styles[size]}`} style={{ borderColor: color, color }}>
+    <span
+      className={`${styles.badge} ${styles[size]}`}
+      style={{ borderColor: color, color }}
+      data-critical={isCritical ? 'true' : undefined}
+    >
+      <span className={styles.dot} />
       {showScore && <span className={styles.score}>{score}</span>}
       <span>{label}</span>
     </span>

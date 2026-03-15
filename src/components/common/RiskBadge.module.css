@@ -1,13 +1,30 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   border: 1px solid;
   font-family: var(--font-mono);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
+  letter-spacing: var(--letter-spacing-wide);
+  transition: box-shadow var(--transition);
 }
-.sm { padding: 1px 6px; font-size: var(--font-size-xs); }
-.md { padding: 2px 8px; font-size: var(--font-size-sm); }
+
+/* Glow on critical scores */
+.badge[data-critical="true"] {
+  box-shadow: 0 0 8px var(--color-accent-glow);
+}
+
+.sm { padding: 1px 6px;  font-size: var(--font-size-xs); }
+.md { padding: 2px 8px;  font-size: var(--font-size-sm); }
 .lg { padding: 4px 12px; font-size: var(--font-size-base); }
-.score { opacity: 0.8; }
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.score { opacity: 0.75; font-size: 0.85em; }

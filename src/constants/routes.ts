@@ -18,4 +18,5 @@ export const ROUTES = {
   NOTIFICATIONS: '/notifications',
   HELP: '/help',
   API_DOCS: '/api-docs',
+  SEARCH: '/search',
 } as const;

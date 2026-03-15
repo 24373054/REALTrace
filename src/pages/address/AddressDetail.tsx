@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import { RiskBadge } from '../../components/common/RiskBadge';
 import { RiskBar } from '../../components/common/RiskBar';
 import { CopyButton } from '../../components/common/CopyButton';
 import { StatCard } from '../../components/common/StatCard';
-import { LoadingSpinner } from '../../components/common/LoadingSpinner';
+import { SkeletonCard, SkeletonTable, Skeleton } from '../../components/common/Skeleton';
 import { UpgradePrompt } from '../../components/common/UpgradePrompt';
 import { useI18n } from '../../hooks/useI18n';
 import { shortAddress, formatAmount, formatDate } from '../../utils/format';
@@ -59,14 +59,37 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
   const { t, locale } = useI18n();
   const { addFavorite, removeFavorite, isFavorite } = useAppStore();
   const [tab, setTab] = useState<Tab>('overview');
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const data = getMockAddress(chain, address);
+
+  useEffect(() => {
+    setLoading(true);
+    const t = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(t);
+  }, [chain, address]);
   const favorited = isFavorite(address);
   const [labelModal, setLabelModal] = useState(false);
   const [userLabel, setUserLabel] = useState(data.label || '');
   const [savedLabel, setSavedLabel] = useState(data.label || '');
 
-  if (loading) return <LoadingSpinner text={t.common.loading} />;
+  if (loading) return (
+    <div className={styles.wrap}>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <Skeleton width={60} height={20} />
+          <Skeleton width={420} height={18} style={{ marginTop: 8 }} />
+          <Skeleton width={120} height={16} style={{ marginTop: 6 }} />
+        </div>
+        <div className={styles.headerRight}>
+          <Skeleton width={80} height={48} />
+        </div>
+      </div>
+      <div className={styles.statsRow}>
+        {Array.from({ length: 6 }, (_, i) => <SkeletonCard key={i} />)}
+      </div>
+      <SkeletonTable rows={6} cols={6} />
+    </div>
+  );
 
   const TAB_LABELS: Record<Tab, string> = {
     overview: t.address.detail.overview,
@@ -147,8 +170,8 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
         <StatCard label={t.address.txCount} value={data.txCount.toLocaleString()} />
         <StatCard label={t.address.received} value={`${formatAmount(data.totalReceived)} ${chain}`} />
         <StatCard label={t.address.sent} value={`${formatAmount(data.totalSent)} ${chain}`} />
-        <StatCard label={t.address.firstSeen} value={formatDate(data.firstSeen)} />
-        <StatCard label={t.address.lastSeen} value={formatDate(data.lastSeen)} />
+        <StatCard label={t.address.firstSeen} value={formatDate(data.firstSeen, locale)} />
+        <StatCard label={t.address.lastSeen} value={formatDate(data.lastSeen, locale)} />
       </div>
 
       <div className={styles.tabs}>
@@ -164,8 +187,8 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
       </div>
 
       <div className={styles.tabContent}>
-        {tab === 'overview' && <OverviewTab data={data} t={t} />}
-        {tab === 'transactions' && <TransactionsTab chain={chain} address={address} t={t} />}
+        {tab === 'overview' && <OverviewTab data={data} t={t} locale={locale} />}
+        {tab === 'transactions' && <TransactionsTab chain={chain} address={address} t={t} locale={locale} />}
         {tab === 'flow' && <FlowTab chain={chain} address={address} t={t} />}
         {tab === 'risk' && <RiskTab data={data} t={t} />}
       </div>
@@ -173,7 +196,7 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
   );
 };
 
-const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress>; t: any }> = ({ data, t }) => {
+const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress>; t: any; locale: 'zh' | 'en' }> = ({ data, t, locale }) => {
   const assetOption = {
     backgroundColor: 'transparent',
     tooltip: {
@@ -223,8 +246,8 @@ const OverviewTab: React.FC<{ data: ReturnType<typeof getMockAddress>; t: any }>
         <div className={styles.infoRows}>
           <div className={styles.infoRow}><span>{t.common.chain}</span><span className="mono">{data.chain}</span></div>
           <div className={styles.infoRow}><span>{t.address.addressType}</span><span>EOA</span></div>
-          <div className={styles.infoRow}><span>{t.address.firstSeen}</span><span>{formatDate(data.firstSeen)}</span></div>
-          <div className={styles.infoRow}><span>{t.address.lastSeen}</span><span>{formatDate(data.lastSeen)}</span></div>
+          <div className={styles.infoRow}><span>{t.address.firstSeen}</span><span>{formatDate(data.firstSeen, locale)}</span></div>
+          <div className={styles.infoRow}><span>{t.address.lastSeen}</span><span>{formatDate(data.lastSeen, locale)}</span></div>
           <div className={styles.infoRow}><span>{t.address.txCount}</span><span className="mono">{data.txCount.toLocaleString()}</span></div>
         </div>
       </div>
@@ -275,7 +298,7 @@ const MOCK_TXS = Array.from({ length: 10 }, (_, i) => ({
   status: 'confirmed' as const,
 }));
 
-const TransactionsTab: React.FC<{ chain: string; address: string; t: any }> = ({ chain, t }) => (
+const TransactionsTab: React.FC<{ chain: string; address: string; t: any; locale: 'zh' | 'en' }> = ({ chain, t, locale }) => (
   <div className={styles.txTable}>
     <div className={styles.txHeader}>
       <span>{t.transaction.txHash}</span>
@@ -288,7 +311,7 @@ const TransactionsTab: React.FC<{ chain: string; address: string; t: any }> = ({
     {MOCK_TXS.map(tx => (
       <div key={tx.hash} className={styles.txRow}>
         <span className={`${styles.txHash} mono`}>{shortAddress(tx.hash, 8, 6)}</span>
-        <span className={styles.txTime}>{formatDate(tx.timestamp)}</span>
+        <span className={styles.txTime}>{formatDate(tx.timestamp, locale)}</span>
         <span className={`${styles.txAddr} mono`}>{shortAddress(tx.from)}</span>
         <span className={`${styles.txAddr} mono`}>{shortAddress(tx.to)}</span>
         <span className={`${styles.txAmount} mono`}>{tx.amount} {chain}</span>

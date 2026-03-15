@@ -37,7 +37,7 @@ type TxTab = 'detail' | 'flow' | 'timeline';
 export const TransactionPage: React.FC = () => {
   const { hash: paramHash } = useParams<{ hash?: string }>();
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [query, setQuery] = useState(paramHash || '');
   const [searched, setSearched] = useState(!!paramHash);
   const [tab, setTab] = useState<TxTab>('detail');
@@ -102,9 +102,9 @@ export const TransactionPage: React.FC = () => {
             ))}
           </div>
 
-          {tab === 'detail' && <DetailTab navigate={navigate} t={t} />}
+          {tab === 'detail' && <DetailTab navigate={navigate} t={t} locale={locale} />}
           {tab === 'flow' && <FlowTab t={t} />}
-          {tab === 'timeline' && <TimelineTab t={t} />}
+          {tab === 'timeline' && <TimelineTab t={t} locale={locale} />}
         </div>
       ) : (
         <EmptyState title={t.transaction.title} description={t.transaction.placeholder} />
@@ -113,7 +113,7 @@ export const TransactionPage: React.FC = () => {
   );
 };
 
-const DetailTab: React.FC<{ navigate: (p: string) => void; t: any }> = ({ navigate, t }) => (
+const DetailTab: React.FC<{ navigate: (p: string) => void; t: any; locale: 'zh' | 'en' }> = ({ navigate, t, locale }) => (
   <div className={styles.detailGrid}>
     <div className={styles.detailCard}>
       <div className={styles.cardTitle}>{t.transaction.txDetail}</div>
@@ -136,7 +136,7 @@ const DetailTab: React.FC<{ navigate: (p: string) => void; t: any }> = ({ naviga
             <CopyButton text={MOCK_TX.to} />
           </div>
         </div>
-        <div className={styles.detailRow}><span>{t.common.time}</span><span className="mono">{formatDate(MOCK_TX.timestamp)}</span></div>
+        <div className={styles.detailRow}><span>{t.common.time}</span><span className="mono">{formatDate(MOCK_TX.timestamp, locale)}</span></div>
         <div className={styles.detailRow}><span>{t.transaction.block}</span><span className="mono">{MOCK_TX.blockNumber.toLocaleString()}</span></div>
         <div className={styles.detailRow}><span>{t.transaction.fee}</span><span className="mono">{MOCK_TX.fee} ETH</span></div>
         <div className={styles.detailRow}><span>{t.transaction.confirmations}</span><span className="mono">{MOCK_TX.confirmations.toLocaleString()}</span></div>
@@ -220,7 +220,7 @@ const FlowTab: React.FC<{ t: any }> = ({ t }) => {
   );
 };
 
-const TimelineTab: React.FC<{ t: any }> = ({ t }) => {
+const TimelineTab: React.FC<{ t: any; locale: 'zh' | 'en' }> = ({ t, locale }) => {
   const timeData = Array.from({ length: 30 }, (_, i) => {
     const d = new Date('2025-02-01');
     d.setDate(d.getDate() + i);
@@ -285,7 +285,7 @@ const TimelineTab: React.FC<{ t: any }> = ({ t }) => {
         })).map((tx, i) => (
           <div key={i} className={styles.txRow}>
             <span className={`${styles.txHash} mono`}>{shortAddress(tx.hash, 8, 6)}</span>
-            <span className={styles.txTime}>{formatDate(tx.timestamp)}</span>
+            <span className={styles.txTime}>{formatDate(tx.timestamp, locale)}</span>
             <span className={`${styles.txAddr} mono`}>{shortAddress(tx.from)}</span>
             <span className={`${styles.txAddr} mono`}>{shortAddress(tx.to)}</span>
             <span className={`${styles.txAmount} mono`}>{tx.amount} ETH</span>

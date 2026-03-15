@@ -29,9 +29,9 @@ export const MainLayout: React.FC = () => {
         <span>© 2026 ChainTrace · {locale === 'zh' ? '区块链资金追踪平台' : 'Blockchain Intelligence Platform'}</span>
         <span className={styles.footerLinks}>
           <a href="/help">{locale === 'zh' ? '帮助文档' : 'Help'}</a>
-          <a href="#">API</a>
-          <a href="#">{locale === 'zh' ? '隐私政策' : 'Privacy'}</a>
-          <a href="#">{locale === 'zh' ? '服务条款' : 'Terms'}</a>
+          <a href="/api-docs">API</a>
+          <a href="/help">{locale === 'zh' ? '隐私政策' : 'Privacy'}</a>
+          <a href="/help">{locale === 'zh' ? '服务条款' : 'Terms'}</a>
         </span>
       </footer>
     </div>

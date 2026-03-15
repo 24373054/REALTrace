@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useI18n } from '../../hooks/useI18n';
+import { timeAgo } from '../../utils/format';
 import styles from './NotificationsPage.module.css';
 
 type NotifType = 'system' | 'risk' | 'activity';
@@ -37,7 +38,7 @@ const TYPE_ICONS: Record<NotifType, string> = {
 };
 
 export const NotificationsPage: React.FC = () => {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [filter, setFilter] = useState<FilterTab>('all');
   const [notifs, setNotifs] = useState(MOCK_NOTIFS);
 
@@ -106,7 +107,7 @@ export const NotificationsPage: React.FC = () => {
                   </span>
                 </div>
                 <div className={styles.itemBody}>{n.body}</div>
-                <div className={styles.itemTime}>{new Date(n.time).toLocaleString()}</div>
+                <div className={styles.itemTime}>{timeAgo(n.time, locale)}</div>
               </div>
               {!n.read && <div className={styles.unreadDot} />}
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { getRiskLabel } from '../../utils/format';
+import { useAppStore } from '../../stores/app';
 import styles from './RiskBadge.module.css';
 
 interface Props {
@@ -9,7 +10,8 @@ interface Props {
 }
 
 export const RiskBadge: React.FC<Props> = ({ score, showScore = true, size = 'md' }) => {
-  const { label, color } = getRiskLabel(score);
+  const locale = useAppStore(s => s.locale);
+  const { label, color } = getRiskLabel(score, locale);
   return (
     <span className={`${styles.badge} ${styles[size]}`} style={{ borderColor: color, color }}>
       {showScore && <span className={styles.score}>{score}</span>}

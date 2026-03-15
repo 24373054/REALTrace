@@ -3,12 +3,18 @@ import { useI18n } from '../../hooks/useI18n';
 import styles from './HelpPage.module.css';
 
 const SHORTCUTS = [
-  { key: 'Ctrl + K', action_zh: '聚焦搜索框', action_en: 'Focus search bar' },
-  { key: 'Ctrl + S', action_zh: '收藏当前地址', action_en: 'Favorite current address' },
-  { key: 'Ctrl + E', action_zh: '导出当前报告', action_en: 'Export current report' },
-  { key: 'Ctrl + H', action_zh: '查看搜索历史', action_en: 'View search history' },
-  { key: 'Esc',      action_zh: '关闭弹窗 / 返回', action_en: 'Close modal / Go back' },
-  { key: '?',        action_zh: '显示快捷键列表', action_en: 'Show shortcuts' },
+  { key: 'Ctrl + K',   action_zh: '聚焦搜索框',          action_en: 'Focus search bar' },
+  { key: 'Ctrl + 1',   action_zh: '跳转到首页',           action_en: 'Go to Home' },
+  { key: 'Ctrl + 2',   action_zh: '跳转到地址查询',       action_en: 'Go to Address' },
+  { key: 'Ctrl + 3',   action_zh: '跳转到交易查询',       action_en: 'Go to Transaction' },
+  { key: 'Ctrl + 4',   action_zh: '跳转到分析页',         action_en: 'Go to Analysis' },
+  { key: 'Ctrl + 5',   action_zh: '跳转到溯源追踪',       action_en: 'Go to Trace' },
+  { key: 'Ctrl + 6',   action_zh: '跳转到监控页',         action_en: 'Go to Monitor' },
+  { key: 'Ctrl + S',   action_zh: '收藏当前地址',         action_en: 'Favorite current address' },
+  { key: 'Ctrl + E',   action_zh: '导出当前报告',         action_en: 'Export current report' },
+  { key: 'Ctrl + H',   action_zh: '查看搜索历史',         action_en: 'View search history' },
+  { key: '?',          action_zh: '打开帮助页',           action_en: 'Open help page' },
+  { key: 'Esc',        action_zh: '关闭弹窗 / 返回',      action_en: 'Close modal / Go back' },
 ];
 
 const FAQ_ITEMS = [

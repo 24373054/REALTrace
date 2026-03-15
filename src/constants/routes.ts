@@ -15,4 +15,6 @@ export const ROUTES = {
   USER_HISTORY: '/user/history',
   MEMBER: '/member',
   TRACE: '/trace',
+  NOTIFICATIONS: '/notifications',
+  HELP: '/help',
 } as const;

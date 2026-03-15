@@ -4,7 +4,7 @@ import ReactECharts from 'echarts-for-react';
 import { useI18n } from '../../hooks/useI18n';
 import styles from './AnalysisPage.module.css';
 
-type AnalysisTab = 'graph' | 'flow' | 'trend';
+type AnalysisTab = 'graph' | 'flow' | 'trend' | 'heatmap';
 
 export const AnalysisPage: React.FC = () => {
   const [tab, setTab] = useState<AnalysisTab>('graph');
@@ -15,13 +15,14 @@ export const AnalysisPage: React.FC = () => {
     graph: t.analysis.graph,
     flow: t.analysis.flow,
     trend: t.analysis.trend,
+    heatmap: t.analysis.heatmap,
   };
 
   return (
     <div className={styles.page}>
       <div className={styles.toolbar}>
         <div className={styles.tabs}>
-          {(['graph', 'flow', 'trend'] as AnalysisTab[]).map(tb => (
+          {(['graph', 'flow', 'trend', 'heatmap'] as AnalysisTab[]).map(tb => (
             <button key={tb} className={`${styles.tab} ${tab === tb ? styles.active : ''}`} onClick={() => setTab(tb)}>
               {TAB_LABELS[tb]}
             </button>
@@ -38,6 +39,7 @@ export const AnalysisPage: React.FC = () => {
         {tab === 'graph' && <GraphTab navigate={navigate} t={t} />}
         {tab === 'flow' && <FlowTab t={t} />}
         {tab === 'trend' && <TrendTab t={t} />}
+        {tab === 'heatmap' && <HeatmapTab t={t} />}
       </div>
     </div>
   );
@@ -199,6 +201,66 @@ const TrendTab: React.FC<{ t: any }> = ({ t }) => {
   return (
     <div className={styles.chartWrap}>
       <div className={styles.chartTitle}>{t.analysis.trendTitle}</div>
+      <ReactECharts option={option} style={{ height: '100%', width: '100%' }} theme="dark" />
+    </div>
+  );
+};
+
+const HeatmapTab: React.FC<{ t: any }> = ({ t }) => {
+  const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const data: [number, number, number][] = [];
+  for (let d = 0; d < 7; d++) {
+    for (let h = 0; h < 24; h++) {
+      const base = (d < 5 && h >= 8 && h <= 20) ? 40 : 10;
+      data.push([h, d, Math.round(base + Math.random() * 60)]);
+    }
+  }
+
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      position: 'top',
+      backgroundColor: '#16161e',
+      borderColor: '#2a2a3a',
+      textStyle: { color: '#e0e0e6', fontSize: 11 },
+      formatter: (p: any) => `${days[p.data[1]]} ${hours[p.data[0]]}<br/>Tx Count: <b>${p.data[2]}</b>`,
+    },
+    grid: { left: 60, right: 20, top: 40, bottom: 60 },
+    xAxis: {
+      type: 'category',
+      data: hours,
+      axisLine: { lineStyle: { color: '#2a2a3a' } },
+      axisLabel: { color: '#555568', fontSize: 9, interval: 1 },
+      splitArea: { show: true, areaStyle: { color: ['rgba(255,255,255,0.01)', 'rgba(255,255,255,0.02)'] } },
+    },
+    yAxis: {
+      type: 'category',
+      data: days,
+      axisLine: { lineStyle: { color: '#2a2a3a' } },
+      axisLabel: { color: '#555568', fontSize: 10 },
+      splitArea: { show: true, areaStyle: { color: ['rgba(255,255,255,0.01)', 'rgba(255,255,255,0.02)'] } },
+    },
+    visualMap: {
+      min: 0, max: 100,
+      calculable: true,
+      orient: 'horizontal',
+      left: 'center',
+      bottom: 8,
+      textStyle: { color: '#555568', fontSize: 10 },
+      inRange: { color: ['#0d0d14', '#1a1a2e', '#2980b9', '#c0392b'] },
+    },
+    series: [{
+      type: 'heatmap',
+      data,
+      label: { show: false },
+      emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } },
+    }],
+  };
+
+  return (
+    <div className={styles.chartWrap}>
+      <div className={styles.chartTitle}>{t.analysis.heatmapTitle}</div>
       <ReactECharts option={option} style={{ height: '100%', width: '100%' }} theme="dark" />
     </div>
   );

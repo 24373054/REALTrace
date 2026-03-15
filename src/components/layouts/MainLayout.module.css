@@ -37,3 +37,28 @@
   transition: color var(--transition);
 }
 .footerLinks a:hover { color: var(--color-text-secondary); }
+
+/* Demo mode banner */
+.demoBanner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-6);
+  background: rgba(192, 57, 43, 0.08);
+  border-bottom: 1px solid rgba(192, 57, 43, 0.25);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+.demoBannerIcon { color: var(--color-accent); font-size: 14px; }
+.demoBannerText { flex: 1; }
+.demoBannerClose {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  padding: 2px var(--space-3);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.demoBannerClose:hover { border-color: var(--color-border-light); color: var(--color-text); }

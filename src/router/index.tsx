@@ -15,6 +15,8 @@ const MemberPage = lazy(() => import('../pages/member/MemberPage').then(m => ({ 
 const LoginPage = lazy(() => import('../pages/auth/LoginPage').then(m => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('../pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const TracePage = lazy(() => import('../pages/trace/TracePage').then(m => ({ default: m.TracePage })));
+const NotificationsPage = lazy(() => import('../pages/notifications/NotificationsPage').then(m => ({ default: m.NotificationsPage })));
+const HelpPage = lazy(() => import('../pages/help/HelpPage').then(m => ({ default: m.HelpPage })));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 const Wrap = ({ children }: { children: React.ReactNode }) => (
@@ -40,6 +42,8 @@ export const router = createBrowserRouter([
       { path: 'user/history', element: <Wrap><UserPage /></Wrap> },
       { path: 'member', element: <Wrap><MemberPage /></Wrap> },
       { path: 'trace', element: <Wrap><TracePage /></Wrap> },
+      { path: 'notifications', element: <Wrap><NotificationsPage /></Wrap> },
+      { path: 'help', element: <Wrap><HelpPage /></Wrap> },
       { path: 'login', element: <Wrap><LoginPage /></Wrap> },
       { path: 'register', element: <Wrap><RegisterPage /></Wrap> },
       { path: '*', element: <Wrap><NotFoundPage /></Wrap> },

@@ -35,3 +35,39 @@
 .payMethod { padding: 2px var(--space-3); border: 1px solid var(--color-border); font-size: var(--font-size-xs); color: var(--color-text-secondary); }
 @media (max-width: 1024px) { .plansGrid { grid-template-columns: repeat(2, 1fr); } .usageBars { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .plansGrid { grid-template-columns: 1fr; } }
+
+/* Featured plan */
+.featuredCard { border-color: var(--color-warning); }
+.featuredBadge { position: absolute; top: -1px; right: var(--space-4); background: var(--color-warning); color: #000; font-size: var(--font-size-xs); padding: 2px var(--space-2); font-weight: 700; }
+.planBtnFeatured { background: var(--color-warning); color: #000; border: none; padding: var(--space-3); font-size: var(--font-size-sm); font-weight: 700; cursor: pointer; transition: all var(--transition); }
+.planBtnFeatured:hover { opacity: 0.85; }
+.priceMonthly { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-left: var(--space-2); }
+
+/* Checkout modal */
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: var(--color-bg-elevated); border: 1px solid var(--color-border-light); width: 420px; max-width: 95vw; display: flex; flex-direction: column; gap: 0; }
+.modalHeader { display: flex; align-items: center; justify-content: space-between; padding: var(--space-5); border-bottom: 1px solid var(--color-border); }
+.modalTitle { font-size: var(--font-size-md); font-weight: 600; color: var(--color-text); }
+.modalClose { background: none; border: none; color: var(--color-text-muted); font-size: var(--font-size-lg); cursor: pointer; padding: 0; line-height: 1; }
+.modalClose:hover { color: var(--color-text); }
+.orderSummary { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+.orderRow { display: flex; justify-content: space-between; font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.orderVal { color: var(--color-text); font-family: var(--font-mono); }
+.orderDivider { border-top: 1px solid var(--color-border); margin: var(--space-1) 0; }
+.orderTotal { font-weight: 600; }
+.orderPrice { font-size: var(--font-size-xl); font-family: var(--font-mono); color: var(--color-accent); }
+.paySection { padding: 0 var(--space-5) var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
+.paySectionLabel { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.payMethodGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+.payMethodBtn { padding: var(--space-2) var(--space-3); background: var(--color-bg-card); border: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: var(--font-size-xs); cursor: pointer; transition: all var(--transition); text-align: center; }
+.payMethodBtn:hover { border-color: var(--color-border-light); color: var(--color-text); }
+.payMethodActive { border-color: var(--color-accent); color: var(--color-text); background: var(--color-bg-elevated); }
+.secureNote { padding: 0 var(--space-5) var(--space-3); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.modalActions { display: flex; gap: var(--space-3); padding: var(--space-5); border-top: 1px solid var(--color-border); justify-content: flex-end; }
+
+/* Success state */
+.successWrap { padding: var(--space-8); display: flex; flex-direction: column; align-items: center; gap: var(--space-4); text-align: center; }
+.successIcon { width: 56px; height: 56px; border: 2px solid var(--color-success); color: var(--color-success); font-size: 28px; display: flex; align-items: center; justify-content: center; }
+.successTitle { font-size: var(--font-size-xl); font-weight: 600; color: var(--color-text); }
+.successDesc { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.orderNo { font-size: var(--font-size-xs); color: var(--color-text-muted); }

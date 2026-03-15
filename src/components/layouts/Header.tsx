@@ -137,6 +137,9 @@ export const Header: React.FC = () => {
                     <span className={styles.notifTime}>{a.time}</span>
                   </div>
                 ))}
+                <button className={styles.notifViewAll} onClick={() => { navigate('/notifications'); closeAll(); }}>
+                  {t.common.viewAll} →
+                </button>
               </div>
             )}
           </div>

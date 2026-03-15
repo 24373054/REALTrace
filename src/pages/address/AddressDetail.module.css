@@ -161,3 +161,8 @@
 .flowActions { display: flex; align-items: center; gap: var(--space-4); }
 .flowNote { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 .riskCard, .infoCard { background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* Risk tab grid with radar */
+.riskTabGrid { display: grid; grid-template-columns: 280px 1fr; gap: var(--space-5); }
+.radarCard { background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
+@media (max-width: 768px) { .riskTabGrid { grid-template-columns: 1fr; } }

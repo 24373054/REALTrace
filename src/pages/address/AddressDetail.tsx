@@ -314,29 +314,72 @@ const FlowTab: React.FC<{ chain: string; address: string; t: any }> = ({ chain, 
   );
 };
 
-const RiskTab: React.FC<{ data: ReturnType<typeof getMockAddress>; t: any }> = ({ data, t }) => (
-  <div className={styles.riskReport}>
-    <div className={styles.reportHeader}>
-      <div className={styles.reportScore}>
-        <span className={styles.reportScoreNum} style={{ color: 'var(--risk-critical)' }}>{data.riskScore}</span>
-        <span className={styles.reportScoreLabel}>/ 100</span>
-      </div>
-      <div>
-        <div className={styles.reportTitle}>{t.address.highRisk}</div>
-        <div className={styles.reportSub}>{t.address.highRiskDesc}</div>
-      </div>
-    </div>
-    <div className={styles.factorList}>
-      <div className={styles.cardTitle}>{t.address.riskFactorDetail}</div>
-      {data.riskFactors.map((f, i) => (
-        <div key={i} className={styles.factorDetail}>
-          <div className={styles.factorDetailHeader}>
-            <span className={styles.factorName}>{f.name}</span>
-            <span className={styles.factorScore} style={{ color: 'var(--risk-critical)' }}>{t.address.impactScore}: +{f.score}</span>
-          </div>
-          <div className={styles.factorDesc}>{f.description}</div>
+const RiskTab: React.FC<{ data: ReturnType<typeof getMockAddress>; t: any }> = ({ data, t }) => {
+  const radarOption = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      backgroundColor: '#16161e',
+      borderColor: '#2a2a3a',
+      textStyle: { color: '#e0e0e6', fontSize: 11 },
+    },
+    radar: {
+      indicator: [
+        { name: 'Mixer', max: 100 },
+        { name: 'Blacklist', max: 100 },
+        { name: 'Tx Pattern', max: 100 },
+        { name: 'High-Risk Link', max: 100 },
+        { name: 'Behavior', max: 100 },
+      ],
+      center: ['50%', '50%'],
+      radius: '65%',
+      axisName: { color: '#8888a0', fontSize: 10, fontFamily: 'JetBrains Mono, monospace' },
+      splitLine: { lineStyle: { color: '#2a2a3a' } },
+      splitArea: { areaStyle: { color: ['rgba(255,255,255,0.01)', 'rgba(255,255,255,0.02)'] } },
+      axisLine: { lineStyle: { color: '#2a2a3a' } },
+    },
+    series: [{
+      type: 'radar',
+      data: [{
+        value: [85, 60, 75, 90, 70],
+        name: 'Risk Dimensions',
+        areaStyle: { color: 'rgba(192,57,43,0.15)' },
+        lineStyle: { color: '#c0392b', width: 1.5 },
+        itemStyle: { color: '#c0392b' },
+        symbolSize: 4,
+      }],
+    }],
+  };
+
+  return (
+    <div className={styles.riskReport}>
+      <div className={styles.reportHeader}>
+        <div className={styles.reportScore}>
+          <span className={styles.reportScoreNum} style={{ color: 'var(--risk-critical)' }}>{data.riskScore}</span>
+          <span className={styles.reportScoreLabel}>/ 100</span>
         </div>
-      ))}
+        <div>
+          <div className={styles.reportTitle}>{t.address.highRisk}</div>
+          <div className={styles.reportSub}>{t.address.highRiskDesc}</div>
+        </div>
+      </div>
+      <div className={styles.riskTabGrid}>
+        <div className={styles.radarCard}>
+          <div className={styles.cardTitle}>Risk Dimensions</div>
+          <ReactECharts option={radarOption} style={{ height: 220 }} theme="dark" />
+        </div>
+        <div className={styles.factorList}>
+          <div className={styles.cardTitle}>{t.address.riskFactorDetail}</div>
+          {data.riskFactors.map((f, i) => (
+            <div key={i} className={styles.factorDetail}>
+              <div className={styles.factorDetailHeader}>
+                <span className={styles.factorName}>{f.name}</span>
+                <span className={styles.factorScore} style={{ color: 'var(--risk-critical)' }}>{t.address.impactScore}: +{f.score}</span>
+              </div>
+              <div className={styles.factorDesc}>{f.description}</div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};

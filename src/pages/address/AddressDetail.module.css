@@ -166,3 +166,17 @@
 .riskTabGrid { display: grid; grid-template-columns: 280px 1fr; gap: var(--space-5); }
 .radarCard { background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
 @media (max-width: 768px) { .riskTabGrid { grid-template-columns: 1fr; } }
+
+/* Label modal */
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 500; }
+.labelModal { background: var(--color-bg-elevated); border: 1px solid var(--color-border-light); width: 380px; max-width: 95vw; padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+.labelModalTitle { font-size: var(--font-size-md); font-weight: 600; color: var(--color-text); }
+.labelModalAddr { font-size: var(--font-size-xs); color: var(--color-text-muted); font-family: var(--font-mono); word-break: break-all; }
+.labelModalField { display: flex; flex-direction: column; gap: var(--space-2); }
+.labelModalField label { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.labelInput { padding: var(--space-2) var(--space-3); background: var(--color-bg-input); border: 1px solid var(--color-border); color: var(--color-text); font-size: var(--font-size-sm); }
+.labelInput:focus { border-color: var(--color-accent); outline: none; }
+.labelPresets { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.presetBtn { padding: 2px var(--space-3); background: var(--color-bg-card); border: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: var(--font-size-xs); cursor: pointer; transition: all var(--transition); }
+.presetBtn:hover { border-color: var(--color-accent); color: var(--color-text); }
+.labelModalActions { display: flex; gap: var(--space-3); justify-content: flex-end; }

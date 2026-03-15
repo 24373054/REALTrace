@@ -1,0 +1,46 @@
+.page { display: flex; flex-direction: column; overflow-y: auto; }
+.searchBar { padding: var(--space-5) var(--space-6); background: var(--color-bg-elevated); border-bottom: 1px solid var(--color-border); }
+.form { display: flex; gap: 0; max-width: 700px; border: 1px solid var(--color-border); background: var(--color-bg-input); }
+.form:focus-within { border-color: var(--color-border-light); }
+.input { flex: 1; padding: var(--space-3) var(--space-4); background: none; border: none; color: var(--color-text); font-size: var(--font-size-sm); font-family: var(--font-mono); outline: none; }
+.input::placeholder { color: var(--color-text-muted); }
+.content { padding: var(--space-5) var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); max-width: 900px; }
+.resultsMeta { display: flex; align-items: center; justify-content: space-between; }
+.queryLabel { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.countLabel { font-size: var(--font-size-xs); color: var(--color-text-muted); font-family: var(--font-mono); }
+.filterRow { display: flex; gap: 0; border: 1px solid var(--color-border); width: fit-content; }
+.filterBtn { padding: var(--space-2) var(--space-4); font-size: var(--font-size-xs); color: var(--color-text-muted); background: none; border: none; border-right: 1px solid var(--color-border); cursor: pointer; display: flex; align-items: center; gap: var(--space-2); transition: all var(--transition); }
+.filterBtn:last-child { border-right: none; }
+.filterBtn:hover { color: var(--color-text); background: var(--color-bg-card); }
+.filterActive { color: var(--color-text); background: var(--color-bg-card); }
+.filterCount { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); background: var(--color-bg-elevated); padding: 0 4px; border: 1px solid var(--color-border); }
+.resultList { display: flex; flex-direction: column; border: 1px solid var(--color-border); }
+.resultItem { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--color-border); cursor: pointer; transition: background var(--transition); gap: var(--space-4); }
+.resultItem:last-child { border-bottom: none; }
+.resultItem:hover { background: var(--color-bg-elevated); }
+.resultLeft { display: flex; align-items: center; gap: var(--space-4); flex: 1; min-width: 0; }
+.typeIcon { font-size: 18px; flex-shrink: 0; width: 20px; text-align: center; }
+.resultInfo { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.resultValue { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.resultValue .mono { font-size: var(--font-size-sm); color: var(--color-text); }
+.resultLabel { font-size: var(--font-size-xs); color: var(--risk-critical); border: 1px solid rgba(192,57,43,0.3); padding: 1px var(--space-2); }
+.resultMeta { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.chainTag { font-size: 10px; font-family: var(--font-mono); color: var(--color-text-muted); border: 1px solid var(--color-border); padding: 0 var(--space-2); }
+.typeTag { font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.metaItem { font-size: var(--font-size-xs); color: var(--color-text-muted); font-family: var(--font-mono); }
+.resultRight { display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0; }
+.arrow { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.loading { display: flex; justify-content: center; padding: var(--space-12); }
+.loadingDots { display: flex; gap: var(--space-2); }
+.loadingDots span { width: 6px; height: 6px; background: var(--color-accent); animation: pulse 1s ease-in-out infinite; }
+.loadingDots span:nth-child(2) { animation-delay: 0.2s; }
+.loadingDots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+.empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); padding: var(--space-12); color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.emptyIcon { font-size: 32px; opacity: 0.3; }
+
+@media (max-width: 640px) {
+  .searchBar { padding: var(--space-4); }
+  .content { padding: var(--space-4); }
+  .resultItem { padding: var(--space-3) var(--space-4); }
+}

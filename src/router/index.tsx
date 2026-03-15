@@ -19,6 +19,7 @@ const TracePage = lazy(() => import('../pages/trace/TracePage').then(m => ({ def
 const NotificationsPage = lazy(() => import('../pages/notifications/NotificationsPage').then(m => ({ default: m.NotificationsPage })));
 const HelpPage = lazy(() => import('../pages/help/HelpPage').then(m => ({ default: m.HelpPage })));
 const ApiDocsPage = lazy(() => import('../pages/api-docs/ApiDocsPage').then(m => ({ default: m.ApiDocsPage })));
+const SearchPage = lazy(() => import('../pages/search/SearchPage').then(m => ({ default: m.SearchPage })));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 const Wrap = ({ children }: { children: React.ReactNode }) => (
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
       { path: 'analysis', element: <Wrap><AnalysisPage /></Wrap> },
       { path: 'trace', element: <Wrap><TracePage /></Wrap> },
       { path: 'help', element: <Wrap><HelpPage /></Wrap> },
+      { path: 'search', element: <Wrap><SearchPage /></Wrap> },
       { path: 'monitor', element: <Private><MonitorPage /></Private> },
       { path: 'report', element: <Private><ReportPage /></Private> },
       { path: 'user', element: <Private><UserPage /></Private> },

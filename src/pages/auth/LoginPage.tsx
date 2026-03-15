@@ -12,6 +12,7 @@ export const LoginPage: React.FC = () => {
   const { t, locale } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -50,6 +51,13 @@ export const LoginPage: React.FC = () => {
             <input className={styles.input} type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} />
           </div>
           {error && <div className={styles.error}>{error}</div>}
+          <div className={styles.rememberRow}>
+            <label className={styles.rememberLabel}>
+              <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} style={{ accentColor: 'var(--color-accent)' }} />
+              {locale === 'zh' ? '记住我 (7天)' : 'Remember me (7 days)'}
+            </label>
+            <button type="button" className={styles.forgotBtn}>{locale === 'zh' ? '忘记密码？' : 'Forgot password?'}</button>
+          </div>
           <button type="submit" className={`${styles.submitBtn} ${loading ? styles.loading : ''}`} disabled={loading}>
             {loading ? (locale === 'zh' ? '登录中...' : 'Signing in...') : (locale === 'zh' ? '登录' : 'Sign In')}
           </button>

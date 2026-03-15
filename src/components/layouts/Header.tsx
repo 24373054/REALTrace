@@ -35,11 +35,7 @@ export const Header: React.FC = () => {
     const q = query.trim();
     if (!q) return;
     addSearchHistory(q);
-    if (q.length === 64 || q.length === 66) {
-      navigate(`${ROUTES.TRANSACTION}/${q}`);
-    } else {
-      navigate(`${ROUTES.ADDRESS}/${chain}/${q}`);
-    }
+    navigate(`/search?q=${encodeURIComponent(q)}`);
     setQuery('');
   };
 

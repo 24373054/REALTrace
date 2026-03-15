@@ -30,6 +30,7 @@
 .historyList { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--color-border); }
 .historyItem { padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--color-border); font-size: var(--font-size-sm); color: var(--color-text-secondary); }
 .historyItem:last-child { border-bottom: none; }
+.selectedItem { background: var(--color-accent-dim); border-left: 2px solid var(--color-accent); }
 /* Usage tab */
 .usageSection { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); background: var(--color-bg-card); border: 1px solid var(--color-border); }
 .usageSectionTitle { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1px; }

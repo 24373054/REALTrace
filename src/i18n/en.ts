@@ -335,6 +335,8 @@ export const en = {
     riskAlerts: 'Risk Alerts',
     heatmap: 'Activity Heatmap',
     heatmapTitle: 'Tx Activity Heatmap · Hour × Day (Demo Data)',
+    crosschain: 'Cross-Chain',
+    crosschainTitle: 'Cross-Chain Fund Flow · Multi-Chain Tracking (Demo Data)',
   },
   trace: {
     backToMain: 'Back to Main View',

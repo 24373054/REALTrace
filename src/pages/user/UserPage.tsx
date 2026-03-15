@@ -110,18 +110,74 @@ const SettingsTab: React.FC<{ t: any }> = ({ t }) => (
 const FavoritesTab: React.FC<{ t: any }> = ({ t }) => {
   const navigate = useNavigate();
   const { favorites, removeFavorite } = useAppStore();
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const toggleSelect = (addr: string) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(addr) ? next.delete(addr) : next.add(addr);
+      return next;
+    });
+  };
+
+  const selectAll = () => setSelected(new Set(favorites.map(f => f.address)));
+  const clearSelect = () => setSelected(new Set());
+
+  const deleteSelected = () => {
+    selected.forEach(addr => removeFavorite(addr));
+    setSelected(new Set());
+  };
+
+  const exportCSV = () => {
+    const rows = favorites.filter(f => selected.size === 0 || selected.has(f.address));
+    const csv = 'address,chain,label\n' + rows.map(f => `${f.address},${f.chain},${f.label || ''}`).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'favorites.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className={styles.tabContent}>
-      <div className={styles.tabTitle}>{t.user.favorites}</div>
+    <div className={styles.tabContent} style={{ maxWidth: 800 }}>
+      <div className={styles.tabTitleRow}>
+        <span className={styles.tabTitle}>{t.user.favorites}</span>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {favorites.length > 0 && (
+            <>
+              <button className="btn btn-sm" onClick={selected.size === favorites.length ? clearSelect : selectAll}>
+                {selected.size === favorites.length ? t.common.cancel : t.common.edit}
+              </button>
+              {selected.size > 0 && (
+                <>
+                  <button className="btn btn-sm" onClick={exportCSV}>{t.common.export} ({selected.size})</button>
+                  <button className="btn btn-sm" style={{ color: 'var(--color-danger)' }} onClick={deleteSelected}>
+                    {t.common.delete} ({selected.size})
+                  </button>
+                </>
+              )}
+              <button className="btn btn-sm" onClick={exportCSV}>{t.common.export}</button>
+            </>
+          )}
+        </div>
+      </div>
       {favorites.length === 0 ? (
         <div className={styles.emptyHint}>{t.user.noFavorites}</div>
       ) : (
         <div className={styles.historyList}>
           {favorites.map((f, i) => (
-            <div key={i} className={styles.historyItem} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <span className="mono" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text)' }}>{f.address}</span>
-                <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>{f.chain}{f.label ? ` · ${f.label}` : ''}</span>
+            <div key={i} className={`${styles.historyItem} ${selected.has(f.address) ? styles.selectedItem : ''}`}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <input
+                  type="checkbox"
+                  checked={selected.has(f.address)}
+                  onChange={() => toggleSelect(f.address)}
+                  style={{ accentColor: 'var(--color-accent)', cursor: 'pointer' }}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <span className="mono" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text)' }}>{f.address}</span>
+                  <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>{f.chain}{f.label ? ` · ${f.label}` : ''}</span>
+                </div>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn-sm" onClick={() => navigate(`/address/${f.chain}/${f.address}`)}>{t.common.view}</button>

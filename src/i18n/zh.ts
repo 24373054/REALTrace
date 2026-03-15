@@ -339,6 +339,8 @@ export const zh = {
     riskAlerts: '风险预警',
     heatmap: '活跃热力图',
     heatmapTitle: '交易活跃热力图 · 小时 × 星期（演示数据）',
+    crosschain: '跨链分析',
+    crosschainTitle: '跨链资金流向 · 多链追踪（演示数据）',
   },
   trace: {
     backToMain: '返回主视图',

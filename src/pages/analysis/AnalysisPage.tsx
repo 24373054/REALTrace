@@ -4,7 +4,7 @@ import ReactECharts from 'echarts-for-react';
 import { useI18n } from '../../hooks/useI18n';
 import styles from './AnalysisPage.module.css';
 
-type AnalysisTab = 'graph' | 'flow' | 'trend' | 'heatmap';
+type AnalysisTab = 'graph' | 'flow' | 'trend' | 'heatmap' | 'crosschain';
 
 export const AnalysisPage: React.FC = () => {
   const [tab, setTab] = useState<AnalysisTab>('graph');
@@ -16,13 +16,14 @@ export const AnalysisPage: React.FC = () => {
     flow: t.analysis.flow,
     trend: t.analysis.trend,
     heatmap: t.analysis.heatmap,
+    crosschain: t.analysis.crosschain,
   };
 
   return (
     <div className={styles.page}>
       <div className={styles.toolbar}>
         <div className={styles.tabs}>
-          {(['graph', 'flow', 'trend', 'heatmap'] as AnalysisTab[]).map(tb => (
+          {(['graph', 'flow', 'trend', 'heatmap', 'crosschain'] as AnalysisTab[]).map(tb => (
             <button key={tb} className={`${styles.tab} ${tab === tb ? styles.active : ''}`} onClick={() => setTab(tb)}>
               {TAB_LABELS[tb]}
             </button>
@@ -40,6 +41,7 @@ export const AnalysisPage: React.FC = () => {
         {tab === 'flow' && <FlowTab t={t} />}
         {tab === 'trend' && <TrendTab t={t} />}
         {tab === 'heatmap' && <HeatmapTab t={t} />}
+        {tab === 'crosschain' && <CrossChainTab t={t} />}
       </div>
     </div>
   );
@@ -262,6 +264,102 @@ const HeatmapTab: React.FC<{ t: any }> = ({ t }) => {
     <div className={styles.chartWrap}>
       <div className={styles.chartTitle}>{t.analysis.heatmapTitle}</div>
       <ReactECharts option={option} style={{ height: '100%', width: '100%' }} theme="dark" />
+    </div>
+  );
+};
+
+const CrossChainTab: React.FC<{ t: any }> = ({ t }) => {
+  const CHAINS = ['ETH', 'BTC', 'TRX', 'SOL', 'BSC', 'ARB'];
+  const BRIDGES = ['Wormhole', 'LayerZero', 'Stargate', 'Hop', 'Across'];
+
+  const flowData = [
+    { from: 'ETH', to: 'BTC', bridge: 'Wormhole', amount: 1240, risk: 72 },
+    { from: 'ETH', to: 'TRX', bridge: 'LayerZero', amount: 890, risk: 88 },
+    { from: 'BTC', to: 'ETH', bridge: 'Stargate', amount: 560, risk: 34 },
+    { from: 'SOL', to: 'ETH', bridge: 'Wormhole', amount: 320, risk: 45 },
+    { from: 'ETH', to: 'BSC', bridge: 'Hop', amount: 2100, risk: 61 },
+    { from: 'ARB', to: 'ETH', bridge: 'Across', amount: 780, risk: 22 },
+    { from: 'TRX', to: 'BTC', bridge: 'LayerZero', amount: 430, risk: 91 },
+  ];
+
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: '#16161e',
+      borderColor: '#2a2a3a',
+      textStyle: { color: '#e0e0e6', fontSize: 11 },
+      formatter: (p: any) => {
+        if (p.dataType === 'edge') {
+          return `${p.data.source} → ${p.data.target}<br/>Bridge: ${p.data.bridge}<br/>Amount: $${p.data.value.toLocaleString()}K<br/>Risk: ${p.data.risk}`;
+        }
+        return p.name;
+      },
+    },
+    series: [{
+      type: 'graph',
+      layout: 'circular',
+      roam: true,
+      circular: { rotateLabel: true },
+      label: { show: true, color: '#8888a0', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' },
+      lineStyle: { opacity: 0.6, width: 2, curveness: 0.3 },
+      edgeLabel: { show: true, fontSize: 9, color: '#555568', formatter: (p: any) => p.data.bridge || '' },
+      data: CHAINS.map(c => ({
+        name: c,
+        symbolSize: 40,
+        itemStyle: {
+          color: c === 'ETH' ? '#2980b9' : c === 'BTC' ? '#e67e22' : c === 'TRX' ? '#c0392b' : c === 'SOL' ? '#9b59b6' : c === 'BSC' ? '#f1c40f' : '#27ae60',
+        },
+        label: { color: '#dddde8', fontWeight: 600 },
+      })),
+      links: flowData.map(f => ({
+        source: f.from,
+        target: f.to,
+        value: f.amount,
+        bridge: f.bridge,
+        risk: f.risk,
+        lineStyle: {
+          color: f.risk > 80 ? '#c0392b' : f.risk > 60 ? '#e67e22' : '#2980b9',
+          width: Math.max(1, Math.floor(f.amount / 400)),
+          opacity: 0.7,
+        },
+      })),
+    }],
+  };
+
+  return (
+    <div className={styles.chartWrap}>
+      <div className={styles.chartTitle}>{t.analysis.crosschainTitle}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16, height: 'calc(100% - 32px)' }}>
+        <ReactECharts option={option} style={{ height: '100%', width: '100%' }} theme="dark" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, overflow: 'auto' }}>
+          <div style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px', paddingBottom: 8, borderBottom: '1px solid var(--color-border)' }}>
+            Cross-Chain Flows
+          </div>
+          {flowData.map((f, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--color-border)', fontSize: 11 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text)' }}>{f.from} → {f.to}</span>
+                <span style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>{f.bridge}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text)' }}>${f.amount.toLocaleString()}K</span>
+                <span style={{ fontSize: 10, color: f.risk > 80 ? 'var(--risk-critical)' : f.risk > 60 ? 'var(--risk-high)' : 'var(--risk-safe)' }}>
+                  Risk {f.risk}
+                </span>
+              </div>
+            </div>
+          ))}
+          <div style={{ marginTop: 8, padding: '8px 12px', background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', fontSize: 10, color: 'var(--color-text-muted)' }}>
+            {BRIDGES.map(b => (
+              <div key={b} style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0' }}>
+                <span>{b}</span>
+                <span style={{ fontFamily: 'var(--font-mono)' }}>{flowData.filter(f => f.bridge === b).length} flows</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

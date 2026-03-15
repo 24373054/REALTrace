@@ -56,12 +56,15 @@ type Tab = 'overview' | 'transactions' | 'flow' | 'risk';
 
 export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { addFavorite, removeFavorite, isFavorite } = useAppStore();
   const [tab, setTab] = useState<Tab>('overview');
   const [loading] = useState(false);
   const data = getMockAddress(chain, address);
   const favorited = isFavorite(address);
+  const [labelModal, setLabelModal] = useState(false);
+  const [userLabel, setUserLabel] = useState(data.label || '');
+  const [savedLabel, setSavedLabel] = useState(data.label || '');
 
   if (loading) return <LoadingSpinner text={t.common.loading} />;
 
@@ -72,8 +75,42 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
     risk: t.address.detail.risk,
   };
 
+  const handleSaveLabel = () => {
+    setSavedLabel(userLabel);
+    setLabelModal(false);
+  };
+
   return (
     <div className={styles.wrap}>
+      {labelModal && (
+        <div className={styles.modalOverlay} onClick={() => setLabelModal(false)}>
+          <div className={styles.labelModal} onClick={e => e.stopPropagation()}>
+            <div className={styles.labelModalTitle}>{locale === 'zh' ? '地址标签管理' : 'Address Label'}</div>
+            <div className={styles.labelModalAddr}>{address}</div>
+            <div className={styles.labelModalField}>
+              <label>{locale === 'zh' ? '自定义标签' : 'Custom Label'}</label>
+              <input
+                className={styles.labelInput}
+                value={userLabel}
+                onChange={e => setUserLabel(e.target.value)}
+                placeholder={locale === 'zh' ? '如：我的钱包、交易所充值地址...' : 'e.g. My Wallet, Exchange Deposit...'}
+                autoFocus
+                maxLength={40}
+              />
+            </div>
+            <div className={styles.labelPresets}>
+              {['Exchange', 'Mixer', 'Hacker', 'DeFi', 'NFT', 'Bridge'].map(p => (
+                <button key={p} className={styles.presetBtn} onClick={() => setUserLabel(p)}>{p}</button>
+              ))}
+            </div>
+            <div className={styles.labelModalActions}>
+              <button className="btn btn-sm" onClick={() => setLabelModal(false)}>{t.common.cancel}</button>
+              <button className="btn btn-primary btn-sm" onClick={handleSaveLabel}>{t.common.save}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <div className={styles.chainBadge}>{chain}</div>
@@ -81,7 +118,7 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
             <span className={`${styles.address} mono`}>{address}</span>
             <CopyButton text={address} />
           </div>
-          {data.label && <div className={styles.label}>{data.label}</div>}
+          {savedLabel && <div className={styles.label}>{savedLabel}</div>}
           <div className={styles.tags}>
             {data.tags.map(tag => <span key={tag} className="tag tag-danger">{tag}</span>)}
           </div>
@@ -91,10 +128,13 @@ export const AddressDetail: React.FC<Props> = ({ chain, address }) => {
           <div className={styles.headerActions}>
             <button
               className="btn btn-sm"
-              onClick={() => favorited ? removeFavorite(address) : addFavorite(address, chain, data.label)}
+              onClick={() => favorited ? removeFavorite(address) : addFavorite(address, chain, savedLabel)}
               style={favorited ? { color: 'var(--color-warning)', borderColor: 'var(--color-warning)' } : {}}
             >
               {favorited ? `★ ${t.address.favorited}` : `☆ ${t.address.favorite}`}
+            </button>
+            <button className="btn btn-sm" onClick={() => setLabelModal(true)}>
+              ◈ {locale === 'zh' ? '标签' : 'Label'}
             </button>
             <button className="btn btn-sm" onClick={() => navigate(ROUTES.MONITOR)}>◉ {t.address.monitor}</button>
             <button className="btn btn-sm">▤ {t.address.exportReport}</button>

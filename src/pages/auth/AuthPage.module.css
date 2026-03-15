@@ -125,3 +125,25 @@
 }
 
 .link:hover { text-decoration: underline; }
+
+/* Multi-step register */
+.stepIndicator { display: flex; align-items: center; justify-content: center; gap: 0; }
+.stepDot { width: 24px; height: 24px; border: 1px solid var(--color-border); color: var(--color-text-muted); font-size: var(--font-size-xs); font-family: var(--font-mono); display: flex; align-items: center; justify-content: center; }
+.stepActive { border-color: var(--color-accent); color: var(--color-accent); background: var(--color-accent-dim); }
+.stepLine { width: 40px; height: 1px; background: var(--color-border); }
+.verifyHint { font-size: var(--font-size-sm); color: var(--color-text-secondary); text-align: center; }
+.codeInput { text-align: center; font-size: var(--font-size-xl); font-family: var(--font-mono); letter-spacing: 0.3em; }
+.resendRow { display: flex; justify-content: center; }
+.resendBtn { background: none; border: none; color: var(--color-accent); font-size: var(--font-size-sm); cursor: pointer; }
+.resendBtn:hover { text-decoration: underline; }
+.cooldown { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+.backLink { background: none; border: none; color: var(--color-text-muted); font-size: var(--font-size-sm); cursor: pointer; }
+.backLink:hover { color: var(--color-text); }
+.successIcon { font-size: 40px; color: var(--color-safe); text-align: center; }
+.successDesc { font-size: var(--font-size-sm); color: var(--color-text-muted); text-align: center; }
+
+/* Remember me / forgot password row */
+.rememberRow { display: flex; align-items: center; justify-content: space-between; }
+.rememberLabel { display: flex; align-items: center; gap: var(--space-2); font-size: var(--font-size-xs); color: var(--color-text-muted); cursor: pointer; }
+.forgotBtn { background: none; border: none; color: var(--color-accent); font-size: var(--font-size-xs); cursor: pointer; }
+.forgotBtn:hover { text-decoration: underline; }

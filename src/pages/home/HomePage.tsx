@@ -71,11 +71,7 @@ export const HomePage: React.FC = () => {
     const q = query.trim();
     if (!q) return;
     addSearchHistory(q);
-    if (q.length === 64 || q.length === 66) {
-      navigate(`${ROUTES.TRANSACTION}/${q}`);
-    } else {
-      navigate(`/address/${chain}/${q}`);
-    }
+    navigate(`/search?q=${encodeURIComponent(q)}`);
   };
 
   return (

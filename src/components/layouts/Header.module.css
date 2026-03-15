@@ -178,21 +178,7 @@
 /* Notifications */
 .notifWrap { position: relative; }
 
-.notifBtn {
-  position: relative;
-  background: none;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 14px;
-  transition: border-color var(--transition), color var(--transition);
-}
-.notifBtn:hover { border-color: var(--color-border-light); color: var(--color-text); }
+/* notifBtn is now .iconBtn - kept for reference */
 
 .notifBadge {
   position: absolute;
@@ -247,3 +233,50 @@
 
 .notifMsg { font-size: var(--font-size-xs); color: var(--color-text); line-height: 1.5; }
 .notifTime { font-size: 10px; color: var(--color-text-muted); font-family: var(--font-mono); }
+
+/* Settings dropdown */
+.settingsWrap { position: relative; }
+.iconBtn {
+  position: relative;
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: border-color var(--transition), color var(--transition);
+}
+.iconBtn:hover { border-color: var(--color-border-light); color: var(--color-text); }
+.notifBtn { /* alias */ }
+.settingsDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 220px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+}
+.settingsSection { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); }
+.settingsSection:last-child { border-bottom: none; }
+.settingsSectionTitle { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--space-2); }
+.settingsRow { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.settingsBtn {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.settingsBtn:hover { color: var(--color-text); border-color: var(--color-border-light); }
+.settingsBtnActive { color: var(--color-text); border-color: var(--color-accent); background: var(--color-bg-input); }

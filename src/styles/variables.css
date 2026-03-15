@@ -70,3 +70,57 @@
   /* 过渡 */
   --transition: 150ms ease;
 }
+
+/* ─── Light Theme ─────────────────────────────────────────── */
+[data-theme="light"] {
+  --color-bg: #f4f4f8;
+  --color-bg-elevated: #ffffff;
+  --color-bg-card: #f9f9fc;
+  --color-bg-input: #ffffff;
+  --color-border: #d0d0de;
+  --color-border-light: #b8b8cc;
+  --color-text: #0a0a1a;
+  --color-text-secondary: #444460;
+  --color-text-muted: #888899;
+  --color-text-inverse: #ffffff;
+  --color-accent: #c0392b;
+  --color-accent-hover: #a93226;
+  --color-danger: #c0392b;
+  --color-warning: #b8860b;
+  --color-safe: #1a7a40;
+  --color-info: #1a5f8a;
+  --risk-critical: #c0392b;
+  --risk-high: #c0620a;
+  --risk-medium: #b8860b;
+  --risk-low: #1a7a40;
+  --risk-safe: #1a9a50;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ─── High Contrast Theme ─────────────────────────────────── */
+[data-theme="high-contrast"] {
+  --color-bg: #000000;
+  --color-bg-elevated: #0a0a0a;
+  --color-bg-card: #111111;
+  --color-bg-input: #0d0d0d;
+  --color-border: #444444;
+  --color-border-light: #666666;
+  --color-text: #ffffff;
+  --color-text-secondary: #cccccc;
+  --color-text-muted: #888888;
+  --color-text-inverse: #000000;
+  --color-accent: #ff4444;
+  --color-accent-hover: #ff2222;
+  --color-danger: #ff4444;
+  --color-warning: #ffcc00;
+  --color-safe: #00ff88;
+  --color-info: #44aaff;
+  --risk-critical: #ff4444;
+  --risk-high: #ff8800;
+  --risk-medium: #ffcc00;
+  --risk-low: #00ff88;
+  --risk-safe: #00ff88;
+  --shadow-sm: 0 0 0 1px #444;
+  --shadow-md: 0 0 0 2px #666;
+}

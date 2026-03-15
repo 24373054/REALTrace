@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUserStore } from '../../stores/user';
 import { useAppStore } from '../../stores/app';
+import { useI18n } from '../../hooks/useI18n';
 import { UsageBar } from '../../components/common/UsageBar';
 import { ROUTES } from '../../constants/routes';
 import styles from './UserPage.module.css';
@@ -12,6 +13,7 @@ export const UserPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, updateUser } = useUserStore();
+  const { t } = useI18n();
   const [tab, setTab] = useState<UserTab>(
     location.pathname.includes('settings') ? 'settings' :
     location.pathname.includes('favorites') ? 'favorites' :
@@ -35,19 +37,19 @@ export const UserPage: React.FC = () => {
         </div>
         <nav className={styles.nav}>
           {([
-            ['profile', '个人信息'],
-            ['settings', '账户设置'],
-            ['usage', '用量统计'],
-            ['favorites', '我的收藏'],
-            ['history', '搜索历史'],
-          ] as [UserTab, string][]).map(([t, label]) => (
-            <button key={t} className={`${styles.navItem} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>
+            ['profile', t.user.profile],
+            ['settings', t.user.settings],
+            ['usage', t.user.usage],
+            ['favorites', t.user.favorites],
+            ['history', t.user.history],
+          ] as [UserTab, string][]).map(([tb, label]) => (
+            <button key={tb} className={`${styles.navItem} ${tab === tb ? styles.active : ''}`} onClick={() => setTab(tb)}>
               {label}
             </button>
           ))}
         </nav>
         <div className={styles.sidebarFooter}>
-          <button className="btn btn-primary btn-sm" style={{ width: '100%' }} onClick={() => navigate(ROUTES.MEMBER)}>升级会员</button>
+          <button className="btn btn-primary btn-sm" style={{ width: '100%' }} onClick={() => navigate(ROUTES.MEMBER)}>{t.common.upgrade}</button>
         </div>
       </div>
 

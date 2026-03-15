@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useUserStore } from '../../stores/user';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../../hooks/useI18n';
 import { MEMBER_TIERS } from '../../constants/config';
 import { UsageBar } from '../../components/common/UsageBar';
 import styles from './MemberPage.module.css';
@@ -8,6 +9,7 @@ import styles from './MemberPage.module.css';
 export const MemberPage: React.FC = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [duration, setDuration] = useState(1);
 
   const prices: Record<number, number> = { 1: 1, 3: 0.9, 6: 0.85, 12: 0.8 };
@@ -15,11 +17,11 @@ export const MemberPage: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <div className={styles.headerTitle}>会员中心</div>
+        <div className={styles.headerTitle}>{t.member.title}</div>
         {user && (
           <div className={styles.currentPlan}>
-            当前方案: <span className={styles.planName}>{user.role.toUpperCase()}</span>
-            <span className={styles.expiry}>· 有效期至 2026-03-15</span>
+            {t.member.currentPlan}: <span className={styles.planName}>{user.role.toUpperCase()}</span>
+            <span className={styles.expiry}>· {t.member.expiry} 2026-03-15</span>
           </div>
         )}
       </div>
@@ -27,7 +29,7 @@ export const MemberPage: React.FC = () => {
       {/* Current usage summary */}
       {user && (
         <div className={styles.usageSummary}>
-          <div className={styles.usageSummaryTitle}>当前用量 · 今日</div>
+          <div className={styles.usageSummaryTitle}>{t.member.usage} · {t.member.today}</div>
           <div className={styles.usageBars}>
             <UsageBar label="地址查询" used={7} total={user.role === 'free' ? 10 : user.role === 'basic' ? 100 : 500} unit=" 次" />
             <UsageBar label="报告导出" used={1} total={user.role === 'free' ? 3 : user.role === 'basic' ? 20 : 100} unit=" 次" />
@@ -37,7 +39,7 @@ export const MemberPage: React.FC = () => {
       )}
 
       <div className={styles.durationRow}>
-        <span className={styles.durationLabel}>购买时长</span>
+        <span className={styles.durationLabel}>{t.member.duration}</span>
         {[1, 3, 6, 12].map(d => (
           <button
             key={d}
@@ -93,7 +95,7 @@ export const MemberPage: React.FC = () => {
                 className={`${styles.planBtn} ${isCurrent ? styles.planBtnCurrent : 'btn btn-primary'}`}
                 disabled={isCurrent || tier.key === 'free'}
               >
-                {isCurrent ? '当前方案' : tier.price === -1 ? '联系销售' : '立即购买'}
+                {isCurrent ? t.member.currentPlanBtn : tier.price === -1 ? t.member.contact : t.member.upgrade}
               </button>
             </div>
           );
@@ -101,7 +103,7 @@ export const MemberPage: React.FC = () => {
       </div>
 
       <div className={styles.payMethods}>
-        <span className={styles.payLabel}>支持支付方式</span>
+        <span className={styles.payLabel}>{t.member.payMethods}</span>
         {['支付宝', '微信支付', '银联', 'USDT'].map(p => (
           <span key={p} className={styles.payMethod}>{p}</span>
         ))}

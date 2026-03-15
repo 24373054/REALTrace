@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { EmptyState } from '../../components/common/EmptyState';
-import { RiskBadge } from '../../components/common/RiskBadge';
+import { useI18n } from '../../hooks/useI18n';
 import { shortAddress, formatDate } from '../../utils/format';
 import styles from './MonitorPage.module.css';
 
@@ -28,21 +28,22 @@ export const MonitorPage: React.FC = () => {
   const [newLabel, setNewLabel] = useState('');
   const [newType, setNewType] = useState('transaction');
   const [newThreshold, setNewThreshold] = useState('10');
+  const { t } = useI18n();
   const unreadCount = MOCK_ALERTS.filter(a => !a.read).length;
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <span className={styles.title}>监控预警</span>
+          <span className={styles.title}>{t.monitor.title}</span>
           <div className={styles.viewTabs}>
-            <button className={`${styles.viewTab} ${view === 'list' ? styles.viewTabActive : ''}`} onClick={() => setView('list')}>监控列表</button>
+            <button className={`${styles.viewTab} ${view === 'list' ? styles.viewTabActive : ''}`} onClick={() => setView('list')}>{t.monitor.list}</button>
             <button className={`${styles.viewTab} ${view === 'alerts' ? styles.viewTabActive : ''}`} onClick={() => setView('alerts')}>
-              预警记录 {unreadCount > 0 && <span className={styles.unreadBadge}>{unreadCount}</span>}
+              {t.monitor.alerts} {unreadCount > 0 && <span className={styles.unreadBadge}>{unreadCount}</span>}
             </button>
           </div>
         </div>
-        <button className="btn btn-primary btn-sm" onClick={() => setShowAdd(!showAdd)}>+ 添加监控</button>
+        <button className="btn btn-primary btn-sm" onClick={() => setShowAdd(!showAdd)}>+ {t.monitor.add}</button>
       </div>
 
       {showAdd && <AddForm
@@ -157,28 +158,28 @@ const SEVERITY_COLOR: Record<string, string> = {
   low: 'var(--risk-safe)',
 };
 
-const SEVERITY_LABEL: Record<string, string> = {
-  critical: '严重',
-  high: '高危',
-  medium: '中危',
-  low: '低危',
-};
-
 const AlertList: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const { t } = useI18n();
   const alerts = filter === 'unread' ? MOCK_ALERTS.filter(a => !a.read) : MOCK_ALERTS;
+  const SEVERITY_LABEL: Record<string, string> = {
+    critical: t.monitor.severity.critical,
+    high: t.monitor.severity.high,
+    medium: t.monitor.severity.medium,
+    low: t.monitor.severity.low,
+  };
 
   return (
     <div className={styles.alertSection}>
       <div className={styles.alertToolbar}>
         <div className={styles.filterBtns}>
-          <button className={`${styles.filterBtn} ${filter === 'all' ? styles.filterActive : ''}`} onClick={() => setFilter('all')}>全部</button>
-          <button className={`${styles.filterBtn} ${filter === 'unread' ? styles.filterActive : ''}`} onClick={() => setFilter('unread')}>未读</button>
+          <button className={`${styles.filterBtn} ${filter === 'all' ? styles.filterActive : ''}`} onClick={() => setFilter('all')}>{t.monitor.all}</button>
+          <button className={`${styles.filterBtn} ${filter === 'unread' ? styles.filterActive : ''}`} onClick={() => setFilter('unread')}>{t.monitor.unread}</button>
         </div>
-        <button className="btn btn-sm">全部标为已读</button>
+        <button className="btn btn-sm">{t.monitor.markRead}</button>
       </div>
       {alerts.length === 0 ? (
-        <EmptyState title="暂无预警记录" description="当监控地址触发条件时将在此显示" />
+        <EmptyState title={t.common.noData} description="" />
       ) : (
         <div className={styles.alertList}>
           {alerts.map(a => (

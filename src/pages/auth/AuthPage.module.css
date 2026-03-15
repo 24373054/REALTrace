@@ -114,4 +114,14 @@
   color: var(--color-accent);
   margin-left: var(--space-1);
 }
+/* demo hint */
+.demoHint {
+  padding: var(--space-2) var(--space-3);
+  background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.25);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
 .link:hover { text-decoration: underline; }

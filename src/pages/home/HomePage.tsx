@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../stores/app';
+import { useI18n } from '../../hooks/useI18n';
 import { StatCard } from '../../components/common/StatCard';
 import { RiskBar } from '../../components/common/RiskBar';
 import { SUPPORTED_CHAINS } from '../../constants/config';
@@ -47,6 +48,7 @@ const LiveTicker: React.FC = () => {
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { addSearchHistory } = useAppStore();
+  const { t, locale } = useI18n();
   const [query, setQuery] = useState('');
   const [chain, setChain] = useState('ETH');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -84,9 +86,9 @@ export const HomePage: React.FC = () => {
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <div className={styles.heroLabel}>BLOCKCHAIN INTELLIGENCE PLATFORM</div>
-          <h1 className={styles.heroTitle}>链上资金追踪与风险分析</h1>
-          <p className={styles.heroSub}>支持 BTC / ETH / TRX / SOL 等多链 · 实时风险评分 · 交易图谱可视化</p>
+          <div className={styles.heroLabel}>{t.home.label}</div>
+          <h1 className={styles.heroTitle}>{t.home.title}</h1>
+          <p className={styles.heroSub}>{t.home.subtitle}</p>
           <form className={styles.heroSearch} onSubmit={handleSearch}>
             <select className={styles.heroChain} value={chain} onChange={e => setChain(e.target.value)}>
               {SUPPORTED_CHAINS.map(c => <option key={c.key} value={c.key}>{c.name}</option>)}
@@ -94,17 +96,16 @@ export const HomePage: React.FC = () => {
             <input
               className={styles.heroInput}
               type="text"
-              placeholder="输入区块链地址 / 交易哈希 / ENS 域名..."
+              placeholder={t.common.searchPlaceholder}
               value={query}
               onChange={e => setQuery(e.target.value)}
               ref={inputRef}
               autoFocus
             />
-            <button type="submit" className={styles.heroBtn}>开始追踪</button>
+            <button type="submit" className={styles.heroBtn}>{t.common.search}</button>
           </form>
           <div className={styles.heroHints}>
-            <span>快捷键: <kbd>Ctrl+K</kbd> 聚焦搜索</span>
-            <span>支持地址 / 交易哈希 / ENS 域名</span>
+            <span>{t.home.shortcut}: <kbd>Ctrl+K</kbd></span>
           </div>
         </div>
       </section>
@@ -121,17 +122,17 @@ export const HomePage: React.FC = () => {
       {/* 快捷入口 */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <span className={styles.sectionTitle}>功能入口</span>
+          <span className={styles.sectionTitle}>{t.home.quickActions}</span>
         </div>
         <div className={styles.quickGrid}>
           {[
-            { icon: '⬡', title: '地址查询', desc: '查询地址风险评分、余额、交易历史', path: ROUTES.ADDRESS },
-            { icon: '⇄', title: '交易追踪', desc: '追踪交易资金流向，支持多跳路径分析', path: ROUTES.TRANSACTION },
-            { icon: '◈', title: '可视化分析', desc: '交易图谱、资金流向桑基图、趋势图', path: ROUTES.ANALYSIS },
-            { icon: '⬡', title: '链路追踪', desc: 'D3 力导向图 + 6 大案例 CyberTrace 可视化', path: ROUTES.TRACE },
-            { icon: '◉', title: '监控预警', desc: '实时监控地址动态，触发条件自动预警', path: ROUTES.MONITOR },
-            { icon: '▤', title: '报告中心', desc: '生成专业分析报告，支持 PDF 导出', path: ROUTES.REPORT },
-            { icon: '◎', title: '会员中心', desc: '查看权益、升级会员、管理订阅', path: ROUTES.MEMBER },
+            { icon: '⬡', title: t.nav.address, desc: locale === 'zh' ? '查询地址风险评分、余额、交易历史' : 'Query address risk score, balance, tx history', path: ROUTES.ADDRESS },
+            { icon: '⇄', title: t.nav.transaction, desc: locale === 'zh' ? '追踪交易资金流向，支持多跳路径分析' : 'Trace fund flow, multi-hop path analysis', path: ROUTES.TRANSACTION },
+            { icon: '◈', title: t.nav.analysis, desc: locale === 'zh' ? '交易图谱、资金流向桑基图、趋势图' : 'Graph, Sankey flow chart, trend analysis', path: ROUTES.ANALYSIS },
+            { icon: '⬡', title: t.nav.trace, desc: locale === 'zh' ? 'D3 力导向图 + 6 大案例 CyberTrace 可视化' : 'D3 force graph + 6 CyberTrace cases', path: ROUTES.TRACE },
+            { icon: '◉', title: t.nav.monitor, desc: locale === 'zh' ? '实时监控地址动态，触发条件自动预警' : 'Real-time address monitoring & alerts', path: ROUTES.MONITOR },
+            { icon: '▤', title: t.nav.report, desc: locale === 'zh' ? '生成专业分析报告，支持 PDF 导出' : 'Generate professional reports, PDF export', path: ROUTES.REPORT },
+            { icon: '◎', title: t.nav.member, desc: locale === 'zh' ? '查看权益、升级会员、管理订阅' : 'View benefits, upgrade, manage subscription', path: ROUTES.MEMBER },
           ].map((item) => (
             <button key={item.path} className={styles.quickCard} onClick={() => navigate(item.path)}>
               <span className={styles.quickIcon}>{item.icon}</span>
@@ -142,15 +143,21 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 热门案例 */}
+      {/* Hot cases */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <span className={styles.sectionTitle}>热门追踪案例</span>
-          <button className={styles.sectionMore} onClick={() => navigate(ROUTES.REPORT)}>查看全部 →</button>
+          <span className={styles.sectionTitle}>{t.home.hotCases}</span>
+          <button className={styles.sectionMore} onClick={() => navigate(ROUTES.REPORT)}>{t.common.viewAll} →</button>
         </div>
         <div className={styles.caseTable}>
           <div className={styles.caseHeader}>
-            <span>案例名称</span><span>链</span><span>地址</span><span>涉案金额</span><span>风险评分</span><span>标签</span><span>操作</span>
+            <span>{locale === 'zh' ? '案例名称' : 'Case'}</span>
+            <span>{t.common.chain}</span>
+            <span>{t.common.address}</span>
+            <span>{t.common.amount}</span>
+            <span>{t.risk.score}</span>
+            <span>{t.common.label}</span>
+            <span>{t.common.actions}</span>
           </div>
           {QUICK_CASES.map((c, i) => (
             <div key={i} className={styles.caseRow}>
@@ -163,9 +170,9 @@ export const HomePage: React.FC = () => {
                 <span className={styles.caseRiskNum} style={{ color: c.risk >= 90 ? 'var(--risk-critical)' : 'var(--risk-high)' }}>{c.risk}</span>
               </div>
               <div className={styles.caseTags}>
-                {c.tags.map(t => <span key={t} className="tag tag-danger">{t}</span>)}
+                {c.tags.map(tag => <span key={tag} className="tag tag-danger">{tag}</span>)}
               </div>
-              <button className="btn btn-sm" onClick={() => navigate(`/address/${c.chain}/${c.address}`)}>查看</button>
+              <button className="btn btn-sm" onClick={() => navigate(`/address/${c.chain}/${c.address}`)}>{t.common.view}</button>
             </div>
           ))}
         </div>

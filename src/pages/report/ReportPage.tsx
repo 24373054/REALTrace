@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmptyState } from '../../components/common/EmptyState';
 import { useAppStore } from '../../stores/app';
+import { useI18n } from '../../hooks/useI18n';
 import { formatDate } from '../../utils/format';
 import styles from './ReportPage.module.css';
 
@@ -69,6 +70,7 @@ export const ReportPage: React.FC = () => {
   const [tab, setTab] = useState<'reports' | 'history'>('reports');
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { searchHistory, clearSearchHistory } = useAppStore();
 
   return (
@@ -76,10 +78,10 @@ export const ReportPage: React.FC = () => {
       {showModal && <GenerateModal onClose={() => setShowModal(false)} />}
       <div className={styles.header}>
         <div className={styles.tabs}>
-          <button className={`${styles.tab} ${tab === 'reports' ? styles.active : ''}`} onClick={() => setTab('reports')}>我的报告</button>
-          <button className={`${styles.tab} ${tab === 'history' ? styles.active : ''}`} onClick={() => setTab('history')}>查询历史</button>
+          <button className={`${styles.tab} ${tab === 'reports' ? styles.active : ''}`} onClick={() => setTab('reports')}>{t.report.myReports}</button>
+          <button className={`${styles.tab} ${tab === 'history' ? styles.active : ''}`} onClick={() => setTab('history')}>{t.report.history}</button>
         </div>
-        <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>+ 生成报告</button>
+        <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>+ {t.report.generate}</button>
       </div>
 
       {tab === 'reports' && (
